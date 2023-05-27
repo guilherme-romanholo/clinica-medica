@@ -41,7 +41,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>clinica.medica.display.Main</mainClass>
+              <mainClass>clinica.medica.gui.Main</mainClass>
             </manifest>
           </archive>
         </configuration>

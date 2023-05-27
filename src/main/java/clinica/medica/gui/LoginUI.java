@@ -6,7 +6,7 @@ import java.awt.*;
 public class LoginUI {
     public static void chamarTela() {
         try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             System.out.println("Não foi possível utilizar o recurso Look and Feel");
         }
