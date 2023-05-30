@@ -35,4 +35,8 @@ public class Medico extends Usuario {
     public String getAreaAtuacao() {
         return this.areaAtuacao;
     }
+    
+    public String getCRM(){
+        return this.CRM;
+    }
 }
