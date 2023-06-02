@@ -73,35 +73,6 @@ public class CadastroUI {
 
         JButton cadastroButton = new JButton("Cadastrar");
 
-        //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o médico
-        cadastroButton.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                String nome = usernameField.getText();
-                String cpf = cpfField.getText();
-                String email = emailField.getText();
-                String area = areaField.getText();
-                String crm = crmField.getText();
-                char[] senha = passwordField.getPassword();
-                String password = new String(senha);
-
-                if(UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm)){
-                    JOptionPane.showMessageDialog(frame, "Cadastro realizado com sucesso!");
-                    frame.dispose();
-                    LoginUI.frame.setVisible(true);
-                }else{
-                    JOptionPane.showMessageDialog(frame,"Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
-                    usernameField.setText("");
-                    cpfField.setText("");
-                    emailField.setText("");
-                    areaField.setText("");
-                    crmField.setText("");
-                    passwordField.setText("");
-                }
-
-            }
-        });
-
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(5, 5, 5, 5);
@@ -147,6 +118,35 @@ public class CadastroUI {
 
         constraints.gridy = 13;
         frame.add(cadastroButton, constraints);
+
+        //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o médico
+        cadastroButton.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String nome = usernameField.getText();
+                String cpf = cpfField.getText();
+                String email = emailField.getText();
+                String area = areaField.getText();
+                String crm = crmField.getText();
+                char[] senha = passwordField.getPassword();
+                String password = new String(senha);
+
+                if(UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm)){
+                    JOptionPane.showMessageDialog(frame, "Cadastro realizado com sucesso!");
+                    frame.dispose();
+                    LoginUI.frame.setVisible(true);
+                }else{
+                    JOptionPane.showMessageDialog(frame,"Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+                    usernameField.setText("");
+                    cpfField.setText("");
+                    emailField.setText("");
+                    areaField.setText("");
+                    crmField.setText("");
+                    passwordField.setText("");
+                }
+
+            }
+        });
     }
 
     /**
@@ -184,46 +184,6 @@ public class CadastroUI {
         JPasswordField passwordField = new JPasswordField(20);
 
         JButton cadastroButton = new JButton("Cadastrar paciente");
-
-        //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o paciente
-        cadastroButton.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int idade = 0;
-                double altura =0, peso = 0;
-                String nome = usernameField.getText();
-                String cpf = cpfField.getText();
-                String email = emailField.getText();
-                String endereco = enderecoField.getText();
-                String sexo = (String)sexoCombo.getSelectedItem();
-                try{
-                    idade = Integer.parseInt(idadeField.getText());
-                    altura = Double.parseDouble(alturaField.getText());
-                    peso = Double.parseDouble(pesoField.getText());
-                }catch(NumberFormatException r){
-
-                }
-                char[] senha = passwordField.getPassword();
-                String password = new String(senha);
-
-                if(UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso)){
-                    JOptionPane.showMessageDialog(frame, "Cadastro do cliente realizado com sucesso!");
-                    frame.dispose();
-                }else{
-                    JOptionPane.showMessageDialog(frame,"Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
-                    usernameField.setText("");
-                    cpfField.setText("");
-                    emailField.setText("");
-                    enderecoField.setText("");
-                    sexoCombo.setSelectedIndex(2);
-                    idadeField.setText("");
-                    alturaField.setText("");
-                    pesoField.setText("");
-                    passwordField.setText("");
-                }
-
-            }
-        });
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
@@ -288,5 +248,46 @@ public class CadastroUI {
 
         constraints.gridy = 19;
         frame.add(cadastroButton, constraints);
+
+        //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o paciente
+        cadastroButton.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int idade = 0;
+                double altura =0, peso = 0;
+                String nome = usernameField.getText();
+                String cpf = cpfField.getText();
+                String email = emailField.getText();
+                String endereco = enderecoField.getText();
+                String sexo = (String)sexoCombo.getSelectedItem();
+                try{
+                    idade = Integer.parseInt(idadeField.getText());
+                    altura = Double.parseDouble(alturaField.getText());
+                    peso = Double.parseDouble(pesoField.getText());
+                }catch(NumberFormatException r){
+
+                }
+                char[] senha = passwordField.getPassword();
+                String password = new String(senha);
+
+                if(UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso)){
+                    JOptionPane.showMessageDialog(frame, "Cadastro do cliente realizado com sucesso!");
+                    frame.dispose();
+                }else{
+                    JOptionPane.showMessageDialog(frame,"Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+                    usernameField.setText("");
+                    cpfField.setText("");
+                    emailField.setText("");
+                    enderecoField.setText("");
+                    sexoCombo.setSelectedIndex(2);
+                    idadeField.setText("");
+                    alturaField.setText("");
+                    pesoField.setText("");
+                    passwordField.setText("");
+                }
+
+            }
+        });
+
     }
 }

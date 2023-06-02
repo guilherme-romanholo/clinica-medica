@@ -91,11 +91,11 @@ public class LoginUI {
                 Medico medicoLogado = UsuariosSQL.loginMedico(email, password);
                 
                 if(medicoLogado != null){
-                    TelaLogadaUI.telaMedico(medicoLogado);
+                    TelaLogadaUI.mostrarTela(medicoLogado);
                     usernameField.setText("");
                     passwordField.setText("");
                 }else if(pacienteLogado != null){
-                    TelaLogadaUI.telaPaciente(pacienteLogado);
+                    TelaLogadaUI.mostrarTela(pacienteLogado);
                     usernameField.setText("");
                     passwordField.setText("");
                 }else{
