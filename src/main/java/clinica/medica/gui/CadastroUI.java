@@ -27,23 +27,6 @@ public class CadastroUI {
     }
 
     /**
-     * Método público para chamar a tela de cadastro do paciente.
-     */
-    public static void telaCadastroPaciente() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            System.out.println("Não foi possível utilizar o recurso Look and Feel");
-        }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                showCadastroPaciente();
-            }
-        });
-    }
-
-    /**
      * Método privado para implementação da tela de cadastro do médico.
      */
     private static void showCadastroMedico(){
@@ -152,15 +135,13 @@ public class CadastroUI {
     /**
      * Método privado para a implementação da tela de cadastro do paciente.
      */
-    private static void showCadastroPaciente(){
+    protected static JPanel cadastroPaciente(){
         String[] sexo = {"Masculino","Feminino","Nenhum"};
-        JFrame frame = new JFrame("Cadastro de paciente");
+        JPanel panel = new JPanel();
 
-        frame.setLayout(new GridBagLayout());
-        frame.setVisible(true);
-        frame.setSize(1000, 1000);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        panel.setLayout(new GridBagLayout());
+        //panel.setVisible(true);
+        //panel.setSize(1000, 1000);
 
         JLabel usernameLabel = new JLabel("Nome");
         JLabel cpfLabel = new JLabel("CPF");
@@ -176,11 +157,14 @@ public class CadastroUI {
         JTextField cpfField = new JTextField(20);
         JTextField emailField = new JTextField(20);
         JTextField enderecoField = new JTextField(20);
+
         JComboBox sexoCombo = new JComboBox(sexo);
         sexoCombo.setSelectedIndex(2);
+
         JTextField idadeField = new JTextField(20);
         JTextField alturaField = new JTextField(20);
         JTextField pesoField = new JTextField(20);
+
         JPasswordField passwordField = new JPasswordField(20);
 
         JButton cadastroButton = new JButton("Cadastrar paciente");
@@ -191,63 +175,63 @@ public class CadastroUI {
         constraints.gridx = 0;
 
         constraints.gridy = 1;
-        frame.add(usernameLabel, constraints);
+        panel.add(usernameLabel, constraints);
 
         constraints.gridy = 2;
-        frame.add(usernameField, constraints);
+        panel.add(usernameField, constraints);
 
         constraints.gridy = 3;
-        frame.add(emailLabel, constraints);
+        panel.add(emailLabel, constraints);
 
         constraints.gridy = 4;
-        frame.add(emailField, constraints);
+        panel.add(emailField, constraints);
 
         constraints.gridy = 5;
-        frame.add(cpfLabel, constraints);
+        panel.add(cpfLabel, constraints);
 
         constraints.gridy = 6;
-        frame.add(cpfField, constraints);
+        panel.add(cpfField, constraints);
 
         constraints.gridy = 7;
-        frame.add(enderecoLabel, constraints);
+        panel.add(enderecoLabel, constraints);
 
         constraints.gridy = 8;
-        frame.add(enderecoField, constraints);
+        panel.add(enderecoField, constraints);
 
         constraints.gridy = 9;
-        frame.add(sexoLabel, constraints);
+        panel.add(sexoLabel, constraints);
 
         constraints.gridy = 10;
-        frame.add(sexoCombo, constraints);
+        panel.add(sexoCombo, constraints);
 
         constraints.gridy = 11;
-        frame.add(idadeLabel, constraints);
+        panel.add(idadeLabel, constraints);
 
         constraints.gridy = 12;
-        frame.add(idadeField, constraints);
+        panel.add(idadeField, constraints);
 
         constraints.gridy = 13;
-        frame.add(alturaLabel, constraints);
+        panel.add(alturaLabel, constraints);
 
         constraints.gridy = 14;
-        frame.add(alturaField, constraints);
+        panel.add(alturaField, constraints);
 
         constraints.gridy = 15;
-        frame.add(pesoLabel, constraints);
+        panel.add(pesoLabel, constraints);
 
         constraints.gridy = 16;
-        frame.add(pesoField, constraints);
+        panel.add(pesoField, constraints);
 
         constraints.gridy = 17;
-        frame.add(passwordLabel, constraints);
+        panel.add(passwordLabel, constraints);
 
         constraints.gridy = 18;
-        frame.add(passwordField, constraints);
+        panel.add(passwordField, constraints);
 
         constraints.anchor = GridBagConstraints.CENTER;
 
         constraints.gridy = 19;
-        frame.add(cadastroButton, constraints);
+        panel.add(cadastroButton, constraints);
 
         //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o paciente
         cadastroButton.addMouseListener(new MouseAdapter(){
@@ -271,10 +255,9 @@ public class CadastroUI {
                 String password = new String(senha);
 
                 if(UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso)){
-                    JOptionPane.showMessageDialog(frame, "Cadastro do cliente realizado com sucesso!");
-                    frame.dispose();
+                    JOptionPane.showMessageDialog(panel, "Cadastro do cliente realizado com sucesso!");
                 }else{
-                    JOptionPane.showMessageDialog(frame,"Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(panel,"Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
                     usernameField.setText("");
                     cpfField.setText("");
                     emailField.setText("");
@@ -285,9 +268,9 @@ public class CadastroUI {
                     pesoField.setText("");
                     passwordField.setText("");
                 }
-
             }
         });
 
+        return panel;
     }
 }

@@ -14,7 +14,7 @@ public class TelaLogadaPacienteUI {
      * Método privado para a implementação da tela do paciente.
      * @param pacienteLogado Paciente logado no momento.
      */
-    protected static JPanel painelPaciente(Paciente pacienteLogado, ActionListener sairListener){
+    protected static JPanel painelPaciente(Paciente pacienteLogado){
         LoginUI.frame.setVisible(false);
 
         JPanel painelPaciente = new JPanel();
@@ -23,17 +23,8 @@ public class TelaLogadaPacienteUI {
         painelPaciente.setVisible(true);
         painelPaciente.setSize(600, 400);
 
-
         JTextArea infoMedicoLabel = new JTextArea("============Bem Vindo, " + pacienteLogado.getNome() + "!============");
         infoMedicoLabel.setEditable(false);
-
-
-        JButton verificarConsultaButton = new JButton("Verifica consultas");
-        JButton agendarConsultaButton = new JButton("Agendar nova consulta");
-        JButton laudoButton = new JButton("Verificar laudos");
-        JButton exameButton = new JButton("Verificar exames");
-        JButton sairButton = new JButton("Sair");
-
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
@@ -43,23 +34,82 @@ public class TelaLogadaPacienteUI {
         constraints.gridy = 1;
         painelPaciente.add(infoMedicoLabel, constraints);
 
-        constraints.gridy = 2;
-        painelPaciente.add(verificarConsultaButton, constraints);
-
-        constraints.gridy = 3;
-        painelPaciente.add(laudoButton, constraints);
-
-        constraints.gridy = 4;
-        painelPaciente.add(agendarConsultaButton, constraints);
-
-        constraints.gridy = 5;
-        painelPaciente.add(exameButton, constraints);
-
-        constraints.gridy = 6;
-        painelPaciente.add(sairButton, constraints);
-
-        sairButton.addActionListener(sairListener);
-
         return painelPaciente;
+    }
+
+    protected static JPanel telaVerificarConsulta() {
+        JPanel painelConsulta = new JPanel();
+
+        painelConsulta.setLayout(new GridBagLayout());
+        painelConsulta.setSize(800, 600);
+
+        JTextArea tempLabel = new JTextArea("Verificar a consulta");
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+
+        constraints.gridy = 1;
+        painelConsulta.add(tempLabel);
+
+        return painelConsulta;
+    }
+
+    protected static JPanel telaAgendarConsulta() {
+        JPanel painelConsulta = new JPanel();
+
+        painelConsulta.setLayout(new GridBagLayout());
+        painelConsulta.setSize(800, 600);
+
+        JTextArea tempLabel = new JTextArea("Agendar a consulta");
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+
+        constraints.gridy = 1;
+        painelConsulta.add(tempLabel);
+
+        return painelConsulta;
+    }
+
+    protected static JPanel telaVerificarLaudo() {
+        JPanel painelLaudo = new JPanel();
+
+        painelLaudo.setLayout(new GridBagLayout());
+        painelLaudo.setSize(800, 600);
+
+        JTextArea tempLabel = new JTextArea("Verificar o laudo");
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+
+        constraints.gridy = 1;
+        painelLaudo.add(tempLabel);
+
+        return painelLaudo;
+    }
+
+    protected static JPanel telaVerificarExame() {
+        JPanel painelExame = new JPanel();
+
+        painelExame.setLayout(new GridBagLayout());
+        painelExame.setSize(800, 600);
+
+        JTextArea tempLabel = new JTextArea("Verificar o exame");
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+
+        constraints.gridy = 1;
+        painelExame.add(tempLabel);
+
+        return painelExame;
     }
 }
