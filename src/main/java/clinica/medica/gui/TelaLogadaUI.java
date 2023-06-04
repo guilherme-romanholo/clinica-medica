@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class TelaLogadaUI extends JFrame implements ActionListener {
+    private String ultimaTela, telaAtual;
     private JPanel menuPanel;
     private JPanel contentPanel;
     private CardLayout cardLayout;
@@ -18,7 +19,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     public TelaLogadaUI(Usuario user) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Tela Logada");
-        setSize(800, 600);
+        setSize(1200, 800);
 
         menuPanel = new JPanel();
         menuPanel.setLayout(new BorderLayout());
@@ -38,17 +39,22 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         container.setLayout(new BorderLayout());
         container.add(menuPanel, BorderLayout.NORTH);
         container.add(contentPanel, BorderLayout.CENTER);
-
+        
+        telaAtual = "Principal";
         cardLayout.show(contentPanel, "Principal");
     }
 
     public void actionPerformed(ActionEvent e) {
         String nomePainel = e.getActionCommand();
-
         if (nomePainel.equals("Sair")){
             dispose();
             LoginUI.frame.setVisible(true);
+        }else if(nomePainel.equals("Voltar")){
+            cardLayout.show(contentPanel, ultimaTela);
+            telaAtual = ultimaTela;
         } else {
+            ultimaTela = telaAtual;
+            telaAtual = nomePainel;
             cardLayout.show(contentPanel, nomePainel);
         }
     }
@@ -70,9 +76,9 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         buttons.add(criaBotaoMenu("Principal"));
 
         if (user instanceof Medico) {
-            buttons.add(criaBotaoMenu("Prescrever exame"));
-            buttons.add(criaBotaoMenu("Prescrever laudo"));
-            buttons.add(criaBotaoMenu("Agendar consulta"));
+            buttons.add(criaBotaoMenu("Exames"));
+            buttons.add(criaBotaoMenu("Laudos"));
+            buttons.add(criaBotaoMenu("Consultas"));
             buttons.add(criaBotaoMenu("Cadastrar paciente"));
         } else if (user instanceof Paciente) {
             buttons.add(criaBotaoMenu("Verificar consultas"));
@@ -94,10 +100,12 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     public void criaPaineisConteudo(Usuario user) {
         if (user instanceof Medico) {
             contentPanel.add(TelaLogadaMedicoUI.painelMedico((Medico) user), "Principal");
-            contentPanel.add(TelaLogadaMedicoUI.telaPrescreverExame(), "Prescrever exame");
-            contentPanel.add(TelaLogadaMedicoUI.telaPrescreverLaudo(), "Prescrever laudo");
-            contentPanel.add(TelaLogadaMedicoUI.telaAgendarConsulta(), "Agendar consulta");
+            contentPanel.add(TelaLogadaMedicoUI.telaPrescreverExame((Medico) user, this), "Exames");
+            contentPanel.add(TelaLogadaMedicoUI.telaPrescreverLaudo(), "Laudos");
+            contentPanel.add(TelaLogadaMedicoUI.telaAgendarConsulta(), "Consultas");
             contentPanel.add(CadastroUI.cadastroPaciente(), "Cadastrar paciente");
+            contentPanel.add(TelaLogadaMedicoUI.telaNovoExame((Medico) user, this), "Prescrever novo exame");
+            contentPanel.add(TelaLogadaMedicoUI.showExames((Medico) user,this), "Verificar exames");
         } else if (user instanceof Paciente) {
             contentPanel.add(TelaLogadaPacienteUI.painelPaciente((Paciente) user), "Principal");
             contentPanel.add(TelaLogadaPacienteUI.telaVerificarConsulta(), "Verificar consultas");
