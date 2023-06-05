@@ -3,9 +3,11 @@ package clinica.medica.gui;
 import clinica.medica.database.UsuariosSQL;
 
 import javax.swing.*;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 
 public class CadastroUI {
 
@@ -29,7 +31,7 @@ public class CadastroUI {
     /**
      * Método privado para implementação da tela de cadastro do médico.
      */
-    private static void showCadastroMedico(){
+    private static void showCadastroMedico() {
         LoginUI.frame.setVisible(false);
 
         JFrame frame = new JFrame("Cadastro médico");
@@ -37,7 +39,7 @@ public class CadastroUI {
 
         frame.setLayout(new GridBagLayout());
         frame.setVisible(true);
-        frame.setSize(600, 400);
+        frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JLabel usernameLabel = new JLabel("Nome");
@@ -48,11 +50,13 @@ public class CadastroUI {
         JLabel passwordLabel = new JLabel("Senha");
 
         JTextField usernameField = new JTextField(20);
-        JTextField cpfField = new JTextField(20);
         JTextField emailField = new JTextField(20);
         JTextField areaField = new JTextField(20);
         JTextField crmField = new JTextField(20);
+
         JPasswordField passwordField = new JPasswordField(20);
+
+        JFormattedTextField cpfField = inicializaCpf();
 
         JButton cadastroButton = new JButton("Cadastrar");
 
@@ -103,7 +107,7 @@ public class CadastroUI {
         frame.add(cadastroButton, constraints);
 
         //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o médico
-        cadastroButton.addMouseListener(new MouseAdapter(){
+        cadastroButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 String nome = usernameField.getText();
@@ -114,12 +118,12 @@ public class CadastroUI {
                 char[] senha = passwordField.getPassword();
                 String password = new String(senha);
 
-                if(UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm)){
+                if (UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm)) {
                     JOptionPane.showMessageDialog(frame, "Cadastro realizado com sucesso!");
                     frame.dispose();
                     LoginUI.frame.setVisible(true);
-                }else{
-                    JOptionPane.showMessageDialog(frame,"Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
                     usernameField.setText("");
                     cpfField.setText("");
                     emailField.setText("");
@@ -135,13 +139,11 @@ public class CadastroUI {
     /**
      * Método privado para a implementação da tela de cadastro do paciente.
      */
-    protected static JPanel cadastroPaciente(){
-        String[] sexo = {"Masculino","Feminino","Nenhum"};
+    protected static JPanel cadastroPaciente() {
+        String[] sexo = {"Masculino", "Feminino", "Nenhum"};
         JPanel panel = new JPanel();
 
         panel.setLayout(new GridBagLayout());
-        //panel.setVisible(true);
-        //panel.setSize(1000, 1000);
 
         JLabel usernameLabel = new JLabel("Nome");
         JLabel cpfLabel = new JLabel("CPF");
@@ -154,9 +156,10 @@ public class CadastroUI {
         JLabel passwordLabel = new JLabel("Senha");
 
         JTextField usernameField = new JTextField(20);
-        JTextField cpfField = new JTextField(20);
         JTextField emailField = new JTextField(20);
         JTextField enderecoField = new JTextField(20);
+
+        JFormattedTextField cpfField = inicializaCpf();
 
         JComboBox sexoCombo = new JComboBox(sexo);
         sexoCombo.setSelectedIndex(2);
@@ -234,30 +237,30 @@ public class CadastroUI {
         panel.add(cadastroButton, constraints);
 
         //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o paciente
-        cadastroButton.addMouseListener(new MouseAdapter(){
+        cadastroButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int idade = 0;
-                double altura =0, peso = 0;
+                double altura = 0, peso = 0;
                 String nome = usernameField.getText();
                 String cpf = cpfField.getText();
                 String email = emailField.getText();
                 String endereco = enderecoField.getText();
-                String sexo = (String)sexoCombo.getSelectedItem();
-                try{
+                String sexo = (String) sexoCombo.getSelectedItem();
+                try {
                     idade = Integer.parseInt(idadeField.getText());
                     altura = Double.parseDouble(alturaField.getText());
                     peso = Double.parseDouble(pesoField.getText());
-                }catch(NumberFormatException r){
-
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
                 }
                 char[] senha = passwordField.getPassword();
                 String password = new String(senha);
 
-                if(UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso)){
+                if (UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso)) {
                     JOptionPane.showMessageDialog(panel, "Cadastro do cliente realizado com sucesso!");
-                }else{
-                    JOptionPane.showMessageDialog(panel,"Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(panel, "Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
                     usernameField.setText("");
                     cpfField.setText("");
                     emailField.setText("");
@@ -272,5 +275,20 @@ public class CadastroUI {
         });
 
         return panel;
+    }
+
+    public static JFormattedTextField inicializaCpf() {
+        JFormattedTextField cpfTest;
+
+        try {
+            MaskFormatter cpfMask = new MaskFormatter("###.###.###-##");
+            cpfTest = new JFormattedTextField(cpfMask);
+            cpfTest.setColumns(20);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            cpfTest = new JFormattedTextField();
+        }
+
+        return cpfTest;
     }
 }
