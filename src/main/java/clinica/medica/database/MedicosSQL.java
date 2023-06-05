@@ -17,11 +17,11 @@ public class MedicosSQL {
     public static boolean cadastrarNovoExame(String tipo, String cpf, String crm, Date data, String comentario){
         boolean cadastro = false;
         String queryVerificacao = "SELECT * FROM pacientes WHERE cpf = ?";
-        String query = "INSERT INTO exames (tipo, paciente, medicoSolicitante, comentario, data) VALUES(?, ?, ?, ?, ?)";
+        String query = "INSERT INTO exames (tipo, paciente, medicoSolicitante, comentario, data) VALUES (?, ?, ?, ?, ?)";
         
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
-        
+
         try {
             PreparedStatement pstmt = connection.getConn().prepareStatement(queryVerificacao);
             pstmt.setString(1, cpf);  

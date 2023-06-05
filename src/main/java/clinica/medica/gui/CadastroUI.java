@@ -106,12 +106,13 @@ public class CadastroUI {
         constraints.gridy = 13;
         frame.add(cadastroButton, constraints);
 
-        //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o médico
+        //Quando clica no botão para cadastrar, pega os dados e chama a função de cadastrar o médico
         cadastroButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 String nome = usernameField.getText();
                 String cpf = cpfField.getText();
+                cpf = cpf.replaceAll("[.-]", "");
                 String email = emailField.getText();
                 String area = areaField.getText();
                 String crm = crmField.getText();
@@ -161,7 +162,7 @@ public class CadastroUI {
 
         JFormattedTextField cpfField = inicializaCpf();
 
-        JComboBox sexoCombo = new JComboBox(sexo);
+        JComboBox<String> sexoCombo = new JComboBox<>(sexo);
         sexoCombo.setSelectedIndex(2);
 
         JTextField idadeField = new JTextField(20);
@@ -236,7 +237,7 @@ public class CadastroUI {
         constraints.gridy = 19;
         panel.add(cadastroButton, constraints);
 
-        //Quando clica no botão pra cadastrar, pega os dados e chama a função de cadastrar o paciente
+        //Quando clica no botão para cadastrar, pega os dados e chama a função de cadastrar o paciente
         cadastroButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -244,6 +245,7 @@ public class CadastroUI {
                 double altura = 0, peso = 0;
                 String nome = usernameField.getText();
                 String cpf = cpfField.getText();
+                cpf = cpf.replaceAll("[.-]", "");
                 String email = emailField.getText();
                 String endereco = enderecoField.getText();
                 String sexo = (String) sexoCombo.getSelectedItem();

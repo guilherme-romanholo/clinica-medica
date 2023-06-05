@@ -71,7 +71,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         JPanel menuButtonsPanel = new JPanel();
         menuButtonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
-        ArrayList<JButton> buttons = new ArrayList<JButton>();
+        ArrayList<JButton> buttons = new ArrayList<>();
 
         buttons.add(criaBotaoMenu("Principal"));
 
@@ -100,7 +100,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     public void criaPaineisConteudo(Usuario user) {
         if (user instanceof Medico) {
             contentPanel.add(TelaLogadaMedicoUI.painelMedico((Medico) user), "Principal");
-            contentPanel.add(TelaLogadaMedicoUI.telaPrescreverExame((Medico) user, this), "Exames");
+            contentPanel.add(TelaLogadaMedicoUI.telaPrescreverExame(this), "Exames");
             contentPanel.add(TelaLogadaMedicoUI.telaPrescreverLaudo(), "Laudos");
             contentPanel.add(TelaLogadaMedicoUI.telaAgendarConsulta(), "Consultas");
             contentPanel.add(CadastroUI.cadastroPaciente(), "Cadastrar paciente");
@@ -113,6 +113,17 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
             contentPanel.add(TelaLogadaPacienteUI.telaVerificarExame(), "Verificar exames");
             contentPanel.add(TelaLogadaPacienteUI.telaAgendarConsulta(), "Agendar consulta");
         }
+    }
+
+    public void atualizaPainel(Usuario user) {
+        Component[] components = contentPanel.getComponents();
+
+        for (Component comp : components) {
+                contentPanel.remove(comp);
+        }
+
+        criaPaineisConteudo(user);
+        cardLayout.show(contentPanel, telaAtual);
     }
 
     public static void mostrarTela(Usuario user) {

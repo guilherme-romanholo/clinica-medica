@@ -1,13 +1,11 @@
 package clinica.medica.gui;
 
 import clinica.medica.database.MedicosSQL;
-import clinica.medica.database.UsuariosSQL;
 import clinica.medica.documentos.Exame;
 import clinica.medica.usuarios.Medico;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
@@ -43,7 +41,7 @@ public class TelaLogadaMedicoUI {
         return painelMedico;
     }
 
-    protected static JPanel telaPrescreverExame(Medico medicoLogado, TelaLogadaUI telaLogada) {
+    protected static JPanel telaPrescreverExame(TelaLogadaUI telaLogada) {
         JPanel painelExame = new JPanel();
 
         painelExame.setLayout(new GridBagLayout());
@@ -142,9 +140,10 @@ public class TelaLogadaMedicoUI {
         JLabel tipoLabel = new JLabel("Tipo de exame");
         JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
         JLabel comentarioLabel = new JLabel("Comentários");
-        
+
+        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
+
         JTextField tipoField = new JTextField(20);
-        JTextField cpfField = new JTextField(20);
         JTextArea comentarioArea = new JTextArea(20,40);
         comentarioArea.setEditable(true);
         comentarioArea.setLineWrap(true);
@@ -192,9 +191,11 @@ public class TelaLogadaMedicoUI {
             public void mouseClicked(MouseEvent e) {
                 String tipo = tipoField.getText();
                 String cpf = cpfField.getText();
+                cpf = cpf.replaceAll("[.-]", "");
                 String comentario = comentarioArea.getText();
                if(MedicosSQL.cadastrarNovoExame(tipo, cpf, medicoLogado.getCRM(), new Date(2023,6,4), comentario)){
                    JOptionPane.showMessageDialog(painelExame, "Cadastro de exame realizado com sucesso!");
+                   telaLogada.atualizaPainel(medicoLogado);
                }else{
                     JOptionPane.showMessageDialog(painelExame,"Não foi possível cadastrar o exame, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
                     tipoField.setText("");
@@ -245,6 +246,5 @@ public class TelaLogadaMedicoUI {
         painelExame.add(voltarButton,constraints);
         
         return painelExame;
-        
     }
 }

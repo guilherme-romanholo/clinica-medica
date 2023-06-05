@@ -29,7 +29,7 @@ public class LoginUI {
     }
 
     /**
-     * Método privado para a implementação da tela de login.
+     * Método privado para a implementação da tela de 'login'.
      */
     private static void showLogin() {
         frame = new JFrame("Login");
