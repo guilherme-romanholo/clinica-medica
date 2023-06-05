@@ -131,7 +131,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
             @Override
             public void run() {
                 try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -7,6 +7,8 @@ import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.ParseException;
 
 public class CadastroUI {
@@ -16,7 +18,7 @@ public class CadastroUI {
      */
     public static void telaCadastroMedico() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {
             System.out.println("Não foi possível utilizar o recurso Look and Feel");
         }
@@ -133,6 +135,13 @@ public class CadastroUI {
                     passwordField.setText("");
                 }
 
+            }
+        });
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                LoginUI.frame.setVisible(true);
             }
         });
     }

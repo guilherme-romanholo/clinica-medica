@@ -3,10 +3,14 @@ package clinica.medica.gui;
 import clinica.medica.database.UsuariosSQL;
 import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class LoginUI {
     protected static JFrame frame;
@@ -16,7 +20,7 @@ public class LoginUI {
      */
     public static void chamarTela() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {
             System.out.println("Não foi possível utilizar o recurso Look and Feel");
         }
@@ -32,12 +36,16 @@ public class LoginUI {
      * Método privado para a implementação da tela de 'login'.
      */
     private static void showLogin() {
+        JPanel painel = new JPanel();
         frame = new JFrame("Login");
 
-        frame.setLayout(new GridBagLayout());
+        frame.setLayout(new BorderLayout());
         frame.setVisible(true);
-        frame.setSize(600, 400);
+        frame.setResizable(false);
+        frame.setSize(1400, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        painel.setLayout(new GridBagLayout());
 
         JLabel usernameLabel = new JLabel("Email");
         JLabel passwordLabel = new JLabel("Senha");
@@ -50,56 +58,67 @@ public class LoginUI {
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
-        constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
+        constraints.insets = new Insets(5, 230, 5, 5);
+        constraints.gridx = 1;
 
         constraints.gridy = 1;
-        frame.add(usernameLabel, constraints);
+        painel.add(usernameLabel, constraints);
 
         constraints.gridy = 2;
-        frame.add(usernameField, constraints);
+        painel.add(usernameField, constraints);
 
         constraints.gridy = 3;
-        frame.add(passwordLabel, constraints);
+        painel.add(passwordLabel, constraints);
 
         constraints.gridy = 4;
-        frame.add(passwordField, constraints);
+        painel.add(passwordField, constraints);
 
         constraints.anchor = GridBagConstraints.CENTER;
 
         constraints.gridy = 5;
-        frame.add(loginButton, constraints);
+        painel.add(loginButton, constraints);
 
         constraints.gridy = 6;
-        frame.add(cadastroButton, constraints);
+        painel.add(cadastroButton, constraints);
+
+        frame.add(painel, BorderLayout.WEST);
+
+        try {
+            BufferedImage logo = ImageIO.read(LoginUI.class.getResourceAsStream("/images/logo.png"));
+            ImageIcon logoIcon = new ImageIcon(logo);
+            JLabel logoLabel = new JLabel(logoIcon);
+            frame.add(logoLabel, BorderLayout.EAST);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //ativa quando eu clico com o mouse no botão
-        cadastroButton.addMouseListener(new MouseAdapter(){
-             @Override
+        cadastroButton.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 CadastroUI.telaCadastroMedico();
             }
         });
-        
-        loginButton.addMouseListener(new MouseAdapter(){
-             @Override
+
+        loginButton.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 String email = usernameField.getText();
                 char[] senha = passwordField.getPassword();
                 String password = new String(senha);
                 Paciente pacienteLogado = UsuariosSQL.loginPaciente(email, password);
                 Medico medicoLogado = UsuariosSQL.loginMedico(email, password);
-                
-                if(medicoLogado != null){
+
+                if (medicoLogado != null) {
                     TelaLogadaUI.mostrarTela(medicoLogado);
                     usernameField.setText("");
                     passwordField.setText("");
-                }else if(pacienteLogado != null){
+                } else if (pacienteLogado != null) {
                     TelaLogadaUI.mostrarTela(pacienteLogado);
                     usernameField.setText("");
                     passwordField.setText("");
-                }else{
-                    JOptionPane.showMessageDialog(frame,"Não foi possível logar o médico/paciente, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(painel, "Não foi possível logar o médico/paciente, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
                     usernameField.setText("");
                     passwordField.setText("");
                 }
