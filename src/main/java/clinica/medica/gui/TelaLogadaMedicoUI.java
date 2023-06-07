@@ -2,14 +2,18 @@ package clinica.medica.gui;
 
 import clinica.medica.database.MedicosSQL;
 import clinica.medica.documentos.Exame;
+import static clinica.medica.gui.LoginUI.frame;
 import clinica.medica.usuarios.Medico;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 
 public class TelaLogadaMedicoUI {
 
@@ -246,5 +250,25 @@ public class TelaLogadaMedicoUI {
         painelExame.add(voltarButton,constraints);
         
         return painelExame;
+    }
+    
+    protected void imprimirExame(Medico medicoLogado,Exame exame){
+        JFrame exameFrame = new JFrame("Exame - " + exame.getPaciente().getNome() + " - " + exame.getTipo());
+        JPanel topoPanel = new JPanel();
+        BorderLayout borderLayout = new BorderLayout();
+        topoPanel.setLayout(borderLayout);
+        
+        /*try {
+            BufferedImage logo = ImageIO.read(LoginUI.class.getResourceAsStream("/images/logo.png"));
+            ImageIcon logoIcon = new ImageIcon(logo);
+            JLabel logoLabel = new JLabel(logoIcon);
+            frame.add(logoLabel, BorderLayout.WEST);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        
+        JLabel enderecoLabel = new JLabel("Rua Cristovão Colombo - (17) 3222-3174");
+        topoPanel.add(enderecoLabel, BorderLayout.CENTER);
+        
     }
 }
