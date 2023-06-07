@@ -293,6 +293,7 @@ public class CadastroUI {
 
         try {
             MaskFormatter cpfMask = new MaskFormatter("###.###.###-##");
+            cpfMask.setPlaceholderCharacter('_');
             cpfTest = new JFormattedTextField(cpfMask);
             cpfTest.setColumns(20);
         } catch (ParseException e) {

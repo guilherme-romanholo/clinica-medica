@@ -1,7 +1,10 @@
 package clinica.medica.documentos;
 
+import clinica.medica.database.ExamesSQL;
+import clinica.medica.database.SQLiteConnection;
 import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
+
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,18 +16,26 @@ public class Exame {
     private Medico medicoSolicitante;
     private Date data;
     private String comentario;
-    
-    public Exame(ResultSet rs){
-        try{
+
+    public Exame(int id) {
+        SQLiteConnection connection = new SQLiteConnection();
+
+        connection.conectar();
+
+        ResultSet rs = ExamesSQL.selectAllFromExames(id, connection.getConn());
+
+        try {
             this.id = rs.getInt("id");
             this.tipo = rs.getString("tipo");
             this.paciente = new Paciente(rs.getString("paciente"));
             this.medicoSolicitante = new Medico(rs.getString("medicoSolicitante"));
-            this.data = new Date(2023,6,4);
-            this.comentario =rs.getString("comentario");
-        }catch(SQLException e){
-            
+            this.data = rs.getDate("data");
+            this.comentario = rs.getString("comentario");
+        } catch (SQLException e) {
+
         }
+
+        connection.desconectar();
     }
 
     /**

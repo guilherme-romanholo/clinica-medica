@@ -64,7 +64,7 @@ public class MedicosSQL {
             ResultSet rs = pstmt.executeQuery();
 
             while(rs.next()) {
-                exames.add(new Exame(rs));
+                exames.add(new Exame(rs.getInt("id")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
