@@ -28,7 +28,7 @@ public class Exame {
             this.id = rs.getInt("id");
             this.tipo = rs.getString("tipo");
             this.paciente = new Paciente(rs.getString("paciente"));
-            this.medicoSolicitante = new Medico(rs.getString("medicoSolicitante"));
+            this.setMedicoSolicitante(new Medico(rs.getString("medicoSolicitante")));
             this.data = rs.getDate("data");
             this.comentario = rs.getString("comentario");
         } catch (SQLException e) {

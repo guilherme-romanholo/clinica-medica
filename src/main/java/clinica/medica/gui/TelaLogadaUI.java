@@ -101,16 +101,18 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         if (user instanceof Medico) {
             contentPanel.add(TelaLogadaMedicoUI.painelMedico((Medico) user), "Principal");
             contentPanel.add(TelaLogadaMedicoUI.telaPrescreverExame(this), "Exames");
-            contentPanel.add(TelaLogadaMedicoUI.telaPrescreverLaudo(), "Laudos");
+            contentPanel.add(TelaLogadaMedicoUI.telaPrescreverLaudo(this), "Laudos");
             contentPanel.add(TelaLogadaMedicoUI.telaAgendarConsulta(), "Consultas");
             contentPanel.add(CadastroUI.cadastroPaciente(), "Cadastrar paciente");
             contentPanel.add(TelaLogadaMedicoUI.telaNovoExame((Medico) user, this), "Prescrever novo exame");
             contentPanel.add(TelaLogadaMedicoUI.showExames((Medico) user,this), "Verificar exames");
+            contentPanel.add(TelaLogadaMedicoUI.showExamesLaudo((Medico) user,this), "Prescrever novo laudo");
+            contentPanel.add(TelaLogadaMedicoUI.showLaudos((Medico) user,this), "Verificar laudos");
         } else if (user instanceof Paciente) {
             contentPanel.add(TelaLogadaPacienteUI.painelPaciente((Paciente) user), "Principal");
             contentPanel.add(TelaLogadaPacienteUI.telaVerificarConsulta(), "Verificar consultas");
-            contentPanel.add(TelaLogadaPacienteUI.telaVerificarLaudo(), "Verificar laudos");
-            contentPanel.add(TelaLogadaPacienteUI.telaVerificarExame(), "Verificar exames");
+            contentPanel.add(TelaLogadaPacienteUI.telaVerificarLaudo((Paciente) user, this), "Verificar laudos");
+            contentPanel.add(TelaLogadaPacienteUI.telaVerificarExame((Paciente) user, this), "Verificar exames");
             contentPanel.add(TelaLogadaPacienteUI.telaAgendarConsulta(), "Agendar consulta");
         }
     }

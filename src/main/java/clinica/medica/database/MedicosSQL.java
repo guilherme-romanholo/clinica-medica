@@ -2,6 +2,7 @@
 package clinica.medica.database;
 
 import clinica.medica.documentos.Exame;
+import clinica.medica.documentos.Laudo;
 import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
 import java.sql.Connection;
@@ -50,6 +51,31 @@ public class MedicosSQL {
 
         return cadastro;
     }
+
+    public static boolean cadastrarNovoLaudo(int idExame, String cpf, String crm, Date data, String conteudo){
+        boolean cadastro = false;
+        String query = "INSERT INTO laudos (exame, medicoSolicitante, paciente, data, conteudo) VALUES (?, ?, ?, ?, ?)";
+
+        SQLiteConnection connection = new SQLiteConnection();
+        connection.conectar();
+
+        try {
+            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
+            pstmt.setInt(1, idExame);
+            pstmt.setString(2, crm);
+            pstmt.setString(3, cpf);
+            pstmt.setDate(4, data);
+            pstmt.setString(5, conteudo);
+            pstmt.executeUpdate();
+            cadastro = true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        connection.desconectar();
+
+        return cadastro;
+    }
     
     public static ArrayList<Exame> verificarExames(String crm){
         ArrayList<Exame> exames = new ArrayList();
@@ -73,5 +99,29 @@ public class MedicosSQL {
         connection.desconectar();
 
         return exames;
+    }
+
+    public static ArrayList<Laudo> verificarLaudos(String crm){
+        ArrayList<Laudo> laudos = new ArrayList();
+        String query = "SELECT * FROM laudos WHERE medicoSolicitante = ?";
+
+        SQLiteConnection connection = new SQLiteConnection();
+        connection.conectar();
+
+        try{
+            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
+            pstmt.setString(1, crm);
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                laudos.add(new Laudo(rs.getInt("exame")));
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+        connection.desconectar();
+
+        return laudos;
     }
 }
