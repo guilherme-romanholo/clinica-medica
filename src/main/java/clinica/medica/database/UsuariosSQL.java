@@ -6,12 +6,36 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Classe para realizar a consulta das informações referentes aos
  * usuarios no banco de dados.
  */
 public class UsuariosSQL {
+
+    public static ArrayList<Paciente> selectAllPacientes() {
+        String query = "SELECT * FROM pacientes";
+        ArrayList<Paciente> pacientes = new ArrayList<>();
+        ResultSet rs = null;
+
+        SQLiteConnection connection = new SQLiteConnection();
+        connection.conectar();
+
+        try {
+            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                pacientes.add(new Paciente(rs.getString("cpf")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Usuário não foi encontrado.");
+        }
+
+        connection.desconectar();
+
+        return pacientes;
+    }
     /**
      * Método para leitura dos dados, referentes à classe Usuario,
      * presentes no banco de dados.

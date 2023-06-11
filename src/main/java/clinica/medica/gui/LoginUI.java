@@ -42,7 +42,7 @@ public class LoginUI {
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
         frame.setResizable(false);
-        frame.setSize(1400, 700);
+        frame.setSize(1300, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         painel.setLayout(new GridBagLayout());
@@ -58,7 +58,7 @@ public class LoginUI {
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
-        constraints.insets = new Insets(5, 230, 5, 5);
+        constraints.insets = new Insets(5, 200, 5, 5);
         constraints.gridx = 1;
 
         constraints.gridy = 1;
