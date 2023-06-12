@@ -8,7 +8,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Laudo {
+public class Laudo implements Imprimivel {
     private Exame exame;
     private String clinica;
     private Medico medicoSolicitante;
@@ -37,6 +37,45 @@ public class Laudo {
         connection.desconectar();
     }
 
+    // --------------------- Métodos da Interface ---------------------
+    @Override
+    public String imprimeTipo() {
+        return "Laudo";
+    }
+    @Override
+    public String imprimeInfo() {
+        return "Laudo referente ao exame: " + exame.getTipo() + " - id: " + exame.getId();
+    }
+    @Override
+    public String imprimeNomePaciente() {
+        return "Nome: " + paciente.getNome();
+    }
+    @Override
+    public String imprimeIdade() {
+        return "Idade: " + paciente.getIdade();
+    }
+    @Override
+    public String imprimeSexo() {
+        return "Sexo: " + paciente.getSexo();
+    }
+    @Override
+    public String imprimeData() {
+        return "Data do laudo: " + data;
+    }
+    @Override
+    public String imprimeComentarios() {
+        return "Informações:\n" + conteudo;
+    }
+    @Override
+    public String imprimeNomeMedico() {
+        return "Dr. " + medicoSolicitante.getNome();
+    }
+    @Override
+    public String imprimeCrmAtuacaoMedico() {
+        return "CRM " + medicoSolicitante.getCRM() + " - " + medicoSolicitante.getAreaAtuacao();
+    }
+
+    // --------------------- Getters e Setters ---------------------
     public Exame getExame() {
         return exame;
     }

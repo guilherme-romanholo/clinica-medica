@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Exame {
+public class Exame implements Imprimivel {
     private int id;
     private String tipo;
     private Paciente paciente;
@@ -28,16 +28,55 @@ public class Exame {
             this.id = rs.getInt("id");
             this.tipo = rs.getString("tipo");
             this.paciente = new Paciente(rs.getString("paciente"));
-            this.setMedicoSolicitante(new Medico(rs.getString("medicoSolicitante")));
+            this.medicoSolicitante = new Medico(rs.getString("medicoSolicitante"));
             this.data = rs.getDate("data");
             this.comentario = rs.getString("comentario");
         } catch (SQLException e) {
-
+            System.out.println("Não foi possível instanciar o exame.");
         }
 
         connection.desconectar();
     }
 
+    // --------------------- Métodos da Interface ---------------------
+    @Override
+    public String imprimeTipo() {
+        return "Exame";
+    }
+    @Override
+    public String imprimeInfo() {
+        return tipo + " - id: " + id;
+    }
+    @Override
+    public String imprimeNomePaciente() {
+        return "Nome: " + paciente.getNome();
+    }
+    @Override
+    public String imprimeIdade() {
+        return "Idade: " + paciente.getIdade();
+    }
+    @Override
+    public String imprimeSexo() {
+        return "Sexo: " + paciente.getSexo();
+    }
+    @Override
+    public String imprimeData() {
+        return "Data do exame: " + data;
+    }
+    @Override
+    public String imprimeComentarios() {
+        return "Informações:\n" + comentario;
+    }
+    @Override
+    public String imprimeNomeMedico() {
+        return "Dr. " + medicoSolicitante.getNome();
+    }
+    @Override
+    public String imprimeCrmAtuacaoMedico() {
+        return "CRM " + medicoSolicitante.getCRM() + " - " + medicoSolicitante.getAreaAtuacao();
+    }
+
+    // --------------------- Getters e Setters ---------------------
     /**
      * @return the id
      */
@@ -46,24 +85,10 @@ public class Exame {
     }
 
     /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
      * @return the tipo
      */
     public String getTipo() {
         return tipo;
-    }
-
-    /**
-     * @param tipo the tipo to set
-     */
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 
     /**
@@ -88,13 +113,6 @@ public class Exame {
     }
 
     /**
-     * @param medicoSolicitante the medicoSolicitante to set
-     */
-    public void setMedicoSolicitante(Medico medicoSolicitante) {
-        this.medicoSolicitante = medicoSolicitante;
-    }
-
-    /**
      * @return the data
      */
     public Date getData() {
@@ -102,23 +120,9 @@ public class Exame {
     }
 
     /**
-     * @param data the data to set
-     */
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    /**
      * @return the comentario
      */
     public String getComentario() {
         return comentario;
-    }
-
-    /**
-     * @param comentario the comentario to set
-     */
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
     }
 }

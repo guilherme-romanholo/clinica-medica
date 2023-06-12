@@ -7,6 +7,7 @@ import clinica.medica.documentos.Exame;
 
 import static clinica.medica.gui.LoginUI.frame;
 
+import clinica.medica.documentos.Imprimivel;
 import clinica.medica.documentos.Laudo;
 import clinica.medica.documentos.Receita;
 import clinica.medica.usuarios.Medico;
@@ -466,7 +467,7 @@ public class TelaLogadaMedicoUI {
                 String[] elementos = exameSelecionado.split("-");
                 int id = Integer.parseInt(elementos[3].strip());
                 Exame exame = new Exame(id);
-                TelaLogadaMedicoUI.imprimirExame(exame);
+                TelaLogadaMedicoUI.imprimirDocumento(exame);
             }
         });
 
@@ -574,7 +575,7 @@ public class TelaLogadaMedicoUI {
                 String[] elementos = laudoSelecionado.split("-");
                 int id = Integer.parseInt(elementos[3].strip());
                 Laudo laudo = new Laudo(id);
-                TelaLogadaMedicoUI.imprimirLaudo(laudo);
+                TelaLogadaMedicoUI.imprimirDocumento(laudo);
             }
         });
 
@@ -681,30 +682,42 @@ public class TelaLogadaMedicoUI {
                 int id = Integer.parseInt(elementos[3].strip());
 
                 Receita receita = new Receita(id);
-                TelaLogadaMedicoUI.imprimirReceita(receita);
+                TelaLogadaMedicoUI.imprimirDocumento(receita);
             }
         });
 
         return painelReceita;
     }
 
-    protected static void imprimirExame(Exame exame) {
-        JFrame exameFrame = new JFrame("Exame - " + exame.getPaciente().getNome() + " - " + exame.getTipo());
+    protected static <T extends Imprimivel> void imprimirDocumento(T documento) {
+        JFrame documentFrame = new JFrame(documento.imprimeTipo());
 
-        exameFrame.setLayout(new BorderLayout());
-        exameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        exameFrame.setSize(1200, 800);
+        documentFrame.setLayout(new BorderLayout());
+        documentFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(5, 5, 5, 5);
 
         // ============ Painéis ============
+        JPanel logoPanel = new JPanel();
+        logoPanel.setLayout(new GridBagLayout());
+        logoPanel.setBackground(Color.WHITE);
+        logoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
+
+        JPanel infosTopoPanel = new JPanel();
+        infosTopoPanel.setLayout(new GridBagLayout());
+        infosTopoPanel.setBackground(Color.WHITE);
+
         JPanel topoPanel = new JPanel();
-        topoPanel.setLayout(new GridBagLayout());
+        topoPanel.setLayout(new BoxLayout(topoPanel, BoxLayout.X_AXIS));
         topoPanel.setBackground(Color.WHITE);
 
+        JPanel infosCentralPanel = new JPanel(new GridBagLayout());
+        infosCentralPanel.setLayout(new GridBagLayout());
+        infosCentralPanel.setBackground(Color.WHITE);
+        infosCentralPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+
         JPanel centralPanel = new JPanel();
-        centralPanel.setLayout(new GridBagLayout());
+        centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.Y_AXIS));
         centralPanel.setBackground(Color.WHITE);
         centralPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
 
@@ -717,65 +730,82 @@ public class TelaLogadaMedicoUI {
         // ============ Logo ============
         constraints.gridx = 0;
         constraints.gridy = 0;
+        constraints.gridheight = 2;
 
         try {
             BufferedImage logo = ImageIO.read(TelaLogadaMedicoUI.class.getResourceAsStream("/images/logoDocs.png"));
             ImageIcon logoIcon = new ImageIcon(logo);
             JLabel logoLabel = new JLabel(logoIcon);
-            topoPanel.add(logoLabel, constraints);
+            logoPanel.add(logoLabel, constraints);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        // ============ Tipo do Documento ============
+        JLabel tipoDocumentoLabel = new JLabel(documento.imprimeTipo());
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        constraints.gridheight = 1;
+        constraints.fill = GridBagConstraints.VERTICAL;
+        infosTopoPanel.add(tipoDocumentoLabel, constraints);
+
         // ============ Endereço Clínica ============
         JLabel enderecoClinicaLabel = new JLabel("Rua Cristovão Colombo - (17) 3222-3174");
 
-        constraints.gridx = 1;
-        constraints.gridy = 0;
+        constraints.gridx = 0;
+        constraints.gridy = 1;
         constraints.gridwidth = 2;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        topoPanel.add(enderecoClinicaLabel, constraints);
+        constraints.gridheight = 1;
+        constraints.fill = GridBagConstraints.BOTH;
+        infosTopoPanel.add(enderecoClinicaLabel, constraints);
+
+        topoPanel.add(logoPanel);
+        topoPanel.add(infosTopoPanel);
 
         // ---------------------------------- MEIO ------------------------------------------
+        constraints.insets = new Insets(0, 0, 0, 0);
 
-        // ============ Tipo Exame ============
-        JLabel tipoExameLabel = new JLabel(exame.getTipo() + " - Id: " + exame.getId());
+        // ============ Info Documento ============
+        JLabel docInfoLabel = new JLabel(documento.imprimeInfo());
 
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 3;
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        centralPanel.add(tipoExameLabel, constraints);
+        infosCentralPanel.add(docInfoLabel, constraints);
 
         // ============ Infos Paciente ============
-        JLabel nomePacienteLabel = new JLabel("Nome: " + exame.getPaciente().getNome());
-        JLabel idadeLabel = new JLabel("Idade: " + exame.getPaciente().getIdade());
-        JLabel sexoLabel = new JLabel("Sexo: " + exame.getPaciente().getSexo());
-        JLabel dataLabel = new JLabel("Data do exame: " + exame.getData());
+        JLabel nomePacienteLabel = new JLabel(documento.imprimeNomePaciente());
+        JLabel idadeLabel = new JLabel(documento.imprimeIdade());
+        JLabel sexoLabel = new JLabel(documento.imprimeSexo());
+        JLabel dataLabel = new JLabel(documento.imprimeData());
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        constraints.gridwidth = 1;
-        centralPanel.add(nomePacienteLabel, constraints);
+        infosCentralPanel.add(nomePacienteLabel, constraints);
         constraints.gridy = 2;
-        centralPanel.add(idadeLabel, constraints);
+        infosCentralPanel.add(idadeLabel, constraints);
         constraints.gridy = 3;
-        centralPanel.add(sexoLabel, constraints);
+        infosCentralPanel.add(sexoLabel, constraints);
         constraints.gridy = 4;
-        centralPanel.add(dataLabel, constraints);
+        infosCentralPanel.add(dataLabel, constraints);
+
+        centralPanel.add(infosCentralPanel);
 
         // ============ Comentário do Médico ============
-        JLabel comentarioLabel = new JLabel("<html>Comentário: " + exame.getComentario() + "</html>");
-        comentarioLabel.setSize(200, 100);
+        JLabel comentariosLabel = new JLabel("<html>" + documento.imprimeComentarios() + "</html>");
+        comentariosLabel.setBackground(Color.WHITE);
+        comentariosLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        constraints.gridy = 5;
-        centralPanel.add(comentarioLabel, constraints);
+        centralPanel.add(comentariosLabel);
 
         // ---------------------------------- Final ------------------------------------------
 
         // ============ Infos do Médico ============
-        JLabel medicoLabel = new JLabel("Dr. " + exame.getMedicoSolicitante().getNome());
-        JLabel infoMedicoLabel = new JLabel("CRM " + exame.getMedicoSolicitante().getCRM() + " - " + exame.getMedicoSolicitante().getAreaAtuacao());
+        JLabel medicoLabel = new JLabel(documento.imprimeNomeMedico());
+        JLabel infoMedicoLabel = new JLabel(documento.imprimeCrmAtuacaoMedico());
 
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -788,247 +818,21 @@ public class TelaLogadaMedicoUI {
         Font fonteGrande = new Font(enderecoClinicaLabel.getFont().getFontName(), enderecoClinicaLabel.getFont().getStyle(), 30);
         Font fontePequena = new Font(enderecoClinicaLabel.getFont().getFontName(), enderecoClinicaLabel.getFont().getStyle(), 15);
 
+        tipoDocumentoLabel.setFont(fonteGrande);
         enderecoClinicaLabel.setFont(fonteGrande);
-        tipoExameLabel.setFont(fontePequena);
+        docInfoLabel.setFont(fontePequena);
         nomePacienteLabel.setFont(fontePequena);
         idadeLabel.setFont(fontePequena);
         sexoLabel.setFont(fontePequena);
         dataLabel.setFont(fontePequena);
-        comentarioLabel.setFont(fontePequena);
+        comentariosLabel.setFont(fontePequena);
 
         // ============ Ajuste Frame ============
-        exameFrame.add(topoPanel, BorderLayout.NORTH);
-        exameFrame.add(centralPanel, BorderLayout.CENTER);
-        exameFrame.add(finalPanel, BorderLayout.SOUTH);
-        exameFrame.setVisible(true);
-    }
-    protected static void imprimirLaudo(Laudo laudo) {
-        JFrame laudoFrame = new JFrame("Exame - " + laudo.getPaciente().getNome() + " - " + laudo.getExame().getTipo());
-
-        laudoFrame.setLayout(new BorderLayout());
-        laudoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        laudoFrame.setSize(1200, 800);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(5, 5, 5, 5);
-
-        // ============ Painéis ============
-        JPanel topoPanel = new JPanel();
-        topoPanel.setLayout(new GridBagLayout());
-        topoPanel.setBackground(Color.WHITE);
-
-        JPanel centralPanel = new JPanel();
-        centralPanel.setLayout(new GridBagLayout());
-        centralPanel.setBackground(Color.WHITE);
-        centralPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
-
-        JPanel finalPanel = new JPanel();
-        finalPanel.setLayout(new GridBagLayout());
-        finalPanel.setBackground(Color.WHITE);
-
-        // ---------------------------------- TOPO ------------------------------------------
-
-        // ============ Logo ============
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-
-        try {
-            BufferedImage logo = ImageIO.read(TelaLogadaMedicoUI.class.getResourceAsStream("/images/logoDocs.png"));
-            ImageIcon logoIcon = new ImageIcon(logo);
-            JLabel logoLabel = new JLabel(logoIcon);
-            topoPanel.add(logoLabel, constraints);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // ============ Endereço Clínica ============
-        JLabel enderecoClinicaLabel = new JLabel("Rua Cristovão Colombo - (17) 3222-3174");
-
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        constraints.gridwidth = 2;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        topoPanel.add(enderecoClinicaLabel, constraints);
-
-        // ---------------------------------- MEIO ------------------------------------------
-
-        // ============ Tipo Exame ============
-        JLabel tipoExameLabel = new JLabel(laudo.getExame().getTipo() + " - Id: " + laudo.getExame().getId());
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 3;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        centralPanel.add(tipoExameLabel, constraints);
-
-        // ============ Infos Paciente ============
-        JLabel nomePacienteLabel = new JLabel("Nome: " + laudo.getExame().getPaciente().getNome());
-        JLabel idadeLabel = new JLabel("Idade: " + laudo.getExame().getPaciente().getIdade());
-        JLabel sexoLabel = new JLabel("Sexo: " + laudo.getExame().getPaciente().getSexo());
-        JLabel dataLabel = new JLabel("Data do exame: " + laudo.getExame().getData());
-
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.gridwidth = 1;
-        centralPanel.add(nomePacienteLabel, constraints);
-        constraints.gridy = 2;
-        centralPanel.add(idadeLabel, constraints);
-        constraints.gridy = 3;
-        centralPanel.add(sexoLabel, constraints);
-        constraints.gridy = 4;
-        centralPanel.add(dataLabel, constraints);
-
-        // ============ Comentário do Médico ============
-        JLabel comentarioLabel = new JLabel("<html>Conclusões: " + laudo.getConteudo() + "</html>");
-        comentarioLabel.setSize(200, 100);
-
-        constraints.gridy = 5;
-        centralPanel.add(comentarioLabel, constraints);
-
-        // ---------------------------------- Final ------------------------------------------
-
-        // ============ Infos do Médico ============
-        JLabel medicoLabel = new JLabel("Dr. " + laudo.getMedicoSolicitante().getNome());
-        JLabel infoMedicoLabel = new JLabel("CRM " + laudo.getMedicoSolicitante().getCRM() + " - " + laudo.getMedicoSolicitante().getAreaAtuacao());
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 1;
-        finalPanel.add(medicoLabel, constraints);
-        constraints.gridy = 1;
-        finalPanel.add(infoMedicoLabel, constraints);
-
-        // ============ Fontes ============
-        Font fonteGrande = new Font(enderecoClinicaLabel.getFont().getFontName(), enderecoClinicaLabel.getFont().getStyle(), 30);
-        Font fontePequena = new Font(enderecoClinicaLabel.getFont().getFontName(), enderecoClinicaLabel.getFont().getStyle(), 15);
-
-        enderecoClinicaLabel.setFont(fonteGrande);
-        tipoExameLabel.setFont(fontePequena);
-        nomePacienteLabel.setFont(fontePequena);
-        idadeLabel.setFont(fontePequena);
-        sexoLabel.setFont(fontePequena);
-        dataLabel.setFont(fontePequena);
-        comentarioLabel.setFont(fontePequena);
-
-        // ============ Ajuste Frame ============
-        laudoFrame.add(topoPanel, BorderLayout.NORTH);
-        laudoFrame.add(centralPanel, BorderLayout.CENTER);
-        laudoFrame.add(finalPanel, BorderLayout.SOUTH);
-        laudoFrame.setVisible(true);
-    }
-
-    protected static void imprimirReceita(Receita receita) {
-        JFrame receitaFrame = new JFrame("Receita de " + receita.getPaciente().getNome() + ", id - " + receita.getId());
-
-        receitaFrame.setLayout(new BorderLayout());
-        receitaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        receitaFrame.setSize(1200, 800);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(5, 5, 5, 5);
-
-        // ============ Painéis ============
-        JPanel topoPanel = new JPanel();
-        topoPanel.setLayout(new GridBagLayout());
-        topoPanel.setBackground(Color.WHITE);
-
-        JPanel centralPanel = new JPanel();
-        centralPanel.setLayout(new GridBagLayout());
-        centralPanel.setBackground(Color.WHITE);
-        centralPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
-
-        JPanel finalPanel = new JPanel();
-        finalPanel.setLayout(new GridBagLayout());
-        finalPanel.setBackground(Color.WHITE);
-
-        // ---------------------------------- TOPO ------------------------------------------
-
-        // ============ Logo ============
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-
-        try {
-            BufferedImage logo = ImageIO.read(TelaLogadaMedicoUI.class.getResourceAsStream("/images/logoDocs.png"));
-            ImageIcon logoIcon = new ImageIcon(logo);
-            JLabel logoLabel = new JLabel(logoIcon);
-            topoPanel.add(logoLabel, constraints);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // ============ Endereço Clínica ============
-        JLabel enderecoClinicaLabel = new JLabel("Rua Cristovão Colombo - (17) 3222-3174");
-
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        constraints.gridwidth = 2;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        topoPanel.add(enderecoClinicaLabel, constraints);
-
-        // ---------------------------------- MEIO ------------------------------------------
-
-        // ============ Tipo Exame ============
-        JLabel remedioLabel = new JLabel("Remedio - " + receita.getNomeDoRemedio());
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 3;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        centralPanel.add(remedioLabel, constraints);
-
-        // ============ Infos Paciente ============
-        JLabel nomePacienteLabel = new JLabel("Nome: " + receita.getPaciente().getNome());
-        JLabel idadeLabel = new JLabel("Idade: " + receita.getPaciente().getIdade());
-        JLabel sexoLabel = new JLabel("Sexo: " + receita.getPaciente().getSexo());
-        JLabel dataLabel = new JLabel("Data de prescrição: " + receita.getDataReceita());
-
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.gridwidth = 1;
-        centralPanel.add(nomePacienteLabel, constraints);
-        constraints.gridy = 2;
-        centralPanel.add(idadeLabel, constraints);
-        constraints.gridy = 3;
-        centralPanel.add(sexoLabel, constraints);
-        constraints.gridy = 4;
-        centralPanel.add(dataLabel, constraints);
-
-        // ============ Comentário do Médico ============
-        JLabel detalhesLabel = new JLabel("<html>Conclusões: " + receita.getDetalhes() + "</html>");
-        detalhesLabel.setSize(200, 100);
-
-        constraints.gridy = 5;
-        centralPanel.add(detalhesLabel, constraints);
-
-        // ---------------------------------- Final ------------------------------------------
-
-        // ============ Infos do Médico ============
-        JLabel medicoLabel = new JLabel("Dr. " + receita.getMedico().getNome());
-        JLabel infoMedicoLabel = new JLabel("CRM " + receita.getMedico().getCRM() + " - " + receita.getMedico().getAreaAtuacao());
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 1;
-        finalPanel.add(medicoLabel, constraints);
-        constraints.gridy = 1;
-        finalPanel.add(infoMedicoLabel, constraints);
-
-        // ============ Fontes ============
-        Font fonteGrande = new Font(enderecoClinicaLabel.getFont().getFontName(), enderecoClinicaLabel.getFont().getStyle(), 30);
-        Font fontePequena = new Font(enderecoClinicaLabel.getFont().getFontName(), enderecoClinicaLabel.getFont().getStyle(), 15);
-
-        enderecoClinicaLabel.setFont(fonteGrande);
-        remedioLabel.setFont(fontePequena);
-        nomePacienteLabel.setFont(fontePequena);
-        idadeLabel.setFont(fontePequena);
-        sexoLabel.setFont(fontePequena);
-        dataLabel.setFont(fontePequena);
-        detalhesLabel.setFont(fontePequena);
-
-        // ============ Ajuste Frame ============
-        receitaFrame.add(topoPanel, BorderLayout.NORTH);
-        receitaFrame.add(centralPanel, BorderLayout.CENTER);
-        receitaFrame.add(finalPanel, BorderLayout.SOUTH);
-        receitaFrame.setVisible(true);
+        documentFrame.add(topoPanel, BorderLayout.NORTH);
+        documentFrame.add(centralPanel, BorderLayout.CENTER);
+        documentFrame.add(finalPanel, BorderLayout.SOUTH);
+        documentFrame.setSize(1000, 800);
+        //documentFrame.pack();
+        documentFrame.setVisible(true);
     }
 }

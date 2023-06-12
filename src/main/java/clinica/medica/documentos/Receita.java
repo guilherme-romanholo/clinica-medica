@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Receita {
+public class Receita implements Imprimivel {
     Medico medico;
     Paciente paciente;
     String nomeDoRemedio;
@@ -44,6 +44,45 @@ public class Receita {
         connection.desconectar();
     }
 
+    // --------------------- Métodos da Interface ---------------------
+    @Override
+    public String imprimeTipo() {
+        return "Receita";
+    }
+    @Override
+    public String imprimeInfo() {
+        return "Remédio: " + nomeDoRemedio;
+    }
+    @Override
+    public String imprimeNomePaciente() {
+        return "Nome: " + paciente.getNome();
+    }
+    @Override
+    public String imprimeIdade() {
+        return "Idade: " + paciente.getIdade();
+    }
+    @Override
+    public String imprimeSexo() {
+        return "Sexo: " + paciente.getSexo();
+    }
+    @Override
+    public String imprimeData() {
+        return "Data da receita: " + dataReceita;
+    }
+    @Override
+    public String imprimeComentarios() {
+        return "Informações:\n" + detalhes;
+    }
+    @Override
+    public String imprimeNomeMedico() {
+        return "Dr. " + medico.getNome();
+    }
+    @Override
+    public String imprimeCrmAtuacaoMedico() {
+        return "CRM " + medico.getCRM() + " - " + medico.getAreaAtuacao();
+    }
+
+    // --------------------- Getters e Setters ---------------------
     public String getDetalhes() {
         return detalhes;
     }
