@@ -15,33 +15,6 @@ import java.util.ArrayList;
 
 public class TelaLogadaPacienteUI {
 
-    /**
-     * Método privado para a implementação da tela do paciente.
-     * @param pacienteLogado Paciente logado no momento.
-     */
-    protected static JPanel painelPaciente(Paciente pacienteLogado){
-        LoginUI.frame.setVisible(false);
-
-        JPanel painelPaciente = new JPanel();
-
-        painelPaciente.setLayout(new GridBagLayout());
-        painelPaciente.setVisible(true);
-        painelPaciente.setSize(600, 400);
-
-        JTextArea infoMedicoLabel = new JTextArea("============Bem Vindo, " + pacienteLogado.getNome() + "!============");
-        infoMedicoLabel.setEditable(false);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-        constraints.gridy = 1;
-        painelPaciente.add(infoMedicoLabel, constraints);
-
-        return painelPaciente;
-    }
-
     protected static JPanel telaVerificarConsulta() {
         JPanel painelConsulta = new JPanel();
 

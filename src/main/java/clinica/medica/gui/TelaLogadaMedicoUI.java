@@ -11,6 +11,7 @@ import clinica.medica.documentos.Laudo;
 import clinica.medica.documentos.Receita;
 import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
+import clinica.medica.usuarios.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,35 +27,6 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 public class TelaLogadaMedicoUI {
-
-
-    /**
-     * Método privado para a implementação da tela do médico.
-     *
-     * @param medicoLogado Médico logado no momento.
-     */
-    protected static JPanel painelMedico(Medico medicoLogado) {
-        LoginUI.frame.setVisible(false);
-
-        JPanel painelMedico = new JPanel();
-
-        painelMedico.setLayout(new GridBagLayout());
-        painelMedico.setVisible(true);
-        painelMedico.setSize(800, 600);
-
-        JTextArea infoMedicoLabel = new JTextArea("============Bem Vindo, " + medicoLogado.getNome() + "============!\n\nÁrea de atuação: " + medicoLogado.getAreaAtuacao() + "\nCRM: " + medicoLogado.getCRM());
-        infoMedicoLabel.setEditable(false);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-        constraints.gridy = 1;
-        painelMedico.add(infoMedicoLabel, constraints);
-
-        return painelMedico;
-    }
 
     protected static JPanel telaPrescreverExame(TelaLogadaUI telaLogada) {
         JPanel painelExame = new JPanel();
@@ -243,7 +215,7 @@ public class TelaLogadaMedicoUI {
                 String cpf = cpfField.getText();
                 cpf = cpf.replaceAll("[.-]", "");
                 String comentario = comentarioArea.getText();
-                if (MedicosSQL.cadastrarNovoExame(tipo, cpf, medicoLogado.getCRM(), new Date(Calendar.getInstance().getTime().getTime()), comentario)) {
+                if (MedicosSQL.cadastrarNovoExame(tipo, cpf, medicoLogado.getCpf(), new Date(Calendar.getInstance().getTime().getTime()), comentario)) {
                     JOptionPane.showMessageDialog(painelExame, "Cadastro de exame realizado com sucesso!");
                     telaLogada.atualizaPainel(medicoLogado);
                 } else {
@@ -333,7 +305,7 @@ public class TelaLogadaMedicoUI {
                 String cpf = cpfField.getText();
                 cpf = cpf.replaceAll("[.-]", "");
                 String conteudo = comentarioArea.getText();
-                if (MedicosSQL.cadastrarNovoLaudo(exame.getId(), cpf, medicoLogado.getCRM(), new Date(Calendar.getInstance().getTime().getTime()), conteudo)) {
+                if (MedicosSQL.cadastrarNovoLaudo(exame.getId(), cpf, medicoLogado.getCpf(), new Date(Calendar.getInstance().getTime().getTime()), conteudo)) {
                     JOptionPane.showMessageDialog(painelExame, "Cadastro de Laudo realizado com sucesso!");
                     tipoField.setText("");
                     cpfField.setText("");
@@ -450,7 +422,7 @@ public class TelaLogadaMedicoUI {
     }
 
     protected static JPanel showExames(Medico medicoLogado, TelaLogadaUI telaLogada) {
-        ArrayList<Exame> exames = MedicosSQL.verificarExames(medicoLogado.getCRM());
+        ArrayList<Exame> exames = MedicosSQL.verificarExames(medicoLogado.getCpf());
         int i = 0;
         JPanel painelExame = new JPanel();
 
@@ -494,7 +466,7 @@ public class TelaLogadaMedicoUI {
                 String[] elementos = exameSelecionado.split("-");
                 int id = Integer.parseInt(elementos[3].strip());
                 Exame exame = new Exame(id);
-                TelaLogadaMedicoUI.imprimirExame(medicoLogado, exame);
+                TelaLogadaMedicoUI.imprimirExame(exame);
             }
         });
 
@@ -502,7 +474,7 @@ public class TelaLogadaMedicoUI {
     }
 
     protected static JPanel showExamesLaudo(Medico medicoLogado, TelaLogadaUI telaLogada) {
-        ArrayList<Exame> exames = MedicosSQL.verificarExames(medicoLogado.getCRM());
+        ArrayList<Exame> exames = MedicosSQL.verificarExames(medicoLogado.getCpf());
         int i = 0;
 
         JPanel painelExame = new JPanel();
@@ -558,7 +530,7 @@ public class TelaLogadaMedicoUI {
 
 
     protected static JPanel showLaudos(Medico medicoLogado, TelaLogadaUI telaLogada) {
-        ArrayList<Laudo> laudos = MedicosSQL.verificarLaudos(medicoLogado.getCRM());
+        ArrayList<Laudo> laudos = MedicosSQL.verificarLaudos(medicoLogado.getCpf());
         int i = 0;
         JPanel painelLaudo = new JPanel();
 
@@ -602,7 +574,7 @@ public class TelaLogadaMedicoUI {
                 String[] elementos = laudoSelecionado.split("-");
                 int id = Integer.parseInt(elementos[3].strip());
                 Laudo laudo = new Laudo(id);
-                TelaLogadaMedicoUI.imprimirLaudo(medicoLogado, laudo);
+                TelaLogadaMedicoUI.imprimirLaudo(laudo);
             }
         });
 
@@ -709,14 +681,14 @@ public class TelaLogadaMedicoUI {
                 int id = Integer.parseInt(elementos[3].strip());
 
                 Receita receita = new Receita(id);
-                TelaLogadaMedicoUI.imprimirReceita(medicoLogado, receita);
+                TelaLogadaMedicoUI.imprimirReceita(receita);
             }
         });
 
         return painelReceita;
     }
 
-    protected static void imprimirExame(Medico medicoLogado, Exame exame) {
+    protected static void imprimirExame(Exame exame) {
         JFrame exameFrame = new JFrame("Exame - " + exame.getPaciente().getNome() + " - " + exame.getTipo());
 
         exameFrame.setLayout(new BorderLayout());
@@ -830,7 +802,7 @@ public class TelaLogadaMedicoUI {
         exameFrame.add(finalPanel, BorderLayout.SOUTH);
         exameFrame.setVisible(true);
     }
-    protected static void imprimirLaudo(Medico medicoLogado, Laudo laudo) {
+    protected static void imprimirLaudo(Laudo laudo) {
         JFrame laudoFrame = new JFrame("Exame - " + laudo.getPaciente().getNome() + " - " + laudo.getExame().getTipo());
 
         laudoFrame.setLayout(new BorderLayout());
@@ -945,7 +917,7 @@ public class TelaLogadaMedicoUI {
         laudoFrame.setVisible(true);
     }
 
-    protected static void imprimirReceita(Medico medicoLogado, Receita receita) {
+    protected static void imprimirReceita(Receita receita) {
         JFrame receitaFrame = new JFrame("Receita de " + receita.getPaciente().getNome() + ", id - " + receita.getId());
 
         receitaFrame.setLayout(new BorderLayout());

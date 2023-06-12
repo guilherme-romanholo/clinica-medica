@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import static clinica.medica.gui.LoginUI.frame;
+
 public class TelaLogadaUI extends JFrame implements ActionListener {
     private String ultimaTela, telaAtual;
     private JPanel menuPanel;
@@ -99,9 +101,11 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         return menuButtonsPanel;
     }
 
-    public void criaPaineisConteudo(Usuario user) {
+    public <T extends Usuario> void criaPaineisConteudo(T user) {
+
+        contentPanel.add(painelPrincipal(user), "Principal");
+
         if (user instanceof Medico) {
-            contentPanel.add(TelaLogadaMedicoUI.painelMedico((Medico) user), "Principal");
             contentPanel.add(TelaLogadaMedicoUI.telaPrescreverExame(this), "Exames");
             contentPanel.add(TelaLogadaMedicoUI.telaPrescreverLaudo(this), "Laudos");
             contentPanel.add(TelaLogadaMedicoUI.telaPrescreverReceita((Medico) user, this), "Receitas");
@@ -114,7 +118,6 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
             contentPanel.add(TelaLogadaMedicoUI.showPacientesReceita((Medico) user, this), "Prescrever nova receita");
             contentPanel.add(TelaLogadaMedicoUI.showReceitas((Medico) user, this), "Verificar receitas");
         } else if (user instanceof Paciente) {
-            contentPanel.add(TelaLogadaPacienteUI.painelPaciente((Paciente) user), "Principal");
             contentPanel.add(TelaLogadaPacienteUI.telaVerificarConsulta(), "Verificar consultas");
             contentPanel.add(TelaLogadaPacienteUI.telaVerificarLaudo((Paciente) user, this), "Verificar laudos");
             contentPanel.add(TelaLogadaPacienteUI.telaVerificarExame((Paciente) user, this), "Verificar exames");
@@ -131,6 +134,36 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
         criaPaineisConteudo(user);
         cardLayout.show(contentPanel, telaAtual);
+    }
+
+    protected static <T extends Usuario> JPanel painelPrincipal(T user) {
+        frame.setVisible(false);
+
+        JPanel painelPrincipal = new JPanel();
+
+        painelPrincipal.setLayout(new GridBagLayout());
+        painelPrincipal.setVisible(true);
+        painelPrincipal.setSize(800, 600);
+
+        JTextArea infoLabel = new JTextArea();
+
+        if (user instanceof Medico medicoLogado) {
+            infoLabel.setText("============Bem Vindo, " + medicoLogado.getNome() + "============!\n\nÁrea de atuação: " + medicoLogado.getAreaAtuacao() + "\nCRM: " + medicoLogado.getCRM());
+            infoLabel.setEditable(false);
+        } else if (user instanceof Paciente pacienteLogado) {
+            infoLabel.setText("============Bem Vindo, " + pacienteLogado.getNome() + "!============");
+            infoLabel.setEditable(false);
+        }
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+
+        constraints.gridy = 1;
+        painelPrincipal.add(infoLabel, constraints);
+
+        return painelPrincipal;
     }
 
     public static void mostrarTela(Usuario user) {

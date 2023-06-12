@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class MedicosSQL {
     
-    public static boolean cadastrarNovoExame(String tipo, String cpf, String crm, Date data, String comentario){
+    public static boolean cadastrarNovoExame(String tipo, String cpf, String cpfMedico, Date data, String comentario){
         boolean cadastro = false;
         String queryVerificacao = "SELECT * FROM pacientes WHERE cpf = ?";
         String query = "INSERT INTO exames (tipo, paciente, medicoSolicitante, comentario, data) VALUES (?, ?, ?, ?, ?)";
@@ -38,7 +38,7 @@ public class MedicosSQL {
             PreparedStatement pstmt = connection.getConn().prepareStatement(query);
             pstmt.setString(1, tipo);
             pstmt.setString(2, cpf);
-            pstmt.setString(3, crm);
+            pstmt.setString(3, cpfMedico);
             pstmt.setString(4, comentario);
             pstmt.setDate(5, data);
             pstmt.executeUpdate();
@@ -52,7 +52,7 @@ public class MedicosSQL {
         return cadastro;
     }
 
-    public static boolean cadastrarNovoLaudo(int idExame, String cpf, String crm, Date data, String conteudo){
+    public static boolean cadastrarNovoLaudo(int idExame, String cpf, String cpfMedico, Date data, String conteudo){
         boolean cadastro = false;
         String query = "INSERT INTO laudos (exame, medicoSolicitante, paciente, data, conteudo) VALUES (?, ?, ?, ?, ?)";
 
@@ -62,7 +62,7 @@ public class MedicosSQL {
         try {
             PreparedStatement pstmt = connection.getConn().prepareStatement(query);
             pstmt.setInt(1, idExame);
-            pstmt.setString(2, crm);
+            pstmt.setString(2, cpfMedico);
             pstmt.setString(3, cpf);
             pstmt.setDate(4, data);
             pstmt.setString(5, conteudo);
@@ -77,7 +77,7 @@ public class MedicosSQL {
         return cadastro;
     }
     
-    public static ArrayList<Exame> verificarExames(String crm){
+    public static ArrayList<Exame> verificarExames(String cpfMedico){
         ArrayList<Exame> exames = new ArrayList();
         String query = "SELECT * FROM exames WHERE medicoSolicitante = ?";
 
@@ -86,7 +86,7 @@ public class MedicosSQL {
         
         try{
             PreparedStatement pstmt = connection.getConn().prepareStatement(query);
-            pstmt.setString(1, crm);
+            pstmt.setString(1, cpfMedico);
             ResultSet rs = pstmt.executeQuery();
 
             while(rs.next()) {
@@ -101,7 +101,7 @@ public class MedicosSQL {
         return exames;
     }
 
-    public static ArrayList<Laudo> verificarLaudos(String crm){
+    public static ArrayList<Laudo> verificarLaudos(String cpfMedico){
         ArrayList<Laudo> laudos = new ArrayList();
         String query = "SELECT * FROM laudos WHERE medicoSolicitante = ?";
 
@@ -110,7 +110,7 @@ public class MedicosSQL {
 
         try{
             PreparedStatement pstmt = connection.getConn().prepareStatement(query);
-            pstmt.setString(1, crm);
+            pstmt.setString(1, cpfMedico);
             ResultSet rs = pstmt.executeQuery();
 
             while(rs.next()) {
