@@ -15,7 +15,7 @@ import static clinica.medica.gui.LoginUI.frame;
 public class TelaLogadaUI extends JFrame implements ActionListener {
     private String ultimaTela, telaAtual;
     private JPanel menuPanel;
-    private JPanel usuarioPanel;
+    private JPanel headerPanel;
     private JPanel contentPanel;
     private CardLayout cardLayout;
 
@@ -30,12 +30,22 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
         JPanel menuButtonsPanel = botoesNavegacao(user);
         menuButtonsPanel.setBackground(Color.decode("#98f8c7"));
+        menuPanel.add(menuButtonsPanel);
 
-        menuPanel.add(menuButtonsPanel, BorderLayout.EAST);
+        headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
 
-        JLabel nomeClinicaLabel = new JLabel("  Healthy");
+        JPanel nomeClinicaPanel = new JPanel(new BorderLayout());
+        nomeClinicaPanel.setSize(156, 50);
+        nomeClinicaPanel.setBackground(Color.decode("#98f8c7"));
 
-        menuPanel.add(nomeClinicaLabel, BorderLayout.WEST);
+        JLabel nomeClinicaLabel = new JLabel("        Healthy");
+        nomeClinicaPanel.add(nomeClinicaLabel, BorderLayout.CENTER);
+
+        nomeClinicaLabel.setForeground(Color.WHITE);
+        nomeClinicaLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+
+        headerPanel.add(nomeClinicaPanel);
 
         criaPainelInfos(user);
 
@@ -46,10 +56,10 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         criaPaineisConteudo(user);
 
         Container container = getContentPane();
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        container.add(menuPanel);
-        container.add(usuarioPanel);
-        container.add(contentPanel);
+        container.setLayout(new BorderLayout());
+        container.add(menuPanel, BorderLayout.WEST);
+        container.add(headerPanel, BorderLayout.NORTH);
+        container.add(contentPanel, BorderLayout.CENTER);
 
         telaAtual = "Principal";
         cardLayout.show(contentPanel, "Principal");
@@ -74,36 +84,25 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     }
 
     public <T extends Usuario> void criaPainelInfos(T user) {
-        usuarioPanel = new JPanel();
-        usuarioPanel.setLayout(new GridBagLayout());
+        JPanel usuarioPanel = new JPanel();
+        usuarioPanel.setLayout(new BoxLayout(usuarioPanel, BoxLayout.Y_AXIS));
         usuarioPanel.setBackground(Color.decode("#98f8c7"));
 
-        GridBagConstraints constraints = new GridBagConstraints();
-
-        JLabel nome = new JLabel(user.getNome());
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        usuarioPanel.add(nome, constraints);
-
         if (user instanceof Medico medico) {
-            JLabel crm = new JLabel(medico.getCRM());
-            JLabel atuacao = new JLabel(medico.getAreaAtuacao());
+            JLabel medicoLabel = new JLabel(medico.getNome() + ", " + medico.getAreaAtuacao() + "     ");
+            JLabel crmLabel = new JLabel("CRM: " + medico.getCRM() + "     ");
 
-            constraints.gridy = 1;
-            usuarioPanel.add(crm, constraints);
-
-            constraints.gridy = 2;
-            usuarioPanel.add(atuacao, constraints);
+            usuarioPanel.add(medicoLabel);
+            usuarioPanel.add(crmLabel);
         } else if (user instanceof Paciente paciente) {
             JLabel cpf = new JLabel(paciente.getCpf());
             JLabel idade = new JLabel(paciente.getIdade() + " anos");
 
-            constraints.gridy = 1;
-            usuarioPanel.add(cpf, constraints);
-
-            constraints.gridy = 2;
-            usuarioPanel.add(idade, constraints);
+            usuarioPanel.add(cpf);
+            usuarioPanel.add(idade);
         }
+
+        headerPanel.add(usuarioPanel);
     }
 
     public JButton criaBotaoMenu(String nome) {
@@ -121,7 +120,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
     public JPanel botoesNavegacao(Usuario user) {
         JPanel menuButtonsPanel = new JPanel();
-        menuButtonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        menuButtonsPanel.setLayout(new BoxLayout(menuButtonsPanel, BoxLayout.Y_AXIS));
 
         ArrayList<JButton> buttons = new ArrayList<>();
 
