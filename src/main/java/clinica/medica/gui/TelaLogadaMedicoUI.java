@@ -14,6 +14,7 @@ import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
 import clinica.medica.usuarios.Usuario;
 
+import com.toedter.calendar.JCalendar;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -123,12 +124,14 @@ public class TelaLogadaMedicoUI {
         return painelReceita;
     }
 
+    
     protected static JPanel telaAgendarConsulta() {
         JPanel painelConsulta = new JPanel();
 
         painelConsulta.setLayout(new GridBagLayout());
         painelConsulta.setSize(800, 600);
-
+        
+        
         JTextArea tempLabel = new JTextArea("Área da Consulta");
 
         JButton novaConsultaButton = new JButton("Agendar nova consulta");
@@ -147,10 +150,91 @@ public class TelaLogadaMedicoUI {
 
         constraints.gridy = 3;
         painelConsulta.add(verificarConsultaButton, constraints);
-
+        
         return painelConsulta;
     }
+    /*
+    protected static JPanel telaNovaConsulta(TelaLogadaUI telaLogada) {
+        JPanel painelExame = new JPanel();
 
+        painelExame.setLayout(new GridBagLayout());
+        painelExame.setSize(800, 600);
+
+        JTextArea tempLabel = new JTextArea("Nova consulta");
+        tempLabel.setEditable(false);
+
+        JLabel tipoLabel = new JLabel("Tipo da consulta");
+        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
+        JLabel comentarioLabel = new JLabel("Comentários");
+
+        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
+
+        JTextField tipoField = new JTextField(20);
+        JTextArea comentarioArea = new JTextArea(20, 40);
+        comentarioArea.setEditable(true);
+        comentarioArea.setLineWrap(true);
+        comentarioArea.setWrapStyleWord(true);
+
+        JButton cadastrarExameButton = new JButton("Cadastrar consulta");
+        JButton voltarButton = new JButton("Voltar");
+        voltarButton.addActionListener(telaLogada);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+
+        constraints.gridy = 1;
+        painelExame.add(tempLabel, constraints);
+
+        constraints.gridy = 2;
+        painelExame.add(tipoLabel, constraints);
+
+        constraints.gridy = 3;
+        painelExame.add(tipoField, constraints);
+
+        constraints.gridy = 4;
+        painelExame.add(cpfPacienteLabel, constraints);
+
+        constraints.gridy = 5;
+        painelExame.add(cpfField, constraints);
+
+        constraints.gridy = 6;
+        painelExame.add(comentarioLabel, constraints);
+
+        constraints.gridy = 7;
+        painelExame.add(comentarioArea, constraints);
+
+        constraints.gridy = 8;
+        painelExame.add(cadastrarExameButton, constraints);
+
+        constraints.gridy = 9;
+        painelExame.add(voltarButton, constraints);
+
+
+        cadastrarExameButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String tipo = tipoField.getText();
+                String cpf = cpfField.getText();
+                cpf = cpf.replaceAll("[.-]", "");
+                String comentario = comentarioArea.getText();
+           
+                if (0000000000000000000000) {
+                    JOptionPane.showMessageDialog(painelExame, "Cadastro de consulta realizado com sucesso!");
+                    telaLogada.atualizaPainel(medicoLogado);
+                } else {
+                    JOptionPane.showMessageDialog(painelExame, "Não foi possível cadastrar a consulta, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+                    tipoField.setText("");
+                    cpfField.setText("");
+                    comentarioArea.setText("");
+                }
+            
+            }
+        });
+        return painelExame;    
+    }
+    */
     protected static JPanel telaNovoExame(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelExame = new JPanel();
 

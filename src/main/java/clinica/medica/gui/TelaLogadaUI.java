@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import static clinica.medica.gui.LoginUI.frame;
+import com.toedter.calendar.JCalendar;
 
 public class TelaLogadaUI extends JFrame implements ActionListener {
     private String ultimaTela, telaAtual;
@@ -190,12 +191,13 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
         JPanel painelPrincipal = new JPanel();
 
-        painelPrincipal.setLayout(new GridBagLayout());
         painelPrincipal.setVisible(true);
         painelPrincipal.setSize(800, 600);
 
-        JTextArea infoLabel = new JTextArea();
+        JCalendar calendar = new JCalendar();
+        painelPrincipal.add(calendar);
 
+        /*
         if (user instanceof Medico medicoLogado) {
             infoLabel.setText("============Bem Vindo, " + medicoLogado.getNome() + "============!\n\nÁrea de atuação: " + medicoLogado.getAreaAtuacao() + "\nCRM: " + medicoLogado.getCRM());
             infoLabel.setEditable(false);
@@ -203,14 +205,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
             infoLabel.setText("============Bem Vindo, " + pacienteLogado.getNome() + "!============");
             infoLabel.setEditable(false);
         }
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-        constraints.gridy = 1;
-        painelPrincipal.add(infoLabel, constraints);
+        */
 
         return painelPrincipal;
     }

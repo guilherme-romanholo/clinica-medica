@@ -26,6 +26,11 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.42.0.0</version>
     </dependency>
+    <dependency>
+       <groupId>com.toedter</groupId>
+       <artifactId>jcalendar</artifactId>
+       <version>1.4</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -52,16 +57,7 @@
         </configuration>
       </plugin>
     </plugins>
-    <!---
-    <resources>
-        <resource>
-          <directory>src/main/resources</directory>
-          <includes>
-            <include>**/*</include>
-          </includes>
-        </resource>
-    </resources>
-    -->
+
   </build>
 
 </project>
