@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class ReceitasSQL {
 
-    public static ArrayList<Receita> selectAllReceitas() {
-        String query = "SELECT * FROM receitas";
+    public static ArrayList<Receita> selectAllReceitasFromPaciente(String cpfPaciente) {
+        String query = "SELECT * FROM receitas where paciente = ?";
         ArrayList<Receita> receitas = new ArrayList<>();
         ResultSet rs = null;
 
@@ -18,6 +18,29 @@ public class ReceitasSQL {
 
         try {
             PreparedStatement pstmt = connection.getConn().prepareStatement(query);
+            pstmt.setString(1, cpfPaciente);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                receitas.add(new Receita(rs.getInt("id")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Receita não foi encontrada.");
+        }
+
+        return receitas;
+    }
+
+    public static ArrayList<Receita> selectAllReceitasFromMedico(String cpfMedico) {
+        String query = "SELECT * FROM receitas where medico = ?";
+        ArrayList<Receita> receitas = new ArrayList<>();
+        ResultSet rs = null;
+
+        SQLiteConnection connection = new SQLiteConnection();
+        connection.conectar();
+
+        try {
+            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
+            pstmt.setString(1, cpfMedico);
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 receitas.add(new Receita(rs.getInt("id")));

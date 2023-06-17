@@ -1,5 +1,6 @@
 package clinica.medica.gui;
 
+import clinica.medica.consultas.Consulta;
 import clinica.medica.database.*;
 import clinica.medica.documentos.Exame;
 
@@ -123,7 +124,7 @@ public class TelaLogadaMedicoUI {
     }
 
     
-    protected static JPanel telaAgendarConsulta() {
+    protected static JPanel telaAgendarConsulta(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelConsulta = new JPanel();
 
         painelConsulta.setLayout(new GridBagLayout());
@@ -134,6 +135,8 @@ public class TelaLogadaMedicoUI {
 
         JButton novaConsultaButton = new JButton("Agendar nova consulta");
         JButton verificarConsultaButton = new JButton("Verificar consultas");
+
+        verificarConsultaButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
@@ -597,6 +600,61 @@ public class TelaLogadaMedicoUI {
         return painelExame;
     }
 
+    protected static JPanel showConsultas(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromMedico(medicoLogado.getCpf());
+        int i = 0;
+        JPanel painelConsulta = new JPanel();
+
+        painelConsulta.setLayout(new GridBagLayout());
+        painelConsulta.setSize(800, 600);
+
+        JTextArea tempLabel = new JTextArea("Consultas");
+        JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
+        JButton editarConsultaButton = new JButton("Editar consulta");
+        JButton voltarButton = new JButton("Voltar");
+        voltarButton.addActionListener(telaLogada);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+
+        String[] listaConsulta = new String[consultas.size()];
+
+        for (Consulta rc: consultas) {
+            //if(!rc.isRealizada())
+                listaConsulta[i] = "Consulta marcada - " + "Paciente: " + rc.getPaciente().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+        }
+
+        JList<String> list = new JList<>(listaConsulta);
+        JScrollPane scrollPanel = new JScrollPane(list);
+
+        scrollPanel.setPreferredSize(new Dimension(600, 400));
+        constraints.gridy = 0;
+        painelConsulta.add(tempLabel, constraints);
+        constraints.gridy = 1;
+        painelConsulta.add(scrollPanel, constraints);
+        constraints.gridy = 2;
+        painelConsulta.add(vizualizarComentarioButton, constraints);
+        constraints.gridy = 3;
+        painelConsulta.add(editarConsultaButton, constraints);
+        constraints.gridy = 4;
+        painelConsulta.add(voltarButton, constraints);
+
+        vizualizarComentarioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String consultaSelecionada = list.getSelectedValue();
+                String[] elementos = consultaSelecionada.split("-");
+                int id = Integer.parseInt(elementos[6].strip());
+                Consulta consulta = new Consulta(id);
+                JOptionPane.showMessageDialog(painelConsulta, "Comentários do paciente: " + consulta.getDescricao(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        return painelConsulta;
+    }
+
 
     protected static JPanel showLaudos(Medico medicoLogado, TelaLogadaUI telaLogada) {
         ArrayList<Laudo> laudos = LaudosSQL.verificarLaudos(medicoLogado.getCpf());
@@ -705,7 +763,7 @@ public class TelaLogadaMedicoUI {
     }
 
     protected static JPanel showReceitas(Medico medicoLogado, TelaLogadaUI telaLogada) {
-        ArrayList<Receita> receitas = ReceitasSQL.selectAllReceitas();
+        ArrayList<Receita> receitas = ReceitasSQL.selectAllReceitasFromMedico(medicoLogado.getCpf());
         int i = 0;
         JPanel painelReceita = new JPanel();
 

@@ -1,5 +1,6 @@
 package clinica.medica.gui;
 
+import clinica.medica.database.HorariosSQL;
 import clinica.medica.database.UsuariosSQL;
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -35,6 +36,9 @@ public class CadastroUI {
      * Método privado para implementação da tela de cadastro do médico.
      */
     private static void showCadastroMedico() {
+        String[] horariosEntrada = {"8","10","12","14","16"};
+        String[] horariosSaida = {"10","12","14","16","18"};
+
         LoginUI.frame.setVisible(false);
 
         JFrame frame = new JFrame("Cadastro médico");
@@ -51,6 +55,8 @@ public class CadastroUI {
         JLabel areaLabel = new JLabel("Área de atuação");
         JLabel crmLabel = new JLabel("CRM");
         JLabel passwordLabel = new JLabel("Senha");
+        JLabel horariosEntradaLabel = new JLabel("Escolha o horário de entrada");
+        JLabel horariosSaidaLabel = new JLabel("Escolha o horário de saida");
 
         JTextField usernameField = new JTextField(20);
         JTextField emailField = new JTextField(20);
@@ -62,6 +68,12 @@ public class CadastroUI {
         JFormattedTextField cpfField = inicializaCpf();
 
         JButton cadastroButton = new JButton("Cadastrar");
+
+        JComboBox horarioEntrada = new JComboBox<>(horariosEntrada);
+        JComboBox horarioSaida = new JComboBox<>(horariosSaida);
+
+        horarioEntrada.setSelectedIndex(0);
+        horarioSaida.setSelectedIndex(4);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
@@ -99,14 +111,26 @@ public class CadastroUI {
         frame.add(crmField, constraints);
 
         constraints.gridy = 11;
-        frame.add(passwordLabel, constraints);
+        frame.add(horariosEntradaLabel, constraints);
 
         constraints.gridy = 12;
+        frame.add(horarioEntrada, constraints);
+
+        constraints.gridy = 13;
+        frame.add(horariosSaidaLabel, constraints);
+
+        constraints.gridy = 14;
+        frame.add(horarioSaida, constraints);
+
+        constraints.gridy = 15;
+        frame.add(passwordLabel, constraints);
+
+        constraints.gridy = 16;
         frame.add(passwordField, constraints);
 
         constraints.anchor = GridBagConstraints.CENTER;
 
-        constraints.gridy = 13;
+        constraints.gridy = 17;
         frame.add(cadastroButton, constraints);
 
         //Quando clica no botão para cadastrar, pega os dados e chama a função de cadastrar o médico
@@ -121,8 +145,17 @@ public class CadastroUI {
                 String crm = crmField.getText();
                 char[] senha = passwordField.getPassword();
                 String password = new String(senha);
+                Integer entrada = Integer.parseInt((String)horarioEntrada.getSelectedItem());
+                Integer saida = Integer.parseInt((String)horarioSaida.getSelectedItem());
 
                 if (UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm, frame)) {
+
+                    for(int i = 0; i < saida - entrada; i++){
+                        Integer hEnt = entrada + i;
+                        String ent = hEnt.toString();
+                        HorariosSQL.salvarHorarios(ent,cpf);
+                    }
+
                     JOptionPane.showMessageDialog(frame, "Cadastro realizado com sucesso!");
                     frame.dispose();
                     LoginUI.frame.setVisible(true);
