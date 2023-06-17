@@ -4,10 +4,13 @@ import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
 import clinica.medica.usuarios.Usuario;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static clinica.medica.gui.LoginUI.frame;
@@ -20,6 +23,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     private JPanel contentPanel;
     private CardLayout cardLayout;
 
+    /*
     public TelaLogadaUI(Usuario user) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Tela Logada");
@@ -36,17 +40,22 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         headerPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
 
-        JPanel nomeClinicaPanel = new JPanel(new BorderLayout());
-        nomeClinicaPanel.setSize(156, 50);
-        nomeClinicaPanel.setBackground(Color.decode("#98f8c7"));
+        try {
+            BufferedImage logo = ImageIO.read(LoginUI.class.getResourceAsStream("/images/logo.png"));
+            ImageIcon logoIcon = new ImageIcon(logo);
+            JLabel logoLabel = new JLabel(logoIcon);
+            frame.add(logoLabel, BorderLayout.EAST);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        JLabel nomeClinicaLabel = new JLabel("        Healthy");
-        nomeClinicaPanel.add(nomeClinicaLabel, BorderLayout.CENTER);
+        JLabel nomeClinicaLabel = RecursosUI.criaImagemLabel("/images/logo.png", 150, 100);
+        nomeClinicaLabel.setPreferredSize(new Dimension(150, 100));
 
         nomeClinicaLabel.setForeground(Color.WHITE);
         nomeClinicaLabel.setFont(new Font("Roboto", Font.BOLD, 16));
 
-        headerPanel.add(nomeClinicaPanel);
+        headerPanel.add(nomeClinicaLabel);
 
         criaPainelInfos(user);
 
@@ -65,7 +74,40 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         telaAtual = "Principal";
         cardLayout.show(contentPanel, "Principal");
     }
+     */
+    public TelaLogadaUI (Usuario user) {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Tela Logada");
+        setLayout(new BorderLayout());
+        setSize(1200, 800);
 
+        // ========== Menu ==========
+        menuPanel = new JPanel();
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+        menuPanel.setBackground(Color.decode("#5e8ab3"));
+
+        JLabel logoLabel = RecursosUI.criaImagemLabel("/images/logoMini.png");
+        menuPanel.add(logoLabel);
+
+        JPanel botoesPanel = botoesNavegacao(user);
+        botoesPanel.setBackground(Color.decode("#5e8ab3"));
+        menuPanel.add(botoesPanel);
+
+        add(menuPanel, BorderLayout.WEST);
+
+        // ========== Conteúdo ==========
+        contentPanel = new JPanel();
+        cardLayout = new CardLayout();
+        contentPanel.setLayout(cardLayout);
+        contentPanel.setBackground(Color.WHITE);
+
+        criaPaineisConteudo(user);
+
+        add(contentPanel, BorderLayout.CENTER);
+
+        telaAtual = "Principal";
+        cardLayout.show(contentPanel, "Principal");
+    }
     public void actionPerformed(ActionEvent e) {
         String nomePainel = e.getActionCommand();
         if (nomePainel.equals("Sair")) {
@@ -108,11 +150,11 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
     public JButton criaBotaoMenu(String nome) {
         JButton button = new JButton(nome);
-        button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         button.setBackground(Color.decode("#98f8c7"));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setFocusPainted(false);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Roboto", Font.BOLD, 14));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         // Adicionar fonte, cores, etc ...
@@ -187,25 +229,86 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     }
 
     protected static <T extends Usuario> JPanel painelPrincipal(T user) {
-        frame.setVisible(false);
+        LoginUI.frame.setVisible(false);
 
         JPanel painelPrincipal = new JPanel();
 
         painelPrincipal.setVisible(true);
         painelPrincipal.setSize(800, 600);
+        painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
+        painelPrincipal.setBackground(Color.WHITE);
+
+        // ============ Informações do usuário ============
+        JPanel infoPanel = new JPanel();
+        infoPanel.setBackground(Color.WHITE);
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+
+        JLabel nomeLabel = new JLabel();
+        JLabel info1Label = new JLabel();
+        JLabel info2Label = new JLabel();
+
+        if (user instanceof Medico medicoLogado) {
+            nomeLabel.setText("Bem Vindo, Dr. " + medicoLogado.getNome() + ".");
+            info1Label.setText("CRM: " + medicoLogado.getCRM());
+            info2Label.setText("Área de atuação: " + medicoLogado.getAreaAtuacao());
+        } else if (user instanceof Paciente pacienteLogado) {
+            nomeLabel.setText("Bem Vindo, " + pacienteLogado.getNome() + ".");
+            info1Label.setText("CPF: " + pacienteLogado.getCpf());
+            info2Label.setText("Idade: " + pacienteLogado.getIdade());
+        }
+
+        infoPanel.add(nomeLabel);
+        nomeLabel.setFont(new Font("Roboto", Font.BOLD, 20));
+        nomeLabel.setForeground(Color.BLACK);
+        nomeLabel.setBackground(Color.WHITE);
+
+        infoPanel.add(info1Label);
+        info1Label.setFont(new Font("Roboto", Font.BOLD, 20));
+        info1Label.setForeground(Color.BLACK);
+        info1Label.setBackground(Color.WHITE);
+
+        infoPanel.add(info2Label);
+        info2Label.setFont(new Font("Roboto", Font.BOLD, 20));
+        info2Label.setForeground(Color.BLACK);
+        info2Label.setBackground(Color.WHITE);
+
+        painelPrincipal.add(infoPanel);
+
+        // ============ Calendário ============
+        JPanel consultasPanel = new JPanel();
+        consultasPanel.setBackground(Color.WHITE);
+        consultasPanel.setLayout(new GridLayout(1, 2));
+
+        JPanel calendarPanel = new JPanel();
+        calendarPanel.setBackground(Color.WHITE);
+        calendarPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 5, 5, 5);
+
+        JLabel calendarLabel = new JLabel("Calendário");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        calendarPanel.add(calendarLabel, constraints);
 
         JCalendar calendar = new JCalendar();
-        painelPrincipal.add(calendar);
+        calendar.setSize(400, 400);
+        constraints.gridy = 1;
+        calendarPanel.add(calendar, constraints);
 
-        /*
-        if (user instanceof Medico medicoLogado) {
-            infoLabel.setText("============Bem Vindo, " + medicoLogado.getNome() + "============!\n\nÁrea de atuação: " + medicoLogado.getAreaAtuacao() + "\nCRM: " + medicoLogado.getCRM());
-            infoLabel.setEditable(false);
-        } else if (user instanceof Paciente pacienteLogado) {
-            infoLabel.setText("============Bem Vindo, " + pacienteLogado.getNome() + "!============");
-            infoLabel.setEditable(false);
-        }
-        */
+        consultasPanel.add(calendarPanel);
+
+        JPanel consultasDiaPanel = new JPanel();
+        consultasDiaPanel.setBackground(Color.WHITE);
+        consultasDiaPanel.setLayout(new GridBagLayout());
+
+        JLabel consultasDiaLabel = new JLabel("Consultas do Dia");
+        constraints.gridy = 0;
+        consultasDiaPanel.add(consultasDiaLabel, constraints);
+
+        consultasPanel.add(consultasDiaPanel);
+
+        painelPrincipal.add(consultasPanel);
 
         return painelPrincipal;
     }
@@ -213,13 +316,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     public static void mostrarTela(Usuario user) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void run() {
-                try {
-                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                public void run() {
                 TelaLogadaUI tela = new TelaLogadaUI(user);
                 tela.setVisible(true);
             }
