@@ -1,6 +1,7 @@
 package clinica.medica.gui;
 
 import clinica.medica.database.UsuariosSQL;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -17,6 +18,11 @@ public class CadastroUI {
      * Método de público para chamar a tela de cadastro do médico.
      */
     public static void telaCadastroMedico() {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

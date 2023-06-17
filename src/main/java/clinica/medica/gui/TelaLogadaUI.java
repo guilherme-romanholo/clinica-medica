@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static clinica.medica.gui.LoginUI.frame;
+
+import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JCalendar;
 
 public class TelaLogadaUI extends JFrame implements ActionListener {
@@ -23,58 +25,6 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     private JPanel contentPanel;
     private CardLayout cardLayout;
 
-    /*
-    public TelaLogadaUI(Usuario user) {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Tela Logada");
-        setSize(1200, 800);
-
-        menuPanel = new JPanel();
-        menuPanel.setLayout(new BorderLayout());
-        menuPanel.setBackground(Color.decode("#98f8c7"));
-
-        JPanel menuButtonsPanel = botoesNavegacao(user);
-        menuButtonsPanel.setBackground(Color.decode("#98f8c7"));
-        menuPanel.add(menuButtonsPanel);
-
-        headerPanel = new JPanel();
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
-
-        try {
-            BufferedImage logo = ImageIO.read(LoginUI.class.getResourceAsStream("/images/logo.png"));
-            ImageIcon logoIcon = new ImageIcon(logo);
-            JLabel logoLabel = new JLabel(logoIcon);
-            frame.add(logoLabel, BorderLayout.EAST);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JLabel nomeClinicaLabel = RecursosUI.criaImagemLabel("/images/logo.png", 150, 100);
-        nomeClinicaLabel.setPreferredSize(new Dimension(150, 100));
-
-        nomeClinicaLabel.setForeground(Color.WHITE);
-        nomeClinicaLabel.setFont(new Font("Roboto", Font.BOLD, 16));
-
-        headerPanel.add(nomeClinicaLabel);
-
-        criaPainelInfos(user);
-
-        contentPanel = new JPanel();
-        cardLayout = new CardLayout();
-        contentPanel.setLayout(cardLayout);
-
-        criaPaineisConteudo(user);
-
-        Container container = getContentPane();
-        container.setLayout(new BorderLayout());
-        container.add(menuPanel, BorderLayout.WEST);
-        container.add(headerPanel, BorderLayout.NORTH);
-        container.add(contentPanel, BorderLayout.CENTER);
-
-        telaAtual = "Principal";
-        cardLayout.show(contentPanel, "Principal");
-    }
-     */
     public TelaLogadaUI (Usuario user) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Tela Logada");
@@ -82,15 +32,28 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         setSize(1200, 800);
 
         // ========== Menu ==========
-        menuPanel = new JPanel();
-        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
-        menuPanel.setBackground(Color.decode("#5e8ab3"));
+        menuPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
 
-        JLabel logoLabel = RecursosUI.criaImagemLabel("/images/logoMini.png");
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
+
+                g2d.setPaint(gradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        };
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+
+        JLabel logoLabel = RecursosUI.criaImagemLabel("/images/logoMini.png", 160, 100);
         menuPanel.add(logoLabel);
 
         JPanel botoesPanel = botoesNavegacao(user);
-        botoesPanel.setBackground(Color.decode("#5e8ab3"));
+        botoesPanel.setOpaque(false);
         menuPanel.add(botoesPanel);
 
         add(menuPanel, BorderLayout.WEST);
@@ -151,12 +114,12 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
     public JButton criaBotaoMenu(String nome) {
         JButton button = new JButton(nome);
         button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        button.setBackground(Color.decode("#98f8c7"));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         button.setForeground(Color.WHITE);
         button.setFont(new Font("Roboto", Font.BOLD, 14));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
+        button.setOpaque(false);
         // Adicionar fonte, cores, etc ...
         return button;
     }
@@ -236,13 +199,28 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
         painelPrincipal.setVisible(true);
         painelPrincipal.setSize(800, 600);
-        painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
+        painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setBackground(Color.WHITE);
 
         // ============ Informações do usuário ============
-        JPanel infoPanel = new JPanel();
-        infoPanel.setBackground(Color.WHITE);
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        JPanel infoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
+
+                g2d.setPaint(gradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        };
+
+        infoPanel.setBackground(Color.decode("#67dcff"));
+        infoPanel.setLayout(new GridBagLayout());
 
         JLabel nomeLabel = new JLabel();
         JLabel info1Label = new JLabel();
@@ -258,22 +236,27 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
             info2Label.setText("Idade: " + pacienteLogado.getIdade());
         }
 
-        infoPanel.add(nomeLabel);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+
+        infoPanel.add(nomeLabel, constraints);
         nomeLabel.setFont(new Font("Roboto", Font.BOLD, 20));
-        nomeLabel.setForeground(Color.BLACK);
-        nomeLabel.setBackground(Color.WHITE);
+        nomeLabel.setForeground(Color.WHITE);
 
-        infoPanel.add(info1Label);
+        constraints.gridy = 1;
+
+        infoPanel.add(info1Label, constraints);
         info1Label.setFont(new Font("Roboto", Font.BOLD, 20));
-        info1Label.setForeground(Color.BLACK);
-        info1Label.setBackground(Color.WHITE);
+        info1Label.setForeground(Color.WHITE);
 
-        infoPanel.add(info2Label);
+        constraints.gridy = 2;
+
+        infoPanel.add(info2Label, constraints);
         info2Label.setFont(new Font("Roboto", Font.BOLD, 20));
-        info2Label.setForeground(Color.BLACK);
-        info2Label.setBackground(Color.WHITE);
+        info2Label.setForeground(Color.WHITE);
 
-        painelPrincipal.add(infoPanel);
+        painelPrincipal.add(infoPanel, BorderLayout.NORTH);
 
         // ============ Calendário ============
         JPanel consultasPanel = new JPanel();
@@ -284,7 +267,6 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         calendarPanel.setBackground(Color.WHITE);
         calendarPanel.setLayout(new GridBagLayout());
 
-        GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5, 5, 5);
 
         JLabel calendarLabel = new JLabel("Calendário");
@@ -293,7 +275,11 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         calendarPanel.add(calendarLabel, constraints);
 
         JCalendar calendar = new JCalendar();
+
         calendar.setSize(400, 400);
+        calendar.getDayChooser().getDayPanel().setBackground(Color.WHITE);
+        calendar.getDayChooser().setWeekOfYearVisible(false);
+        calendar.setDecorationBackgroundColor(Color.WHITE);
         constraints.gridy = 1;
         calendarPanel.add(calendar, constraints);
 
@@ -309,12 +295,17 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
         consultasPanel.add(consultasDiaPanel);
 
-        painelPrincipal.add(consultasPanel);
+        painelPrincipal.add(consultasPanel, BorderLayout.CENTER);
 
         return painelPrincipal;
     }
 
     public static void mostrarTela(Usuario user) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
                 public void run() {
