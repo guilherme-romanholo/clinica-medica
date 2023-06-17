@@ -37,6 +37,29 @@ public class UsuariosSQL {
 
         return pacientes;
     }
+
+    public static ArrayList<Medico> selectAllMedicos() {
+        String query = "SELECT * FROM medicos";
+        ArrayList<Medico> medicos = new ArrayList<>();
+        ResultSet rs = null;
+
+        SQLiteConnection connection = new SQLiteConnection();
+        connection.conectar();
+
+        try {
+            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                medicos.add(new Medico(rs.getString("cpf")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Usuário não foi encontrado.");
+        }
+
+        connection.desconectar();
+
+        return medicos;
+    }
     /**
      * Método para leitura dos dados, referentes à classe Usuario,
      * presentes no banco de dados.

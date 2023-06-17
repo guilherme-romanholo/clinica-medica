@@ -3,11 +3,13 @@ package clinica.medica.gui;
 import clinica.medica.database.MedicosSQL;
 import clinica.medica.database.PacientesSQL;
 import clinica.medica.database.ReceitasSQL;
+import clinica.medica.database.UsuariosSQL;
 import clinica.medica.documentos.Exame;
 import clinica.medica.documentos.Laudo;
 import clinica.medica.documentos.Receita;
 import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
+import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,56 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class TelaLogadaPacienteUI {
+
+    protected static JPanel showMedicosConsulta(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
+        ArrayList<Medico> medicos = UsuariosSQL.selectAllMedicos();
+        int i = 0;
+
+        JPanel painelExame = new JPanel();
+
+        painelExame.setLayout(new GridBagLayout());
+        painelExame.setSize(800, 600);
+
+        JTextArea tempLabel = new JTextArea("Medicos");
+
+        JButton escolherMedicoButton = new JButton("Agendar consulta com o médico selecionado");
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+
+        String[] listaMedicos = new String[medicos.size()];
+
+        for (Medico medico : medicos) {
+            listaMedicos[i] = medico.getNome() + " - " + medico.getAreaAtuacao();
+            i++;
+        }
+
+        JList<String> list = new JList<>(listaMedicos);
+        JScrollPane scrollPanel = new JScrollPane(list);
+
+        scrollPanel.setPreferredSize(new Dimension(600, 400));
+        constraints.gridy = 0;
+        painelExame.add(tempLabel, constraints);
+        constraints.gridy = 1;
+        painelExame.add(scrollPanel, constraints);
+        constraints.gridy = 2;
+        painelExame.add(escolherMedicoButton, constraints);
+
+        escolherMedicoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String exameSelecionado = list.getSelectedValue();
+                String[] elementos = exameSelecionado.split("-");
+                String nomeMedico = elementos[0].strip();
+                telaLogada.getContentPanel().add(telaAgendarConsulta(nomeMedico, pacienteLogado, telaLogada), "Agendar consulta com o médico selecionado");
+                telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Agendar consulta com o médico selecionado");
+            }
+        });
+
+        return painelExame;
+    }
 
     protected static JPanel telaVerificarConsulta() {
         JPanel painelConsulta = new JPanel();
@@ -37,21 +89,51 @@ public class TelaLogadaPacienteUI {
         return painelConsulta;
     }
 
-    protected static JPanel telaAgendarConsulta() {
+    protected static JPanel telaAgendarConsulta(String nomeMedico, Paciente pacienteLogado, TelaLogadaUI telaLogada) {
         JPanel painelConsulta = new JPanel();
 
-        painelConsulta.setLayout(new GridBagLayout());
+        painelConsulta.setLayout(new GridLayout(3,2));
         painelConsulta.setSize(800, 600);
+        painelConsulta.setBackground(Color.WHITE);
+        GridBagConstraints constraints = new GridBagConstraints();
 
         JTextArea tempLabel = new JTextArea("Agendar a consulta");
+        JLabel nomeMedicoLabel = new JLabel("Escolha uma data e horário para agendar a consulta com o Dr." + nomeMedico);
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-        constraints.gridy = 1;
         painelConsulta.add(tempLabel);
+        painelConsulta.add(nomeMedicoLabel);
+
+        JPanel calendarPanel = new JPanel();
+        calendarPanel.setBackground(Color.WHITE);
+        calendarPanel.setLayout(new GridBagLayout());
+
+        constraints.insets = new Insets(5, 5, 5, 5);
+
+        JLabel calendarLabel = new JLabel("Calendário");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        calendarPanel.add(calendarLabel, constraints);
+
+        JCalendar calendar = new JCalendar();
+
+        calendar.setSize(400, 400);
+        calendar.getDayChooser().getDayPanel().setBackground(Color.WHITE);
+        calendar.getDayChooser().setWeekOfYearVisible(false);
+        calendar.setDecorationBackgroundColor(Color.WHITE);
+        constraints.gridy = 1;
+        calendarPanel.add(calendar, constraints);
+
+        painelConsulta.add(calendarPanel);
+
+        JPanel consultasDiaPanel = new JPanel();
+        consultasDiaPanel.setBackground(Color.WHITE);
+        consultasDiaPanel.setLayout(new GridBagLayout());
+
+        JLabel consultasDiaLabel = new JLabel("Horários disponíveis");
+        constraints.gridy = 0;
+        consultasDiaPanel.add(consultasDiaLabel, constraints);
+
+        painelConsulta.add(consultasDiaPanel);
 
         return painelConsulta;
     }
