@@ -19,11 +19,6 @@ public class LoginUI {
      * Método público para chamar a tela de login.
      */
     public static void chamarTela() {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            System.out.println("Não foi possível utilizar o recurso Look and Feel");
-        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -37,6 +32,7 @@ public class LoginUI {
      */
     private static void showLogin() {
         JPanel painel = new JPanel();
+        painel.setBackground(Color.WHITE);
         frame = new JFrame("Login");
 
         frame.setLayout(new BorderLayout());
@@ -51,6 +47,7 @@ public class LoginUI {
         JLabel passwordLabel = new JLabel("Senha");
 
         JTextField usernameField = new JTextField(20);
+        usernameField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
         JPasswordField passwordField = new JPasswordField(20);
 
         JButton loginButton = new JButton("Login");

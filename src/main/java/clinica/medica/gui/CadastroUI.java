@@ -17,11 +17,6 @@ public class CadastroUI {
      * Método de público para chamar a tela de cadastro do médico.
      */
     public static void telaCadastroMedico() {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            System.out.println("Não foi possível utilizar o recurso Look and Feel");
-        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
