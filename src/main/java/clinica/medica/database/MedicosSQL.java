@@ -5,6 +5,8 @@ import clinica.medica.documentos.Exame;
 import clinica.medica.documentos.Laudo;
 import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
+
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,8 +17,20 @@ import java.util.ArrayList;
 
 public class MedicosSQL {
     
-    public static boolean cadastrarNovoExame(String tipo, String cpf, String cpfMedico, Date data, String comentario){
+    public static boolean cadastrarNovoExame(String tipo, String cpf, String cpfMedico, Date data, String comentario, JPanel panel){
         boolean cadastro = false;
+
+        if(tipo.matches("[0-9]+")){
+            JOptionPane.showMessageDialog(panel, "Não foi possível cadastrar o exame, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if(tipo.equals("") || comentario.equals("")){
+            JOptionPane.showMessageDialog(panel, "O cadastro de exame não pode conter campos vazios !", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if(cpf.contains("_")){
+            JOptionPane.showMessageDialog(panel, "CPF inválido!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         String queryVerificacao = "SELECT * FROM pacientes WHERE cpf = ?";
         String query = "INSERT INTO exames (tipo, paciente, medicoSolicitante, comentario, data) VALUES (?, ?, ?, ?, ?)";
         
@@ -52,8 +66,13 @@ public class MedicosSQL {
         return cadastro;
     }
 
-    public static boolean cadastrarNovoLaudo(int idExame, String cpf, String cpfMedico, Date data, String conteudo){
+    public static boolean cadastrarNovoLaudo(int idExame, String cpf, String cpfMedico, Date data, String conteudo, JPanel panel){
         boolean cadastro = false;
+
+        if(conteudo.equals("")){
+            JOptionPane.showMessageDialog(panel, "O cadastro de laudo não pode conter campos vazios !", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         String query = "INSERT INTO laudos (exame, medicoSolicitante, paciente, data, conteudo) VALUES (?, ?, ?, ?, ?)";
 
         SQLiteConnection connection = new SQLiteConnection();
@@ -76,52 +95,5 @@ public class MedicosSQL {
 
         return cadastro;
     }
-    
-    public static ArrayList<Exame> verificarExames(String cpfMedico){
-        ArrayList<Exame> exames = new ArrayList();
-        String query = "SELECT * FROM exames WHERE medicoSolicitante = ?";
 
-        SQLiteConnection connection = new SQLiteConnection();
-        connection.conectar();
-        
-        try{
-            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
-            pstmt.setString(1, cpfMedico);
-            ResultSet rs = pstmt.executeQuery();
-
-            while(rs.next()) {
-                exames.add(new Exame(rs.getInt("id")));
-            }
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
-
-        connection.desconectar();
-
-        return exames;
-    }
-
-    public static ArrayList<Laudo> verificarLaudos(String cpfMedico){
-        ArrayList<Laudo> laudos = new ArrayList();
-        String query = "SELECT * FROM laudos WHERE medicoSolicitante = ?";
-
-        SQLiteConnection connection = new SQLiteConnection();
-        connection.conectar();
-
-        try{
-            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
-            pstmt.setString(1, cpfMedico);
-            ResultSet rs = pstmt.executeQuery();
-
-            while(rs.next()) {
-                laudos.add(new Laudo(rs.getInt("exame")));
-            }
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
-
-        connection.desconectar();
-
-        return laudos;
-    }
 }

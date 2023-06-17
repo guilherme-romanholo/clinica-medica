@@ -121,12 +121,10 @@ public class CadastroUI {
                 char[] senha = passwordField.getPassword();
                 String password = new String(senha);
 
-                if (UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm)) {
+                if (UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm, frame)) {
                     JOptionPane.showMessageDialog(frame, "Cadastro realizado com sucesso!");
                     frame.dispose();
                     LoginUI.frame.setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
                     usernameField.setText("");
                     cpfField.setText("");
                     emailField.setText("");
@@ -150,7 +148,7 @@ public class CadastroUI {
      * Método privado para a implementação da tela de cadastro do paciente.
      */
     protected static JPanel cadastroPaciente() {
-        String[] sexo = {"Masculino", "Feminino", "Nenhum"};
+        String[] sexo = {"Masculino", "Feminino", "Outro"};
         JPanel panel = new JPanel();
 
         panel.setLayout(new GridBagLayout());
@@ -268,10 +266,8 @@ public class CadastroUI {
                 char[] senha = passwordField.getPassword();
                 String password = new String(senha);
 
-                if (UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso)) {
+                if (UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso, panel)) {
                     JOptionPane.showMessageDialog(panel, "Cadastro do cliente realizado com sucesso!");
-                } else {
-                    JOptionPane.showMessageDialog(panel, "Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
                     usernameField.setText("");
                     cpfField.setText("");
                     emailField.setText("");

@@ -1,8 +1,6 @@
 package clinica.medica.gui;
 
-import clinica.medica.database.MedicosSQL;
-import clinica.medica.database.ReceitasSQL;
-import clinica.medica.database.UsuariosSQL;
+import clinica.medica.database.*;
 import clinica.medica.documentos.Exame;
 
 import static clinica.medica.gui.LoginUI.frame;
@@ -300,14 +298,9 @@ public class TelaLogadaMedicoUI {
                 String cpf = cpfField.getText();
                 cpf = cpf.replaceAll("[.-]", "");
                 String comentario = comentarioArea.getText();
-                if (MedicosSQL.cadastrarNovoExame(tipo, cpf, medicoLogado.getCpf(), new Date(Calendar.getInstance().getTime().getTime()), comentario)) {
+                if (MedicosSQL.cadastrarNovoExame(tipo, cpf, medicoLogado.getCpf(), new Date(Calendar.getInstance().getTime().getTime()), comentario, painelExame)) {
                     JOptionPane.showMessageDialog(painelExame, "Cadastro de exame realizado com sucesso!");
                     telaLogada.atualizaPainel(medicoLogado);
-                } else {
-                    JOptionPane.showMessageDialog(painelExame, "Não foi possível cadastrar o exame, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
-                    tipoField.setText("");
-                    cpfField.setText("");
-                    comentarioArea.setText("");
                 }
             }
         });
@@ -315,10 +308,10 @@ public class TelaLogadaMedicoUI {
     }
 
     protected static JPanel telaNovoLaudo(Medico medicoLogado, Exame exame, TelaLogadaUI telaLogada) {
-        JPanel painelExame = new JPanel();
+        JPanel painelLaudo = new JPanel();
 
-        painelExame.setLayout(new GridBagLayout());
-        painelExame.setSize(800, 600);
+        painelLaudo.setLayout(new GridBagLayout());
+        painelLaudo.setSize(800, 600);
 
         JTextArea tempLabel = new JTextArea("Novo Laudo");
         tempLabel.setEditable(false);
@@ -354,34 +347,34 @@ public class TelaLogadaMedicoUI {
 
 
         constraints.gridy = 1;
-        painelExame.add(tempLabel, constraints);
+        painelLaudo.add(tempLabel, constraints);
 
         constraints.gridy = 2;
-        painelExame.add(clinicaLabel, constraints);
+        painelLaudo.add(clinicaLabel, constraints);
 
         constraints.gridy = 3;
-        painelExame.add(tipoLabel, constraints);
+        painelLaudo.add(tipoLabel, constraints);
 
         constraints.gridy = 4;
-        painelExame.add(tipoField, constraints);
+        painelLaudo.add(tipoField, constraints);
 
         constraints.gridy = 5;
-        painelExame.add(cpfPacienteLabel, constraints);
+        painelLaudo.add(cpfPacienteLabel, constraints);
 
         constraints.gridy = 6;
-        painelExame.add(cpfField, constraints);
+        painelLaudo.add(cpfField, constraints);
 
         constraints.gridy = 7;
-        painelExame.add(comentarioLabel, constraints);
+        painelLaudo.add(comentarioLabel, constraints);
 
         constraints.gridy = 8;
-        painelExame.add(comentarioArea, constraints);
+        painelLaudo.add(comentarioArea, constraints);
 
         constraints.gridy = 9;
-        painelExame.add(cadastrarLaudoButton, constraints);
+        painelLaudo.add(cadastrarLaudoButton, constraints);
 
         constraints.gridy = 10;
-        painelExame.add(voltarButton, constraints);
+        painelLaudo.add(voltarButton, constraints);
 
         cadastrarLaudoButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -390,24 +383,20 @@ public class TelaLogadaMedicoUI {
                 String cpf = cpfField.getText();
                 cpf = cpf.replaceAll("[.-]", "");
                 String conteudo = comentarioArea.getText();
-                if (MedicosSQL.cadastrarNovoLaudo(exame.getId(), cpf, medicoLogado.getCpf(), new Date(Calendar.getInstance().getTime().getTime()), conteudo)) {
-                    JOptionPane.showMessageDialog(painelExame, "Cadastro de Laudo realizado com sucesso!");
+                if (MedicosSQL.cadastrarNovoLaudo(exame.getId(), cpf, medicoLogado.getCpf(), new Date(Calendar.getInstance().getTime().getTime()), conteudo, painelLaudo)) {
+                    JOptionPane.showMessageDialog(painelLaudo, "Cadastro de Laudo realizado com sucesso!");
                     tipoField.setText("");
                     cpfField.setText("");
                     comentarioArea.setText("");
                     telaLogada.atualizaPainel(medicoLogado);
-                } else {
-                    JOptionPane.showMessageDialog(painelExame, "Não foi possível cadastrar o laudo, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
-                    tipoField.setText("");
-                    cpfField.setText("");
-                    comentarioArea.setText("");
                 }
+
             }
         });
 
         voltarButton.addActionListener(telaLogada);
 
-        return painelExame;
+        return painelLaudo;
     }
 
     protected static JPanel telaNovaReceita(Medico medicoLogado, String pacienteCpf, TelaLogadaUI telaLogada) {
@@ -486,17 +475,12 @@ public class TelaLogadaMedicoUI {
                 String detalhes = detalhesArea.getText();
                 Receita receita = new Receita(medicoLogado.getCpf(), cpf, remedio, new Date(Calendar.getInstance().getTime().getTime()), detalhes);
 
-                if (ReceitasSQL.cadastrarReceita(receita)) {
+                if (ReceitasSQL.cadastrarReceita(receita, painelReceita)) {
                     JOptionPane.showMessageDialog(painelReceita, "Cadastro de Receita realizado com sucesso!");
                     remedioField.setText("");
                     cpfField.setText("");
                     detalhesArea.setText("");
                     telaLogada.atualizaPainel(medicoLogado);
-                } else {
-                    JOptionPane.showMessageDialog(painelReceita, "Não foi possível cadastrar o laudo, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
-                    remedioField.setText("");
-                    cpfField.setText("");
-                    detalhesArea.setText("");
                 }
             }
         });
@@ -507,7 +491,7 @@ public class TelaLogadaMedicoUI {
     }
 
     protected static JPanel showExames(Medico medicoLogado, TelaLogadaUI telaLogada) {
-        ArrayList<Exame> exames = MedicosSQL.verificarExames(medicoLogado.getCpf());
+        ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
         int i = 0;
         JPanel painelExame = new JPanel();
 
@@ -559,7 +543,7 @@ public class TelaLogadaMedicoUI {
     }
 
     protected static JPanel showExamesLaudo(Medico medicoLogado, TelaLogadaUI telaLogada) {
-        ArrayList<Exame> exames = MedicosSQL.verificarExames(medicoLogado.getCpf());
+        ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
         int i = 0;
 
         JPanel painelExame = new JPanel();
@@ -615,7 +599,7 @@ public class TelaLogadaMedicoUI {
 
 
     protected static JPanel showLaudos(Medico medicoLogado, TelaLogadaUI telaLogada) {
-        ArrayList<Laudo> laudos = MedicosSQL.verificarLaudos(medicoLogado.getCpf());
+        ArrayList<Laudo> laudos = LaudosSQL.verificarLaudos(medicoLogado.getCpf());
         int i = 0;
         JPanel painelLaudo = new JPanel();
 

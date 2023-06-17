@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.*;
 
 /**
  * Classe para realizar a consulta das informações referentes aos
@@ -146,12 +147,20 @@ public class UsuariosSQL {
      * @param crm CRM do médico.
      * @return Valor booleano se foi possível cadastrar o médico.
      */
-    public static boolean cadastroMedico(String nome, String cpf, String email, String senha, String areaAtuacao, String crm){
+    public static boolean cadastroMedico(String nome, String cpf, String email, String senha, String areaAtuacao, String crm, JFrame frame){
         boolean cadastro = false;
         //verifica validade dos dados digitados
         if(nome.matches("[0-9]+") || cpf.matches("[A-Z]+") || areaAtuacao.matches("[0-9]+") || crm.matches("[A-Z]+")){
+            JOptionPane.showMessageDialog(frame, "Não foi possível cadastrar o médico, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
         }else if(nome.equals("") || cpf.equals("") || email.equals("") || senha.equals("") || areaAtuacao.equals("") || crm.equals("")){
+            JOptionPane.showMessageDialog(frame, "O cadastro não pode conter campos vazios!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if(!email.contains("@") || (!email.contains(".com") && !email.contains(".br"))){
+            JOptionPane.showMessageDialog(frame, "Email incorreto!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if(cpf.contains("_")){
+            JOptionPane.showMessageDialog(frame, "CPF inválido!", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -192,14 +201,23 @@ public class UsuariosSQL {
      * @param peso Peso do paciente.
      * @return Valor booleano se foi possível realizar o cadastro do paciente.
      */
-    public static boolean cadastroPaciente(String nome, String cpf, String email, String senha, String endereco, String sexo, int idade, double altura, double peso){
+    public static boolean cadastroPaciente(String nome, String cpf, String email, String senha, String endereco, String sexo, int idade, double altura, double peso, JPanel panel){
         boolean cadastro = false;
         //verifica validade dos dados digitados
-        if(nome.matches("[0-9]+") || cpf.matches("[A-Z]+") || endereco.matches("[0-9]+") || sexo.matches("[0-9]+")){
+        if(nome.matches("[0-9]+") || cpf.matches("[A-Z]+") || endereco.matches("[0-9]+")){
+            JOptionPane.showMessageDialog(panel, "Não foi possível cadastrar o cliente, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
-        }else if(nome.equals("") || cpf.equals("") || email.equals("") || senha.equals("") || endereco.equals("") || sexo.equals("")){
+        }else if(nome.equals("") || email.equals("") || senha.equals("") || endereco.equals("") || sexo.equals("")){
+            JOptionPane.showMessageDialog(panel, "O cadastro não pode conter campos vazios !", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
-        }else if(idade == 0 || peso == 0 || altura == 0){
+        }else if(idade <= 0 || peso <= 0 || altura <= 0){
+            JOptionPane.showMessageDialog(panel, "Idade, Peso ou Altura inválidos !", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if(!email.contains("@") || (!email.contains(".com") && !email.contains(".br"))){
+            JOptionPane.showMessageDialog(panel, "Email incorreto!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if(cpf.contains("_")){
+            JOptionPane.showMessageDialog(panel, "CPF inválido!", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 

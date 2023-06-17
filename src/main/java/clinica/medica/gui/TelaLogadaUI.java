@@ -172,6 +172,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
             contentPanel.add(TelaLogadaPacienteUI.telaVerificarLaudo((Paciente) user, this), "Verificar laudos");
             contentPanel.add(TelaLogadaPacienteUI.telaVerificarExame((Paciente) user, this), "Verificar exames");
             contentPanel.add(TelaLogadaPacienteUI.telaAgendarConsulta(), "Agendar consulta");
+            contentPanel.add(TelaLogadaPacienteUI.telaVerificarReceitas((Paciente) user, this), "Verificar receitas");
         }
     }
 

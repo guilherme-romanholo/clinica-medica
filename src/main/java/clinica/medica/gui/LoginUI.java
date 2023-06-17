@@ -96,7 +96,18 @@ public class LoginUI {
         cadastroButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                CadastroUI.telaCadastroMedico();
+                JPasswordField passwordField = new JPasswordField();
+                int option = JOptionPane.showOptionDialog(frame, passwordField, "Digite a senha de ADMIN: ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+                // Verifica a opção selecionada pelo usuário
+                if (option == JOptionPane.OK_OPTION) {
+                    char[] password = passwordField.getPassword();
+                    String senha = new String(password);
+                    if(senha.equals("12345"))
+                        CadastroUI.telaCadastroMedico();
+                    else
+                        JOptionPane.showMessageDialog(frame, "Senha de ADMIN incorreta, tente novamente!", "Senha incorreta", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -119,7 +130,6 @@ public class LoginUI {
                     passwordField.setText("");
                 } else {
                     JOptionPane.showMessageDialog(painel, "Não foi possível logar o médico/paciente, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
-                    usernameField.setText("");
                     passwordField.setText("");
                 }
             }

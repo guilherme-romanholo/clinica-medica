@@ -2,6 +2,7 @@ package clinica.medica.database;
 
 import clinica.medica.documentos.Receita;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -43,8 +44,17 @@ public class ReceitasSQL {
         return rs;
     }
 
-    public static boolean cadastrarReceita(Receita receita){
+    public static boolean cadastrarReceita(Receita receita, JPanel panel){
         boolean cadastro = false;
+
+        if(receita.getNomeDoRemedio().matches("[0-9]+")){
+            JOptionPane.showMessageDialog(panel, "Não foi possível cadastrar a receita, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if(receita.getNomeDoRemedio().equals("") || receita.getDetalhes().equals("")){
+            JOptionPane.showMessageDialog(panel, "O cadastro de receita não pode conter campos vazios !", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         String queryVerificacao = "SELECT * FROM pacientes WHERE cpf = ?";
         String query = "INSERT INTO receitas (nomeDoRemedio, detalhes, medico, paciente, data) VALUES (?, ?, ?, ?, ?)";
 
