@@ -1,5 +1,7 @@
 package clinica.medica.gui;
 
+import clinica.medica.consultas.Consulta;
+import clinica.medica.database.ConsultaSQL;
 import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
 import clinica.medica.usuarios.Usuario;
@@ -11,7 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static clinica.medica.gui.LoginUI.frame;
 
@@ -259,42 +263,47 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
 
-        // ============ Calendário ============
+        // ============ Consultas do dia ============
         JPanel consultasPanel = new JPanel();
         consultasPanel.setBackground(Color.WHITE);
-        consultasPanel.setLayout(new GridLayout(1, 2));
-
-        JPanel calendarPanel = new JPanel();
-        calendarPanel.setBackground(Color.WHITE);
-        calendarPanel.setLayout(new GridBagLayout());
-
-        constraints.insets = new Insets(5, 5, 5, 5);
-
-        JLabel calendarLabel = new JLabel("Calendário");
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        calendarPanel.add(calendarLabel, constraints);
-
-        JCalendar calendar = new JCalendar();
-
-        calendar.setSize(400, 400);
-        calendar.getDayChooser().getDayPanel().setBackground(Color.WHITE);
-        calendar.getDayChooser().setWeekOfYearVisible(false);
-        calendar.setDecorationBackgroundColor(Color.WHITE);
-        constraints.gridy = 1;
-        calendarPanel.add(calendar, constraints);
-
-        consultasPanel.add(calendarPanel);
-
-        JPanel consultasDiaPanel = new JPanel();
-        consultasDiaPanel.setBackground(Color.WHITE);
-        consultasDiaPanel.setLayout(new GridBagLayout());
+        consultasPanel.setLayout(new GridBagLayout());
 
         JLabel consultasDiaLabel = new JLabel("Consultas do Dia");
+        constraints.gridx = 0;
         constraints.gridy = 0;
-        consultasDiaPanel.add(consultasDiaLabel, constraints);
+        consultasPanel.add(consultasDiaLabel, constraints);
 
-        consultasPanel.add(consultasDiaPanel);
+        ArrayList<Consulta> consultas = null;
+
+        if (user instanceof Medico medico) {
+            consultas = ConsultaSQL.selectAllConsultasFromMedico(medico.getCpf(), new Date(Calendar.getInstance().getTimeInMillis()));
+        } else if (user instanceof Paciente paciente) {
+            consultas = ConsultaSQL.selectAllConsultasFromPaciente(paciente.getCpf(), new Date(Calendar.getInstance().getTimeInMillis()));
+        }
+
+        String[] listaConsulta;
+
+        if (consultas.size() == 0) {
+            listaConsulta = new String[1];
+            listaConsulta[0] = "Não há consultas agendadas para hoje";
+        } else {
+            listaConsulta = new String[consultas.size()];
+        }
+
+        int i = 0;
+        for (Consulta rc: consultas) {
+            if(rc.isRealizada())
+                listaConsulta[i] = "Consulta já realizada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            else
+                listaConsulta[i] = "Consulta marcada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            i++;
+        }
+
+        JList<String> list = new JList<>(listaConsulta);
+        list.setEnabled(false);
+
+        constraints.gridy = 1;
+        consultasPanel.add(list, constraints);
 
         painelPrincipal.add(consultasPanel, BorderLayout.CENTER);
 

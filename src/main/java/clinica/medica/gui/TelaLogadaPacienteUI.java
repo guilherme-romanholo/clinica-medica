@@ -126,7 +126,7 @@ public class TelaLogadaPacienteUI {
         return painelConsulta;
     }
 
-    protected static JPanel telaNovaConsulta(Paciente pacienteLogado, String medicoSolicitado, String cpfMedico, Date data, String horario, TelaLogadaUI telaLogada) {
+    protected static JPanel telaNovaConsulta(Paciente pacienteLogado, String medicoSolicitado, String cpfMedico, Date data, TelaLogadaUI telaLogada) {
         JPanel painelConsulta = new JPanel();
 
         painelConsulta.setLayout(new GridBagLayout());
@@ -152,10 +152,8 @@ public class TelaLogadaPacienteUI {
         dataField.setEditable(false);
         dataField.setEnabled(false);
 
-        JTextField horarioField = new JTextField(20);
-        horarioField.setText(horario + " horas");
-        horarioField.setEditable(false);
-        horarioField.setEnabled(false);
+        String[] horariosDisponiveis = HorariosSQL.selectHorariosDisponiveis(cpfMedico, data);
+        JComboBox<String> horariosCombo = new JComboBox<>(horariosDisponiveis);
 
         JTextField medicoField = new JTextField(20);
         medicoField.setText(medicoSolicitado);
@@ -191,7 +189,7 @@ public class TelaLogadaPacienteUI {
         painelConsulta.add(horariolabel, constraints);
 
         constraints.gridy = 5;
-        painelConsulta.add(horarioField, constraints);
+        painelConsulta.add(horariosCombo, constraints);
 
         constraints.gridy = 6;
         painelConsulta.add(cpfPacienteLabel, constraints);
@@ -223,6 +221,7 @@ public class TelaLogadaPacienteUI {
                 String cpf = cpfField.getText();
                 cpf = cpf.replaceAll("[.-]", "");
                 String conteudo = comentarioArea.getText();
+                String horario = (String) horariosCombo.getSelectedItem();
                 if (ConsultaSQL.salvarConsulta(data, cpfMedico, pacienteLogado.getCpf(),conteudo, horario)) {
                     JOptionPane.showMessageDialog(painelConsulta, "Agendamento de consulta realizado com sucesso!");
                     telaLogada.atualizaPainel(pacienteLogado);
@@ -241,6 +240,7 @@ public class TelaLogadaPacienteUI {
         painelConsulta.setLayout(new GridLayout(3,2));
         painelConsulta.setSize(800, 600);
         painelConsulta.setBackground(Color.WHITE);
+
         GridBagConstraints constraints = new GridBagConstraints();
 
         JTextArea tempLabel = new JTextArea("Agendar consulta");
@@ -286,12 +286,6 @@ public class TelaLogadaPacienteUI {
 
         painelConsulta.add(consultasHorarioPanel);
 
-        String[] horariosDisponiveis = HorariosSQL.selectHorariosDisponiveis(cpfMedico, new Date(Calendar.getInstance().getTime().getTime()));
-        JList<String> horarios = new JList<>(horariosDisponiveis);
-
-        JScrollPane scrollPanel = new JScrollPane(horarios);
-        scrollPanel.setPreferredSize(new Dimension(100, 100));
-
         // ================ Listeners ================
 
         class MeuPropertyListener implements PropertyChangeListener {
@@ -301,44 +295,22 @@ public class TelaLogadaPacienteUI {
                 if ("calendar".equals(e.getPropertyName())) {
                     Calendar selectedCalendar = (Calendar) e.getNewValue();
                     this.data = new Date(selectedCalendar.getTimeInMillis());
-                    String[] horariosDisponiveis = HorariosSQL.selectHorariosDisponiveis(cpfMedico, this.data);
-                    /*
-                    for (String h:horariosDisponiveis) {
-                        System.out.println(h);
-                    }
-
-                     */
-                    JList<String> horarios = new JList<>(horariosDisponiveis);
-
-                    JScrollPane scrollPanel = new JScrollPane(horarios);
-                    scrollPanel.setPreferredSize(new Dimension(100, 100));
-
-                    constraints.gridy = 1;
-                    consultasHorarioPanel.add(scrollPanel, constraints);
-                    consultasHorarioPanel.revalidate();
                 }
             }
 
             public class MeuMouseListener extends MouseAdapter {
-                private JList<String> horariosList;
-
-                public MeuMouseListener(JList<String> horariosList){
-                    this.horariosList = horariosList;
-                }
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    String horarioSelecionado = horariosList.getSelectedValue();
-                    telaLogada.getContentPanel().add(telaNovaConsulta(pacienteLogado, nomeMedico, cpfMedico,  data, horarioSelecionado, telaLogada), "Agendar a consulta");
+                    telaLogada.getContentPanel().add(telaNovaConsulta(pacienteLogado, nomeMedico, cpfMedico,  data, telaLogada), "Agendar a consulta");
                     telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Agendar a consulta");
                 }
             }
         }
 
-
         MeuPropertyListener propertyListener = new MeuPropertyListener();
         calendar.addPropertyChangeListener(propertyListener);
 
-        MeuPropertyListener.MeuMouseListener meuMouseListener = propertyListener.new MeuMouseListener(horarios);
+        MeuPropertyListener.MeuMouseListener meuMouseListener = propertyListener.new MeuMouseListener();
         agendarConsultaButton.addMouseListener(meuMouseListener);
 
         return painelConsulta;

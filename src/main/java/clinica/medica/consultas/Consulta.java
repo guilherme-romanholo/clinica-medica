@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class Consulta {
     private int id;
-    private Date data;
+    private String data;
     private Medico medico;
     private Paciente paciente;
     private boolean realizada;
@@ -26,7 +26,7 @@ public class Consulta {
         try {
             this.medico = new Medico(rs.getString("medico"));
             this.setPaciente(new Paciente(rs.getString("paciente")));
-            this.setData(rs.getDate("data"));
+            this.setData(rs.getString("data"));
             this.setRealizada(rs.getBoolean("realizada"));
             this.setDescricao(rs.getString("descricao"));
             this.setHorario(rs.getString("horario"));
@@ -47,11 +47,11 @@ public class Consulta {
         this.id = id;
     }
 
-    public Date getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(String data) {
         this.data = data;
     }
 

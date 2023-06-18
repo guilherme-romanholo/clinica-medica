@@ -28,10 +28,13 @@ public class HorariosSQL {
             e.printStackTrace();
         }
 
+        LocalDate localDate = data.toLocalDate();
+        String dataFormatada = localDate.getYear() + "-" + localDate.getMonthValue() + "-" + localDate.getDayOfMonth();
+
         try {
             PreparedStatement pstmt = connection.getConn().prepareStatement(queryVerificacao);
             pstmt.setString(1, medicoCpf);
-            pstmt.setLong(2, data.getTime());
+            pstmt.setString(2, dataFormatada);
             rs2 = pstmt.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,11 +44,9 @@ public class HorariosSQL {
 
         try {
             while (rs.next()) {
-                System.out.println("teste");
                 horariosDisponiveis.add(rs.getString("horario"));
             }
             while (rs2.next()) {
-                System.out.println(rs2.getString("horario"));
                 if (horariosDisponiveis.contains(rs2.getString("horario"))){
                     horariosDisponiveis.remove(rs2.getString("horario"));
                 }
