@@ -76,6 +76,7 @@ public class ConsultaSQL {
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
 
+
         try {
             PreparedStatement pstmt = connection.getConn().prepareStatement(query);
             pstmt.setString(1, cpfMedico);

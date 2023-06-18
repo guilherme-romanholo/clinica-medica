@@ -130,7 +130,7 @@ public class TelaLogadaPacienteUI {
         JPanel painelConsulta = new JPanel();
 
         painelConsulta.setLayout(new GridBagLayout());
-        painelConsulta.setSize(800, 600);
+        //painelConsulta.setSize(100, 100);
 
         JTextArea tempLabel = new JTextArea("Nova consulta");
         tempLabel.setEditable(false);
@@ -163,6 +163,7 @@ public class TelaLogadaPacienteUI {
         medicoField.setEnabled(false);
 
         JTextArea comentarioArea = new JTextArea(20, 40);
+        comentarioArea.setSize(new Dimension(100, 100));
         comentarioArea.setEditable(true);
         comentarioArea.setLineWrap(true);
         comentarioArea.setWrapStyleWord(true);
@@ -172,7 +173,7 @@ public class TelaLogadaPacienteUI {
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
+        //constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
 
@@ -285,13 +286,28 @@ public class TelaLogadaPacienteUI {
 
         painelConsulta.add(consultasHorarioPanel);
 
-        calendar.addPropertyChangeListener(new PropertyChangeListener() {
+        String[] horariosDisponiveis = HorariosSQL.selectHorariosDisponiveis(cpfMedico, new Date(Calendar.getInstance().getTime().getTime()));
+        JList<String> horarios = new JList<>(horariosDisponiveis);
+
+        JScrollPane scrollPanel = new JScrollPane(horarios);
+        scrollPanel.setPreferredSize(new Dimension(100, 100));
+
+        // ================ Listeners ================
+
+        class MeuPropertyListener implements PropertyChangeListener {
+            protected Date data;
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("calendar".equals(e.getPropertyName())) {
                     Calendar selectedCalendar = (Calendar) e.getNewValue();
-                    Date sqlDate = new Date(selectedCalendar.getTimeInMillis());
-                    String[] horariosDisponiveis = HorariosSQL.selectHorariosDisponiveis(cpfMedico, sqlDate);
+                    this.data = new Date(selectedCalendar.getTimeInMillis());
+                    String[] horariosDisponiveis = HorariosSQL.selectHorariosDisponiveis(cpfMedico, this.data);
+                    /*
+                    for (String h:horariosDisponiveis) {
+                        System.out.println(h);
+                    }
+
+                     */
                     JList<String> horarios = new JList<>(horariosDisponiveis);
 
                     JScrollPane scrollPanel = new JScrollPane(horarios);
@@ -302,29 +318,28 @@ public class TelaLogadaPacienteUI {
                     consultasHorarioPanel.revalidate();
                 }
             }
-        });
 
-        agendarConsultaButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Component[] components = consultasHorarioPanel.getComponents();
-                System.out.println(components.length);
-                JList<String> listAux = null;
-                for (Component component : components) {
-                    System.out.println(component.getName());
-                    if (component instanceof JList) {
-                        listAux = (JList<String>) component;
-                        break;
-                    }
+            public class MeuMouseListener extends MouseAdapter {
+                private JList<String> horariosList;
+
+                public MeuMouseListener(JList<String> horariosList){
+                    this.horariosList = horariosList;
                 }
-               // String horarioSelecionado = listAux.getSelectedValue();
-                telaLogada.getContentPanel().add(telaNovaConsulta(pacienteLogado, nomeMedico, cpfMedico,  new Date(Calendar.getInstance().getTime().getTime()), "8", telaLogada), "Agendar a consulta");
-                telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Agendar a consulta");
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    String horarioSelecionado = horariosList.getSelectedValue();
+                    telaLogada.getContentPanel().add(telaNovaConsulta(pacienteLogado, nomeMedico, cpfMedico,  data, horarioSelecionado, telaLogada), "Agendar a consulta");
+                    telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Agendar a consulta");
+                }
             }
-        });
+        }
 
 
+        MeuPropertyListener propertyListener = new MeuPropertyListener();
+        calendar.addPropertyChangeListener(propertyListener);
 
+        MeuPropertyListener.MeuMouseListener meuMouseListener = propertyListener.new MeuMouseListener(horarios);
+        agendarConsultaButton.addMouseListener(meuMouseListener);
 
         return painelConsulta;
     }

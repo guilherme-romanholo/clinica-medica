@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class HorariosSQL {
@@ -28,7 +31,7 @@ public class HorariosSQL {
         try {
             PreparedStatement pstmt = connection.getConn().prepareStatement(queryVerificacao);
             pstmt.setString(1, medicoCpf);
-            pstmt.setDate(2, data);;
+            pstmt.setLong(2, data.getTime());
             rs2 = pstmt.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,15 +40,15 @@ public class HorariosSQL {
         ArrayList<String> horariosDisponiveis = new ArrayList<>();
 
         try {
-            if(rs2.next()) {
-                while (rs2.next()) {
-                    if (!(rs2.getString("horario").equals(rs.getString("horario")))) {
-                        horariosDisponiveis.add(rs.getString("horario"));
-                    }
+            while (rs.next()) {
+                System.out.println("teste");
+                horariosDisponiveis.add(rs.getString("horario"));
+            }
+            while (rs2.next()) {
+                System.out.println(rs2.getString("horario"));
+                if (horariosDisponiveis.contains(rs2.getString("horario"))){
+                    horariosDisponiveis.remove(rs2.getString("horario"));
                 }
-            }else{
-                while(rs.next())
-                    horariosDisponiveis.add(rs.getString("horario"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,7 +56,15 @@ public class HorariosSQL {
 
         connection.desconectar();
 
-        return horariosDisponiveis.toArray(new String[horariosDisponiveis.size()]);
+        String[] lista = horariosDisponiveis.toArray(new String[horariosDisponiveis.size()]);
+
+        if (horariosDisponiveis.size() == 0) {
+            String[] ret = new String[1];
+            ret[0] = "Não existem horários disponíveis nesse dia.";
+            return ret;
+        } else {
+            return lista;
+        }
     }
 
     public static void salvarHorarios(String horario, String cpfMedico){
