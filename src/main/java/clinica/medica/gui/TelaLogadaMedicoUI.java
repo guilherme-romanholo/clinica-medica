@@ -16,9 +16,13 @@ import clinica.medica.usuarios.Usuario;
 import com.toedter.calendar.JCalendar;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -133,10 +137,11 @@ public class TelaLogadaMedicoUI {
         
         JTextArea tempLabel = new JTextArea("Área da Consulta");
 
-        JButton novaConsultaButton = new JButton("Agendar nova consulta");
+        JButton novaConsultaButton = new JButton("Agendar novo encaixe");
         JButton verificarConsultaButton = new JButton("Verificar consultas");
 
         verificarConsultaButton.addActionListener(telaLogada);
+        novaConsultaButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
@@ -154,88 +159,202 @@ public class TelaLogadaMedicoUI {
         
         return painelConsulta;
     }
-    /*
-    protected static JPanel telaNovaConsulta(TelaLogadaUI telaLogada) {
-        JPanel painelExame = new JPanel();
 
-        painelExame.setLayout(new GridBagLayout());
-        painelExame.setSize(800, 600);
+    protected static JPanel telaNovoEncaixe(Medico medicoLogado,Date data, TelaLogadaUI telaLogada) {
+        JPanel painelEncaixe = new JPanel();
 
-        JTextArea tempLabel = new JTextArea("Nova consulta");
+        painelEncaixe.setLayout(new GridBagLayout());
+        //painelConsulta.setSize(100, 100);
+
+        JTextArea tempLabel = new JTextArea("Nova Encaixe");
         tempLabel.setEditable(false);
 
-        JLabel tipoLabel = new JLabel("Tipo da consulta");
+        JLabel dataLabel = new JLabel("Data do encaixe");
+        JLabel horariolabel = new JLabel("Horário");
+        JLabel medicoLabel = new JLabel("Medico");
         JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
-        JLabel comentarioLabel = new JLabel("Comentários");
+        JLabel comentarioLabel = new JLabel("Descrição");
+        JLabel motivoEmergencia = new JLabel("Motivo da emergência");
+
 
         JFormattedTextField cpfField = CadastroUI.inicializaCpf();
 
-        JTextField tipoField = new JTextField(20);
-        JTextArea comentarioArea = new JTextArea(20, 40);
+        JTextField dataField = new JTextField(20);
+        dataField.setText(data.toString());
+        dataField.setEditable(false);
+        dataField.setEnabled(false);
+
+        String[] horariosDisponiveis = {"8","9","10","11","12","13","14","15","16","17"};
+        JComboBox<String> horariosCombo = new JComboBox<>(horariosDisponiveis);
+
+        JTextField medicoField = new JTextField(20);
+        medicoField.setText(medicoLogado.getNome());
+        medicoField.setEditable(false);
+        medicoField.setEnabled(false);
+
+        JTextArea comentarioArea = new JTextArea(10, 20);
+        comentarioArea.setSize(new Dimension(20, 20));
         comentarioArea.setEditable(true);
         comentarioArea.setLineWrap(true);
         comentarioArea.setWrapStyleWord(true);
 
-        JButton cadastrarExameButton = new JButton("Cadastrar consulta");
+        JTextArea motivoArea = new JTextArea(10, 20);
+        comentarioArea.setSize(new Dimension(20, 20));
+        comentarioArea.setEditable(true);
+        comentarioArea.setLineWrap(true);
+        comentarioArea.setWrapStyleWord(true);
+
+
+
+        JButton cadastrarEncaixeButton = new JButton("Agendar encaixe");
         JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
+        //constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+
         constraints.gridy = 1;
-        painelExame.add(tempLabel, constraints);
+        painelEncaixe.add(tempLabel, constraints);
+
 
         constraints.gridy = 2;
-        painelExame.add(tipoLabel, constraints);
+        painelEncaixe.add(dataLabel, constraints);
 
         constraints.gridy = 3;
-        painelExame.add(tipoField, constraints);
+        painelEncaixe.add(dataField, constraints);
 
         constraints.gridy = 4;
-        painelExame.add(cpfPacienteLabel, constraints);
+        painelEncaixe.add(horariolabel, constraints);
 
         constraints.gridy = 5;
-        painelExame.add(cpfField, constraints);
+        painelEncaixe.add(horariosCombo, constraints);
 
         constraints.gridy = 6;
-        painelExame.add(comentarioLabel, constraints);
+        painelEncaixe.add(cpfPacienteLabel, constraints);
 
         constraints.gridy = 7;
-        painelExame.add(comentarioArea, constraints);
+        painelEncaixe.add(cpfField, constraints);
 
         constraints.gridy = 8;
-        painelExame.add(cadastrarExameButton, constraints);
+        painelEncaixe.add(medicoLabel, constraints);
 
         constraints.gridy = 9;
-        painelExame.add(voltarButton, constraints);
+        painelEncaixe.add(medicoField, constraints);
 
+        constraints.gridy = 10;
+        painelEncaixe.add(comentarioLabel, constraints);
 
-        cadastrarExameButton.addMouseListener(new MouseAdapter() {
+        constraints.gridy = 11;
+        painelEncaixe.add(comentarioArea, constraints);
+
+        constraints.gridy = 12;
+        painelEncaixe.add(motivoEmergencia, constraints);
+
+        constraints.gridy = 13;
+        painelEncaixe.add(motivoArea, constraints);
+
+        constraints.gridy = 14;
+        painelEncaixe.add(cadastrarEncaixeButton, constraints);
+
+        constraints.gridy = 15;
+        painelEncaixe.add(voltarButton, constraints);
+
+        cadastrarEncaixeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                String tipo = tipoField.getText();
                 String cpf = cpfField.getText();
                 cpf = cpf.replaceAll("[.-]", "");
-                String comentario = comentarioArea.getText();
-           
-                if (0000000000000000000000) {
-                    JOptionPane.showMessageDialog(painelExame, "Cadastro de consulta realizado com sucesso!");
+                String conteudo = comentarioArea.getText();
+                String motivo = motivoArea.getText();
+                String horario = (String) horariosCombo.getSelectedItem();
+                if (ConsultaSQL.salvarEncaixe(data, medicoLogado.getCpf(), cpf,conteudo,motivo, horario)) {
+                    JOptionPane.showMessageDialog(painelEncaixe, "Agendamento de encaixe realizado com sucesso!");
                     telaLogada.atualizaPainel(medicoLogado);
-                } else {
-                    JOptionPane.showMessageDialog(painelExame, "Não foi possível cadastrar a consulta, tente novamente!", "ERRO", JOptionPane.ERROR_MESSAGE);
-                    tipoField.setText("");
-                    cpfField.setText("");
-                    comentarioArea.setText("");
                 }
-            
+
             }
         });
-        return painelExame;    
+
+        voltarButton.addActionListener(telaLogada);
+
+        return painelEncaixe;
     }
-    */
+
+    protected  static JPanel telaAgendarEncaixe(Medico medicoLogado, TelaLogadaUI telaLogada){
+        JPanel painelConsulta = new JPanel();
+
+        painelConsulta.setLayout(new GridLayout(3,2));
+        painelConsulta.setSize(800, 600);
+        painelConsulta.setBackground(Color.WHITE);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        JTextArea tempLabel = new JTextArea("Agendar encaixe");
+        JLabel nomeMedicoLabel = new JLabel("Escolha uma data para agendar o encaixe");
+
+        painelConsulta.add(tempLabel);
+        painelConsulta.add(nomeMedicoLabel);
+
+        JPanel calendarPanel = new JPanel();
+        calendarPanel.setBackground(Color.WHITE);
+        calendarPanel.setLayout(new GridBagLayout());
+
+        constraints.insets = new Insets(5, 5, 5, 5);
+
+        JLabel calendarLabel = new JLabel("Calendário");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        calendarPanel.add(calendarLabel, constraints);
+
+        JCalendar calendar = new JCalendar();
+
+        calendar.setSize(400, 400);
+        calendar.getDayChooser().getDayPanel().setBackground(Color.WHITE);
+        calendar.getDayChooser().setWeekOfYearVisible(false);
+        calendar.setDecorationBackgroundColor(Color.WHITE);
+        calendar.setMinSelectableDate(new Date(Calendar.getInstance().getTime().getTime()));
+        constraints.gridy = 1;
+        calendarPanel.add(calendar, constraints);
+
+        painelConsulta.add(calendarPanel);
+
+        JButton agendarConsultaButton = new JButton("Agendar o encaixe");
+
+        painelConsulta.add(agendarConsultaButton);
+
+        // ================ Listeners ================
+
+        class MeuPropertyListener implements PropertyChangeListener {
+            protected Date data;
+            @Override
+            public void propertyChange(PropertyChangeEvent e) {
+                if ("calendar".equals(e.getPropertyName())) {
+                    Calendar selectedCalendar = (Calendar) e.getNewValue();
+                    this.data = new Date(selectedCalendar.getTimeInMillis());
+                }
+            }
+
+            public class MeuMouseListener extends MouseAdapter {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    telaLogada.getContentPanel().add(telaNovoEncaixe(medicoLogado, data, telaLogada), "Agendar o encaixe");
+                    telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Agendar o encaixe");
+                }
+            }
+        }
+
+        MeuPropertyListener propertyListener = new MeuPropertyListener();
+        calendar.addPropertyChangeListener(propertyListener);
+
+        MeuPropertyListener.MeuMouseListener meuMouseListener = propertyListener.new MeuMouseListener();
+        agendarConsultaButton.addMouseListener(meuMouseListener);
+
+        return painelConsulta;
+
+    }
+
     protected static JPanel telaNovoExame(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelExame = new JPanel();
 
@@ -620,10 +739,11 @@ public class TelaLogadaMedicoUI {
         constraints.gridx = 0;
 
         String[] listaConsulta = new String[consultas.size()];
-
+        System.out.println(consultas.size());
         for (Consulta rc: consultas) {
-            //if(!rc.isRealizada())
+            if(!rc.isRealizada())
                 listaConsulta[i] = "Consulta marcada - " + "Paciente: " + rc.getPaciente().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            i++;
         }
 
         JList<String> list = new JList<>(listaConsulta);
@@ -648,7 +768,57 @@ public class TelaLogadaMedicoUI {
                 String[] elementos = consultaSelecionada.split("-");
                 int id = Integer.parseInt(elementos[6].strip());
                 Consulta consulta = new Consulta(id);
-                JOptionPane.showMessageDialog(painelConsulta, "Comentários do paciente: " + consulta.getDescricao(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                if(consulta.getMotivoCancelamento().equals(""))
+                    JOptionPane.showMessageDialog(painelConsulta, "Comentários do paciente: " + consulta.getDescricao(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                else if(!consulta.getMotivoCancelamento().equals(""))
+                    JOptionPane.showMessageDialog(painelConsulta, "Comentários do paciente: " + consulta.getDescricao() + "\n\n Motivo do cancelamento: " + consulta.getMotivoCancelamento(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+       editarConsultaButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String consultaSelecionada = list.getSelectedValue();
+                String[] elementos = consultaSelecionada.split("-");
+                int id = Integer.parseInt(elementos[6].strip());
+                Consulta consulta = new Consulta(id);
+
+                JRadioButton feitaButton = new JRadioButton("Marcar consulta como realizada");
+                JRadioButton canceladaButton = new JRadioButton("Cancelar consulta");
+                ButtonGroup radioGroup = new ButtonGroup();
+                radioGroup.add(feitaButton);
+                radioGroup.add(canceladaButton);
+
+                JPanel radioPanel = new JPanel();
+                radioPanel.setLayout(new FlowLayout());
+                radioPanel.add(feitaButton);
+                radioPanel.add(canceladaButton);
+
+                ;
+
+                int option = JOptionPane.showOptionDialog(painelConsulta,radioPanel, "Selecione uma opção", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+                if(option == JOptionPane.OK_OPTION){
+                    if(feitaButton.isSelected()){
+                        ConsultaSQL.atualizaConsulta(consulta.getId());
+                        JOptionPane.showMessageDialog(painelConsulta, "Consulta finalizada com sucesso! ", "Consulta finalizada", JOptionPane.INFORMATION_MESSAGE);
+                    }else if(canceladaButton.isSelected()){
+                        JPanel fieldPanel = new JPanel();
+                        fieldPanel.setLayout(new BorderLayout());
+                        JLabel motivoLabel = new JLabel("Digite o motivo do cancelamento");
+                        JTextArea cancelamento = new JTextArea(10,10);
+                        cancelamento.setEditable(true);
+                        cancelamento.setLineWrap(true);
+                        fieldPanel.add(motivoLabel,BorderLayout.NORTH);
+                        fieldPanel.add(cancelamento,BorderLayout.SOUTH);
+                        int option2 = JOptionPane.showOptionDialog(painelConsulta,fieldPanel, "Cancelamento", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+                        if(option2 == JOptionPane.OK_OPTION){
+                            String motivo = cancelamento.getText();
+                            ConsultaSQL.atualizaConsulta(consulta.getId(),motivo);
+                            JOptionPane.showMessageDialog(painelConsulta, "Consulta cancelada com sucesso!", "Consulta cancelada", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                }
             }
         });
 

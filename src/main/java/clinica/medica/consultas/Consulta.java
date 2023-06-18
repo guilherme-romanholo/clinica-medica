@@ -17,6 +17,8 @@ public class Consulta {
     private String descricao;
     private String horario;
 
+    private String motivoCancelamento;
+
     public Consulta(int id) {
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
@@ -31,6 +33,7 @@ public class Consulta {
             this.setDescricao(rs.getString("descricao"));
             this.setHorario(rs.getString("horario"));
             this.setId(id);
+            this.setMotivoCancelamento(rs.getString("motivoCancelamento"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             System.out.println("Não foi possível criar a consulta.");
@@ -93,5 +96,13 @@ public class Consulta {
 
     public void setHorario(String horario) {
         this.horario = horario;
+    }
+
+    public String getMotivoCancelamento() {
+        return motivoCancelamento;
+    }
+
+    public void setMotivoCancelamento(String motivoCancelamento) {
+        this.motivoCancelamento = motivoCancelamento;
     }
 }

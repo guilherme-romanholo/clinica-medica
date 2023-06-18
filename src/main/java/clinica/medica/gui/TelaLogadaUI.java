@@ -169,6 +169,7 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
             contentPanel.add(TelaLogadaMedicoUI.telaPrescreverLaudo(this), "Laudos");
             contentPanel.add(TelaLogadaMedicoUI.telaPrescreverReceita((Medico) user, this), "Receitas");
             contentPanel.add(TelaLogadaMedicoUI.telaAgendarConsulta((Medico) user, this), "Consultas");
+            contentPanel.add(TelaLogadaMedicoUI.telaAgendarEncaixe((Medico) user, this), "Agendar novo encaixe");
             contentPanel.add(CadastroUI.cadastroPaciente(), "Cadastrar paciente");
             contentPanel.add(TelaLogadaMedicoUI.telaNovoExame((Medico) user, this), "Prescrever novo exame");
             contentPanel.add(TelaLogadaMedicoUI.showExames((Medico) user, this), "Verificar exames");
@@ -292,10 +293,17 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
 
         int i = 0;
         for (Consulta rc: consultas) {
-            if(rc.isRealizada())
-                listaConsulta[i] = "Consulta já realizada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
-            else
-                listaConsulta[i] = "Consulta marcada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            if(user instanceof Paciente) {
+                if (rc.isRealizada())
+                    listaConsulta[i] = "Consulta já realizada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                else
+                    listaConsulta[i] = "Consulta marcada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            }else if( user instanceof Medico){
+                if (rc.isRealizada())
+                    listaConsulta[i] = "Consulta já realizada - " + "Paciente: " + rc.getPaciente().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                else
+                    listaConsulta[i] = "Consulta marcada - " + "Paciente: " + rc.getPaciente().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            }
             i++;
         }
 

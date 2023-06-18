@@ -94,9 +94,12 @@ public class TelaLogadaPacienteUI {
         String[] listaConsulta = new String[consultas.size()];
 
         for (Consulta rc: consultas) {
-            if(rc.isRealizada())
-                listaConsulta[i] = "Consulta já realizada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
-            else
+            if(rc.isRealizada()) {
+                if (rc.getMotivoCancelamento().equals(""))
+                    listaConsulta[i] = "Consulta já realizada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                else
+                    listaConsulta[i] = "Consulta cancelada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            }else
                 listaConsulta[i] = "Consulta marcada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
             i++;
         }
@@ -119,7 +122,10 @@ public class TelaLogadaPacienteUI {
                 String[] elementos = consultaSelecionada.split("-");
                 int id = Integer.parseInt(elementos[6].strip());
                 Consulta consulta = new Consulta(id);
-                JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                if(consulta.getMotivoCancelamento().equals(""))
+                    JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao() + "\n\n Motivo do cancelamento: " + consulta.getMotivoCancelamento(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -244,7 +250,7 @@ public class TelaLogadaPacienteUI {
         GridBagConstraints constraints = new GridBagConstraints();
 
         JTextArea tempLabel = new JTextArea("Agendar consulta");
-        JLabel nomeMedicoLabel = new JLabel("Escolha uma data e horário para agendar a consulta com o Dr." + nomeMedico);
+        JLabel nomeMedicoLabel = new JLabel("Escolha uma data para agendar a consulta com o Dr." + nomeMedico);
 
         painelConsulta.add(tempLabel);
         painelConsulta.add(nomeMedicoLabel);

@@ -37,6 +37,7 @@ public class PacientesSQL {
         ArrayList<Laudo> laudos = new ArrayList();
         String query = "SELECT * FROM laudos WHERE paciente = ?";
 
+
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
 

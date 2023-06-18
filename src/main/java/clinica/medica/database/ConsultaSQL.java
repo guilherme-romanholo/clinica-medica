@@ -121,7 +121,7 @@ public class ConsultaSQL {
 
     public static boolean salvarConsulta(Date data, String cpfMedico, String cpfPaciente, String descricao, String horario){
         boolean cadastro = false;
-        String query = "INSERT INTO consultas (medico, paciente, data, descricao, realizada, horario) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO consultas (medico, paciente, data, descricao, realizada, horario, motivoCancelamento) VALUES (?, ?, ?, ?, ?, ?, ?)";
         if(descricao.equals("")){
             return false;
         }
@@ -139,6 +139,7 @@ public class ConsultaSQL {
             pstmt.setString(4, descricao);
             pstmt.setBoolean(5, false);
             pstmt.setString(6, horario);
+            pstmt.setString(7, "");
             pstmt.executeUpdate();
             cadastro = true;
         } catch (SQLException e) {
@@ -148,5 +149,93 @@ public class ConsultaSQL {
         connection.desconectar();
 
         return cadastro;
+    }
+
+    public static boolean salvarEncaixe(Date data, String cpfMedico, String cpfPaciente, String descricao,String motivo, String horario){
+        boolean cadastro = false;
+        String queryVerificacao = "SELECT * FROM pacientes WHERE cpf = ?";
+        String query = "INSERT INTO consultas (medico, paciente, data, descricao, realizada, horario, motivoCancelamento) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        if(descricao.equals("") || motivo.equals("")){
+            return false;
+        }
+        SQLiteConnection connection = new SQLiteConnection();
+        connection.conectar();
+
+        try {
+            PreparedStatement pstmt = connection.getConn().prepareStatement(queryVerificacao);
+            pstmt.setString(1, cpfPaciente);
+            ResultSet rs = pstmt.executeQuery();
+            if(!rs.next()){
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        LocalDate localDate = data.toLocalDate();
+        String dataFormatada = localDate.getYear() + "-" + localDate.getMonthValue() + "-" + localDate.getDayOfMonth();
+
+        try {
+            PreparedStatement pstmt = connection.getConn().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, cpfMedico);
+            pstmt.setString(2, cpfPaciente);
+            pstmt.setString(3, dataFormatada);
+            pstmt.setString(4, descricao);
+            pstmt.setBoolean(5, false);
+            pstmt.setString(6, horario);
+            pstmt.setString(7, "");
+            int verificacao = pstmt.executeUpdate();
+            if(verificacao > 0){
+                ResultSet chaveGerada = pstmt.getGeneratedKeys();
+                int chavePrimaria = chaveGerada.getInt(1);
+                String queryEncaixe = "INSERT INTO encaixes (motivoEmergencia, idConsulta) VALUES (?, ?)";
+                PreparedStatement pstmt2 = connection.getConn().prepareStatement(queryEncaixe);
+                pstmt2.setString(1, motivo);
+                pstmt2.setInt(2, chavePrimaria);
+                pstmt2.executeUpdate();
+                cadastro = true;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        connection.desconectar();
+
+        return cadastro;
+    }
+
+    public static void atualizaConsulta(int id){
+        String query = "UPDATE consultas SET realizada = 1 WHERE id = ?";
+
+        SQLiteConnection connection = new SQLiteConnection();
+        connection.conectar();
+
+        try {
+            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        connection.desconectar();
+    }
+
+    public static void atualizaConsulta(int id, String motivoCancelamento){
+        String query = "UPDATE consultas SET realizada = true, motivoCancelamento = ? WHERE id = ?";
+
+        SQLiteConnection connection = new SQLiteConnection();
+        connection.conectar();
+
+        try {
+            PreparedStatement pstmt = connection.getConn().prepareStatement(query);
+            pstmt.setString(1,motivoCancelamento);
+            pstmt.setInt(2,id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        connection.desconectar();
     }
 }
