@@ -34,12 +34,34 @@ import javax.swing.border.LineBorder;
 public class TelaLogadaMedicoUI {
 
     protected static JPanel telaPrescreverExame(TelaLogadaUI telaLogada) {
-        JPanel painelExame = new JPanel();
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
 
-        painelExame.setLayout(new GridBagLayout());
-        painelExame.setSize(800, 600);
+        JPanel infoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
 
-        JTextArea tempLabel = new JTextArea("Área dos exames");
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
+
+                g2d.setPaint(gradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        };
+
+        infoPanel.setBackground(Color.decode("#67dcff"));
+        infoPanel.setLayout(new GridBagLayout());
+
+        JLabel examesLabel = new JLabel();
+        examesLabel.setText("Área dos exames");
+
+        JPanel painelExame = new JPanel(new GridBagLayout());
+
 
         JButton novoExameButton = new JButton("Prescrever novo exame");
         JButton verificarExameButton = new JButton("Verificar exames");
@@ -51,27 +73,57 @@ public class TelaLogadaMedicoUI {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
+        constraints.gridy = 0;
+
+        infoPanel.add(examesLabel, constraints);
+        examesLabel.setFont(new Font("Roboto", Font.BOLD, 20));
+        examesLabel.setForeground(Color.WHITE);
+
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+
 
         constraints.gridy = 1;
-        painelExame.add(tempLabel, constraints);
-
-        constraints.gridy = 2;
         painelExame.add(novoExameButton, constraints);
 
-        constraints.gridy = 3;
+        constraints.gridy = 2;
         painelExame.add(verificarExameButton, constraints);
 
+        painelPrincipal.add(painelExame,BorderLayout.CENTER);
 
-        return painelExame;
+
+        return painelPrincipal;
     }
 
     protected static JPanel telaPrescreverLaudo(TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+
+        JPanel infoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
+
+                g2d.setPaint(gradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        };
+
+        infoPanel.setBackground(Color.decode("#67dcff"));
+        infoPanel.setLayout(new GridBagLayout());
+
+        JLabel laudoLabel = new JLabel("Área dos laudos");
+
         JPanel painelLaudo = new JPanel();
 
         painelLaudo.setLayout(new GridBagLayout());
         painelLaudo.setSize(800, 600);
-
-        JTextArea tempLabel = new JTextArea("Área do Laudo");
 
         JButton novoLaudoButton = new JButton("Prescrever novo laudo");
         JButton verificarLaudoButton = new JButton("Verificar laudos");
@@ -83,26 +135,52 @@ public class TelaLogadaMedicoUI {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
+        constraints.gridy = 0;
+        infoPanel.add(laudoLabel);
+        laudoLabel.setFont(new Font("Roboto", Font.BOLD, 20));
+        laudoLabel.setForeground(Color.WHITE);
 
         constraints.gridy = 1;
-        painelLaudo.add(tempLabel, constraints);
-
-        constraints.gridy = 2;
         painelLaudo.add(novoLaudoButton, constraints);
 
-        constraints.gridy = 3;
+        constraints.gridy = 2;
         painelLaudo.add(verificarLaudoButton, constraints);
 
-        return painelLaudo;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelLaudo,BorderLayout.CENTER);
+
+        return painelPrincipal;
     }
 
     protected static JPanel telaPrescreverReceita(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+
+        JPanel infoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
+
+                g2d.setPaint(gradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        };
+
+        infoPanel.setBackground(Color.decode("#67dcff"));
+        infoPanel.setLayout(new GridBagLayout());
+        JLabel receitaLabel = new JLabel("Área das receitas");
+
         JPanel painelReceita = new JPanel();
 
         painelReceita.setLayout(new GridBagLayout());
         painelReceita.setSize(800, 600);
-
-        JTextArea tempLabel = new JTextArea("Área das receitas");
 
         JButton novaReceitaButton = new JButton("Prescrever nova receita");
         JButton verificarReceitaButton = new JButton("Verificar receitas");
@@ -114,28 +192,35 @@ public class TelaLogadaMedicoUI {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
+        constraints.gridy = 0;
+        infoPanel.add(receitaLabel);
+        receitaLabel.setFont(new Font("Roboto", Font.BOLD, 20));
+        receitaLabel.setForeground(Color.WHITE);
+
 
         constraints.gridy = 1;
-        painelReceita.add(tempLabel, constraints);
-
-        constraints.gridy = 2;
         painelReceita.add(novaReceitaButton, constraints);
 
-        constraints.gridy = 3;
+        constraints.gridy = 2;
         painelReceita.add(verificarReceitaButton, constraints);
 
-        return painelReceita;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelReceita,BorderLayout.CENTER);
+
+        return painelPrincipal;
     }
 
     
     protected static JPanel telaAgendarConsulta(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Área das consultas");
         JPanel painelConsulta = new JPanel();
 
         painelConsulta.setLayout(new GridBagLayout());
         painelConsulta.setSize(800, 600);
-        
-        
-        JTextArea tempLabel = new JTextArea("Área da Consulta");
+
 
         JButton novaConsultaButton = new JButton("Agendar novo encaixe");
         JButton verificarConsultaButton = new JButton("Verificar consultas");
@@ -148,26 +233,28 @@ public class TelaLogadaMedicoUI {
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
-        constraints.gridy = 1;
-        painelConsulta.add(tempLabel, constraints);
-
         constraints.gridy = 2;
         painelConsulta.add(novaConsultaButton, constraints);
 
         constraints.gridy = 3;
         painelConsulta.add(verificarConsultaButton, constraints);
+
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelConsulta,BorderLayout.CENTER);
         
-        return painelConsulta;
+        return painelPrincipal;
     }
 
     protected static JPanel telaNovoEncaixe(Medico medicoLogado,Date data, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Novo encaixe");
         JPanel painelEncaixe = new JPanel();
 
         painelEncaixe.setLayout(new GridBagLayout());
         //painelConsulta.setSize(100, 100);
 
-        JTextArea tempLabel = new JTextArea("Nova Encaixe");
-        tempLabel.setEditable(false);
 
         JLabel dataLabel = new JLabel("Data do encaixe");
         JLabel horariolabel = new JLabel("Horário");
@@ -213,10 +300,6 @@ public class TelaLogadaMedicoUI {
         constraints.anchor = GridBagConstraints.CENTER;
         //constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
-
-
-        constraints.gridy = 1;
-        painelEncaixe.add(tempLabel, constraints);
 
 
         constraints.gridy = 2;
@@ -269,7 +352,7 @@ public class TelaLogadaMedicoUI {
                 String conteudo = comentarioArea.getText();
                 String motivo = motivoArea.getText();
                 String horario = (String) horariosCombo.getSelectedItem();
-                if (ConsultaSQL.salvarEncaixe(data, medicoLogado.getCpf(), cpf,conteudo,motivo, horario)) {
+                if (ConsultaSQL.salvarEncaixe(data, medicoLogado.getCpf(), cpf,conteudo,motivo, horario, painelEncaixe)) {
                     JOptionPane.showMessageDialog(painelEncaixe, "Agendamento de encaixe realizado com sucesso!");
                     telaLogada.atualizaPainel(medicoLogado);
                 }
@@ -279,23 +362,24 @@ public class TelaLogadaMedicoUI {
 
         voltarButton.addActionListener(telaLogada);
 
-        return painelEncaixe;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelEncaixe,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
     protected  static JPanel telaAgendarEncaixe(Medico medicoLogado, TelaLogadaUI telaLogada){
-        JPanel painelConsulta = new JPanel();
-
-        painelConsulta.setLayout(new GridLayout(3,2));
-        painelConsulta.setSize(800, 600);
-        painelConsulta.setBackground(Color.WHITE);
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Agendamento de encaixes");
 
         GridBagConstraints constraints = new GridBagConstraints();
 
-        JTextArea tempLabel = new JTextArea("Agendar encaixe");
         JLabel nomeMedicoLabel = new JLabel("Escolha uma data para agendar o encaixe");
+        JButton agendarConsultaButton = new JButton("Agendar o encaixe");
 
-        painelConsulta.add(tempLabel);
-        painelConsulta.add(nomeMedicoLabel);
+        //painelConsulta.add(tempLabel);
+       // painelConsulta.add(nomeMedicoLabel, BorderLayout.NORTH);
 
         JPanel calendarPanel = new JPanel();
         calendarPanel.setBackground(Color.WHITE);
@@ -306,6 +390,8 @@ public class TelaLogadaMedicoUI {
         JLabel calendarLabel = new JLabel("Calendário");
         constraints.gridx = 0;
         constraints.gridy = 0;
+        calendarPanel.add(nomeMedicoLabel,constraints);
+        constraints.gridy = 1;
         calendarPanel.add(calendarLabel, constraints);
 
         JCalendar calendar = new JCalendar();
@@ -315,14 +401,11 @@ public class TelaLogadaMedicoUI {
         calendar.getDayChooser().setWeekOfYearVisible(false);
         calendar.setDecorationBackgroundColor(Color.WHITE);
         calendar.setMinSelectableDate(new Date(Calendar.getInstance().getTime().getTime()));
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         calendarPanel.add(calendar, constraints);
+        constraints.gridy = 3;
+        calendarPanel.add(agendarConsultaButton, constraints);
 
-        painelConsulta.add(calendarPanel);
-
-        JButton agendarConsultaButton = new JButton("Agendar o encaixe");
-
-        painelConsulta.add(agendarConsultaButton);
 
         // ================ Listeners ================
 
@@ -351,18 +434,23 @@ public class TelaLogadaMedicoUI {
         MeuPropertyListener.MeuMouseListener meuMouseListener = propertyListener.new MeuMouseListener();
         agendarConsultaButton.addMouseListener(meuMouseListener);
 
-        return painelConsulta;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(calendarPanel,BorderLayout.CENTER);
+
+        return painelPrincipal;
 
     }
 
     protected static JPanel telaNovoExame(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+
+        JPanel infoPanel = criaInfoPanel("Novo exame");
         JPanel painelExame = new JPanel();
 
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
-
-        JTextArea tempLabel = new JTextArea("Novo exame");
-        tempLabel.setEditable(false);
 
         JLabel tipoLabel = new JLabel("Tipo de exame");
         JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
@@ -384,9 +472,6 @@ public class TelaLogadaMedicoUI {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
-
-        constraints.gridy = 1;
-        painelExame.add(tempLabel, constraints);
 
         constraints.gridy = 2;
         painelExame.add(tipoLabel, constraints);
@@ -426,19 +511,22 @@ public class TelaLogadaMedicoUI {
                 }
             }
         });
-        return painelExame;
+
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelExame,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
     protected static JPanel telaNovoLaudo(Medico medicoLogado, Exame exame, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Novo Laudo");
         JPanel painelLaudo = new JPanel();
 
         painelLaudo.setLayout(new GridBagLayout());
         painelLaudo.setSize(800, 600);
 
-        JTextArea tempLabel = new JTextArea("Novo Laudo");
-        tempLabel.setEditable(false);
-
-        JLabel clinicaLabel = new JLabel("Clínica UNESP");
         JLabel tipoLabel = new JLabel("Tipo de exame");
         JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
         JLabel comentarioLabel = new JLabel("Conclusão");
@@ -466,13 +554,6 @@ public class TelaLogadaMedicoUI {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
-
-
-        constraints.gridy = 1;
-        painelLaudo.add(tempLabel, constraints);
-
-        constraints.gridy = 2;
-        painelLaudo.add(clinicaLabel, constraints);
 
         constraints.gridy = 3;
         painelLaudo.add(tipoLabel, constraints);
@@ -517,20 +598,21 @@ public class TelaLogadaMedicoUI {
         });
 
         voltarButton.addActionListener(telaLogada);
-
-        return painelLaudo;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelLaudo,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
     protected static JPanel telaNovaReceita(Medico medicoLogado, String pacienteCpf, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Nova receita");
         JPanel painelReceita = new JPanel();
 
         painelReceita.setLayout(new GridBagLayout());
         painelReceita.setSize(800, 600);
 
-        JTextArea tempLabel = new JTextArea("Nova receita");
-        tempLabel.setEditable(false);
-
-        JLabel clinicaLabel = new JLabel("Clínica UNESP");
         JLabel remedioLabel = new JLabel("Nome do remedio");
         JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
         JLabel detalhesLabel = new JLabel("Detalhes");
@@ -556,12 +638,6 @@ public class TelaLogadaMedicoUI {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
-
-        constraints.gridy = 1;
-        painelReceita.add(tempLabel, constraints);
-
-        constraints.gridy = 2;
-        painelReceita.add(clinicaLabel, constraints);
 
         constraints.gridy = 3;
         painelReceita.add(cpfPacienteLabel, constraints);
@@ -608,11 +684,18 @@ public class TelaLogadaMedicoUI {
         });
 
         voltarButton.addActionListener(telaLogada);
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelReceita,BorderLayout.CENTER);
 
-        return painelReceita;
+        return painelPrincipal;
     }
 
     protected static JPanel showExames(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+
+        JPanel infoPanel = criaInfoPanel("Exames");
         ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
         int i = 0;
         JPanel painelExame = new JPanel();
@@ -620,7 +703,6 @@ public class TelaLogadaMedicoUI {
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
 
-        JTextArea tempLabel = new JTextArea("Exames");
         JButton imprimirExameButton = new JButton("Visualizar exame");
         JButton voltarButton = new JButton("Voltar");
         voltarButton.addActionListener(telaLogada);
@@ -641,8 +723,6 @@ public class TelaLogadaMedicoUI {
         JScrollPane scrollPanel = new JScrollPane(list);
 
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
-        painelExame.add(tempLabel, constraints);
         constraints.gridy = 1;
         painelExame.add(scrollPanel, constraints);
         constraints.gridy = 2;
@@ -661,10 +741,16 @@ public class TelaLogadaMedicoUI {
             }
         });
 
-        return painelExame;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelExame,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
     protected static JPanel showExamesLaudo(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Exames");
         ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
         int i = 0;
 
@@ -672,8 +758,6 @@ public class TelaLogadaMedicoUI {
 
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
-
-        JTextArea tempLabel = new JTextArea("Exames");
 
         JButton utilizarExameButton = new JButton("Prescrever laudo para esse exame");
         JButton voltarButton = new JButton("Voltar");
@@ -695,8 +779,6 @@ public class TelaLogadaMedicoUI {
         JScrollPane scrollPanel = new JScrollPane(list);
 
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
-        painelExame.add(tempLabel, constraints);
         constraints.gridy = 1;
         painelExame.add(scrollPanel, constraints);
         constraints.gridy = 2;
@@ -715,11 +797,16 @@ public class TelaLogadaMedicoUI {
                 telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Prescrever laudo para esse exame");
             }
         });
-
-        return painelExame;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelExame,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
     protected static JPanel showConsultas(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Consultas");
         ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromMedico(medicoLogado.getCpf());
         int i = 0;
         JPanel painelConsulta = new JPanel();
@@ -727,7 +814,6 @@ public class TelaLogadaMedicoUI {
         painelConsulta.setLayout(new GridBagLayout());
         painelConsulta.setSize(800, 600);
 
-        JTextArea tempLabel = new JTextArea("Consultas");
         JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
         JButton editarConsultaButton = new JButton("Editar consulta");
         JButton voltarButton = new JButton("Voltar");
@@ -750,8 +836,6 @@ public class TelaLogadaMedicoUI {
         JScrollPane scrollPanel = new JScrollPane(list);
 
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
-        painelConsulta.add(tempLabel, constraints);
         constraints.gridy = 1;
         painelConsulta.add(scrollPanel, constraints);
         constraints.gridy = 2;
@@ -821,12 +905,17 @@ public class TelaLogadaMedicoUI {
                 }
             }
         });
-
-        return painelConsulta;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelConsulta,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
 
     protected static JPanel showLaudos(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Laudos");
         ArrayList<Laudo> laudos = LaudosSQL.verificarLaudos(medicoLogado.getCpf());
         int i = 0;
         JPanel painelLaudo = new JPanel();
@@ -834,7 +923,6 @@ public class TelaLogadaMedicoUI {
         painelLaudo.setLayout(new GridBagLayout());
         painelLaudo.setSize(800, 600);
 
-        JTextArea tempLabel = new JTextArea("Laudos");
         JButton imprimirLaudoButton = new JButton("Visualizar laudo");
         JButton voltarButton = new JButton("Voltar");
         voltarButton.addActionListener(telaLogada);
@@ -855,8 +943,6 @@ public class TelaLogadaMedicoUI {
         JScrollPane scrollPanel = new JScrollPane(list);
 
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
-        painelLaudo.add(tempLabel, constraints);
         constraints.gridy = 1;
         painelLaudo.add(scrollPanel, constraints);
         constraints.gridy = 2;
@@ -874,11 +960,16 @@ public class TelaLogadaMedicoUI {
                 TelaLogadaMedicoUI.imprimirDocumento(laudo);
             }
         });
-
-        return painelLaudo;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelLaudo,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
     protected static JPanel showPacientesReceita(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Pacientes");
         ArrayList<Paciente> pacientes = UsuariosSQL.selectAllPacientes();
         int i = 0;
 
@@ -887,7 +978,6 @@ public class TelaLogadaMedicoUI {
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
 
-        JTextArea tempLabel = new JTextArea("Pacientes");
 
         JButton utilizarExameButton = new JButton("Prescrever receita para esse paciente");
         JButton voltarButton = new JButton("Voltar");
@@ -909,8 +999,6 @@ public class TelaLogadaMedicoUI {
         JScrollPane scrollPanel = new JScrollPane(list);
 
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
-        painelExame.add(tempLabel, constraints);
         constraints.gridy = 1;
         painelExame.add(scrollPanel, constraints);
         constraints.gridy = 2;
@@ -928,11 +1016,16 @@ public class TelaLogadaMedicoUI {
                 telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Prescrever receita para esse paciente");
             }
         });
-
-        return painelExame;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelExame,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
     protected static JPanel showReceitas(Medico medicoLogado, TelaLogadaUI telaLogada) {
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
+        JPanel infoPanel = criaInfoPanel("Receitas");
         ArrayList<Receita> receitas = ReceitasSQL.selectAllReceitasFromMedico(medicoLogado.getCpf());
         int i = 0;
         JPanel painelReceita = new JPanel();
@@ -940,7 +1033,6 @@ public class TelaLogadaMedicoUI {
         painelReceita.setLayout(new GridBagLayout());
         painelReceita.setSize(800, 600);
 
-        JTextArea tempLabel = new JTextArea("Receitas");
         JButton imprimirReceitaButton = new JButton("Visualizar receita");
         JButton voltarButton = new JButton("Voltar");
         voltarButton.addActionListener(telaLogada);
@@ -961,8 +1053,6 @@ public class TelaLogadaMedicoUI {
         JScrollPane scrollPanel = new JScrollPane(list);
 
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
-        painelReceita.add(tempLabel, constraints);
         constraints.gridy = 1;
         painelReceita.add(scrollPanel, constraints);
         constraints.gridy = 2;
@@ -982,7 +1072,9 @@ public class TelaLogadaMedicoUI {
             }
         });
 
-        return painelReceita;
+        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
+        painelPrincipal.add(painelReceita,BorderLayout.CENTER);
+        return painelPrincipal;
     }
 
     protected static <T extends Imprimivel> void imprimirDocumento(T documento) {
@@ -1130,5 +1222,38 @@ public class TelaLogadaMedicoUI {
         documentFrame.setSize(1000, 800);
         //documentFrame.pack();
         documentFrame.setVisible(true);
+    }
+
+    protected static JPanel criaInfoPanel(String label){
+        JPanel infoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
+
+                g2d.setPaint(gradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        };
+
+        infoPanel.setBackground(Color.decode("#67dcff"));
+        infoPanel.setLayout(new GridBagLayout());
+        JLabel l = new JLabel();
+        l.setText(label);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        infoPanel.add(l);
+        l.setFont(new Font("Roboto", Font.BOLD, 20));
+        l.setForeground(Color.WHITE);
+        infoPanel.add(l);
+
+        return infoPanel;
     }
 }

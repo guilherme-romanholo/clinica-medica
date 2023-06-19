@@ -170,7 +170,7 @@ public class UsuariosSQL {
      * @param crm CRM do médico.
      * @return Valor booleano se foi possível cadastrar o médico.
      */
-    public static boolean cadastroMedico(String nome, String cpf, String email, String senha, String areaAtuacao, String crm, JFrame frame){
+    public static boolean cadastroMedico(String nome, String cpf, String email, String senha, String areaAtuacao, String crm, JFrame frame, int entrada, int saida){
         boolean cadastro = false;
         //verifica validade dos dados digitados
         if(nome.matches("[0-9]+") || cpf.matches("[A-Z]+") || areaAtuacao.matches("[0-9]+") || crm.matches("[A-Z]+")){
@@ -184,6 +184,9 @@ public class UsuariosSQL {
             return false;
         }else if(cpf.contains("_")){
             JOptionPane.showMessageDialog(frame, "CPF inválido!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if((saida - entrada) <=0){
+            JOptionPane.showMessageDialog(frame, "Escolha um horário de trabalho válido!", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 

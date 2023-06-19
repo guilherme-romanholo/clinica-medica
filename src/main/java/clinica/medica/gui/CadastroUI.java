@@ -148,7 +148,7 @@ public class CadastroUI {
                 Integer entrada = Integer.parseInt((String)horarioEntrada.getSelectedItem());
                 Integer saida = Integer.parseInt((String)horarioSaida.getSelectedItem());
 
-                if (UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm, frame)) {
+                if (UsuariosSQL.cadastroMedico(nome, cpf, email, password, area, crm, frame, entrada, saida)) {
 
                     for(int i = 0; i < saida - entrada; i++){
                         Integer hEnt = entrada + i;
@@ -182,10 +182,34 @@ public class CadastroUI {
      * Método privado para a implementação da tela de cadastro do paciente.
      */
     protected static JPanel cadastroPaciente() {
-        String[] sexo = {"Masculino", "Feminino", "Outro"};
-        JPanel panel = new JPanel();
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setSize(800, 600);
 
-        panel.setLayout(new GridBagLayout());
+        JPanel infoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
+
+                g2d.setPaint(gradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        };
+
+        infoPanel.setBackground(Color.decode("#67dcff"));
+        infoPanel.setLayout(new GridBagLayout());
+        JLabel cadastroLabel = new JLabel("Cadastro de paciente");
+
+        String[] sexo = {"Masculino", "Feminino", "Outro"};
+        JPanel panelCadastro = new JPanel();
+
+        panelCadastro.setLayout(new GridBagLayout());
 
         JLabel usernameLabel = new JLabel("Nome");
         JLabel cpfLabel = new JLabel("CPF");
@@ -218,65 +242,69 @@ public class CadastroUI {
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
+        constraints.gridy = 0;
+        infoPanel.add(cadastroLabel);
+        cadastroLabel.setFont(new Font("Roboto", Font.BOLD, 20));
+        cadastroLabel.setForeground(Color.WHITE);
 
         constraints.gridy = 1;
-        panel.add(usernameLabel, constraints);
+        panelCadastro.add(usernameLabel, constraints);
 
         constraints.gridy = 2;
-        panel.add(usernameField, constraints);
+        panelCadastro.add(usernameField, constraints);
 
         constraints.gridy = 3;
-        panel.add(emailLabel, constraints);
+        panelCadastro.add(emailLabel, constraints);
 
         constraints.gridy = 4;
-        panel.add(emailField, constraints);
+        panelCadastro.add(emailField, constraints);
 
         constraints.gridy = 5;
-        panel.add(cpfLabel, constraints);
+        panelCadastro.add(cpfLabel, constraints);
 
         constraints.gridy = 6;
-        panel.add(cpfField, constraints);
+        panelCadastro.add(cpfField, constraints);
 
         constraints.gridy = 7;
-        panel.add(enderecoLabel, constraints);
+        panelCadastro.add(enderecoLabel, constraints);
 
         constraints.gridy = 8;
-        panel.add(enderecoField, constraints);
+        panelCadastro.add(enderecoField, constraints);
 
         constraints.gridy = 9;
-        panel.add(sexoLabel, constraints);
+        panelCadastro.add(sexoLabel, constraints);
 
         constraints.gridy = 10;
-        panel.add(sexoCombo, constraints);
+        panelCadastro.add(sexoCombo, constraints);
 
         constraints.gridy = 11;
-        panel.add(idadeLabel, constraints);
+        panelCadastro.add(idadeLabel, constraints);
 
         constraints.gridy = 12;
-        panel.add(idadeField, constraints);
+        panelCadastro.add(idadeField, constraints);
 
         constraints.gridy = 13;
-        panel.add(alturaLabel, constraints);
+        panelCadastro.add(alturaLabel, constraints);
 
         constraints.gridy = 14;
-        panel.add(alturaField, constraints);
+        panelCadastro.add(alturaField, constraints);
 
         constraints.gridy = 15;
-        panel.add(pesoLabel, constraints);
+        panelCadastro.add(pesoLabel, constraints);
 
         constraints.gridy = 16;
-        panel.add(pesoField, constraints);
+        panelCadastro.add(pesoField, constraints);
 
         constraints.gridy = 17;
-        panel.add(passwordLabel, constraints);
+        panelCadastro.add(passwordLabel, constraints);
 
         constraints.gridy = 18;
-        panel.add(passwordField, constraints);
+        panelCadastro.add(passwordField, constraints);
 
         constraints.anchor = GridBagConstraints.CENTER;
 
         constraints.gridy = 19;
-        panel.add(cadastroButton, constraints);
+        panelCadastro.add(cadastroButton, constraints);
 
         //Quando clica no botão para cadastrar, pega os dados e chama a função de cadastrar o paciente
         cadastroButton.addMouseListener(new MouseAdapter() {
@@ -300,8 +328,8 @@ public class CadastroUI {
                 char[] senha = passwordField.getPassword();
                 String password = new String(senha);
 
-                if (UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso, panel)) {
-                    JOptionPane.showMessageDialog(panel, "Cadastro do cliente realizado com sucesso!");
+                if (UsuariosSQL.cadastroPaciente(nome, cpf, email, password, endereco, sexo, idade, altura, peso, panelCadastro)) {
+                    JOptionPane.showMessageDialog(panelCadastro, "Cadastro do cliente realizado com sucesso!");
                     usernameField.setText("");
                     cpfField.setText("");
                     emailField.setText("");
@@ -315,7 +343,10 @@ public class CadastroUI {
             }
         });
 
-        return panel;
+        painelPrincipal.add(infoPanel, BorderLayout.NORTH);
+        painelPrincipal.add(panelCadastro, BorderLayout.CENTER);
+
+        return painelPrincipal;
     }
 
     public static JFormattedTextField inicializaCpf() {

@@ -243,8 +243,6 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         }
 
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
 
         infoPanel.add(nomeLabel, constraints);
         nomeLabel.setFont(new Font("Roboto", Font.BOLD, 20));

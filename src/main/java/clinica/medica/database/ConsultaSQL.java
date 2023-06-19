@@ -3,6 +3,7 @@ package clinica.medica.database;
 import clinica.medica.consultas.Consulta;
 import clinica.medica.documentos.Receita;
 
+import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -119,10 +120,11 @@ public class ConsultaSQL {
         return rs;
     }
 
-    public static boolean salvarConsulta(Date data, String cpfMedico, String cpfPaciente, String descricao, String horario){
+    public static boolean salvarConsulta(Date data, String cpfMedico, String cpfPaciente, String descricao, String horario, JPanel painel){
         boolean cadastro = false;
         String query = "INSERT INTO consultas (medico, paciente, data, descricao, realizada, horario, motivoCancelamento) VALUES (?, ?, ?, ?, ?, ?, ?)";
         if(descricao.equals("")){
+            JOptionPane.showMessageDialog(painel, "O cadastro de consulta não pode conter campos vazios !", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         SQLiteConnection connection = new SQLiteConnection();
@@ -151,11 +153,15 @@ public class ConsultaSQL {
         return cadastro;
     }
 
-    public static boolean salvarEncaixe(Date data, String cpfMedico, String cpfPaciente, String descricao,String motivo, String horario){
+    public static boolean salvarEncaixe(Date data, String cpfMedico, String cpfPaciente, String descricao,String motivo, String horario, JPanel painel){
         boolean cadastro = false;
         String queryVerificacao = "SELECT * FROM pacientes WHERE cpf = ?";
         String query = "INSERT INTO consultas (medico, paciente, data, descricao, realizada, horario, motivoCancelamento) VALUES (?, ?, ?, ?, ?, ?, ?)";
         if(descricao.equals("") || motivo.equals("")){
+            JOptionPane.showMessageDialog(painel, "O cadastro encaixe não pode conter campos vazios !", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if(cpfPaciente.contains("_")){
+            JOptionPane.showMessageDialog(painel, "CPF do paciente inválido !", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         SQLiteConnection connection = new SQLiteConnection();
@@ -166,6 +172,7 @@ public class ConsultaSQL {
             pstmt.setString(1, cpfPaciente);
             ResultSet rs = pstmt.executeQuery();
             if(!rs.next()){
+                JOptionPane.showMessageDialog(painel, "Esse paciente não existe !", "ERRO", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (SQLException e) {
