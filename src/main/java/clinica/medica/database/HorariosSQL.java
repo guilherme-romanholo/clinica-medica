@@ -8,8 +8,17 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
+/**
+ * Classe para realizar a consulta das informações referentes aos
+ * horários no banco de dados.
+ */
 public class HorariosSQL {
+    /**
+     * Método que verifica os horários disponíveis paa o agendamento de uma consulta
+     * @param medicoCpf CPF do médico escolhido para a consulta
+     * @param data data escolhida para a consulta
+     * @return retorna um vetor de String com os horários disponíveis
+     */
     public static String[] selectHorariosDisponiveis(String medicoCpf, Date data) {
         String query = "SELECT * FROM horarios WHERE medico = ?";
         String queryVerificacao = "SELECT * FROM consultas WHERE medico = ? AND data = ?";
@@ -68,6 +77,11 @@ public class HorariosSQL {
         }
     }
 
+    /**
+     * Método que salva os horários disponíveis de um médico
+     * @param horario Horário de consulta do médico
+     * @param cpfMedico CPF do médico que está sendo cadastrado
+     */
     public static void salvarHorarios(String horario, String cpfMedico){
         String query = "INSERT INTO horarios (horario, medico) VALUES (?, ?)";
 

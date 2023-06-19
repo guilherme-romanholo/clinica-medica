@@ -19,6 +19,8 @@ public class Consulta {
 
     private String motivoCancelamento;
 
+    private boolean encaixe;
+
     public Consulta(int id) {
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
@@ -34,6 +36,7 @@ public class Consulta {
             this.setHorario(rs.getString("horario"));
             this.setId(id);
             this.setMotivoCancelamento(rs.getString("motivoCancelamento"));
+            this.setEncaixe(rs.getBoolean("encaixe"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             System.out.println("Não foi possível criar a consulta.");
@@ -104,5 +107,13 @@ public class Consulta {
 
     public void setMotivoCancelamento(String motivoCancelamento) {
         this.motivoCancelamento = motivoCancelamento;
+    }
+
+    public boolean isEncaixe() {
+        return encaixe;
+    }
+
+    public void setEncaixe(boolean encaixe) {
+        this.encaixe = encaixe;
     }
 }

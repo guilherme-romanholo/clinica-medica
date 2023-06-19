@@ -14,9 +14,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
+/**
+ * Classe para realizar a consulta das informações referentes aos
+ * médicos no banco de dados.
+ */
 public class MedicosSQL {
-    
+    /**
+     * Método que salva um novo exame no banco de dados
+     * @param tipo tipo do exame
+     * @param cpf CPF do paciente
+     * @param cpfMedico CPF do médico
+     * @param data datd do exame
+     * @param comentario comentário do exame
+     * @param panel painel da interface do cadastro de exame
+     * @return retorna verdadeiro se o cadastro der certo, ou falso se houver algum erro
+     */
     public static boolean cadastrarNovoExame(String tipo, String cpf, String cpfMedico, Date data, String comentario, JPanel panel){
         boolean cadastro = false;
 
@@ -66,6 +78,16 @@ public class MedicosSQL {
         return cadastro;
     }
 
+    /**
+     * Método que salva um novo laudo no banco de dados
+     * @param idExame ID do exame utilizado para fazer o laudo
+     * @param cpf CPF do paciente
+     * @param cpfMedico CPF do médico que realiza o laudo
+     * @param data data do laudo
+     * @param conteudo conteudo do laudo
+     * @param panel painel da interface de cadastro do laudo
+     * @return retorna verdadeiro se o cadastro der certo, ou falso se houver algum erro
+     */
     public static boolean cadastrarNovoLaudo(int idExame, String cpf, String cpfMedico, Date data, String conteudo, JPanel panel){
         boolean cadastro = false;
 

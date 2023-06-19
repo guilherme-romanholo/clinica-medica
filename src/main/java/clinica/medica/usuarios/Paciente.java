@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class Paciente extends Usuario{
     private String endereco;
     private ArrayList<Exame> exames;
-    private String doenca;
     private String sexo;
     private int idade;
     private double altura;
@@ -32,7 +31,6 @@ public class Paciente extends Usuario{
             this.setIdade(rs.getInt("idade"));
             this.setAltura(rs.getDouble("altura"));
             this.setPeso(rs.getDouble("peso"));
-            this.setDoenca(rs.getString("doenca"));
             this.setExames(null);
         } catch (SQLException e) {
             System.out.println("Não foi possível instanciar o paciente.");
@@ -57,13 +55,6 @@ public class Paciente extends Usuario{
         this.exames = exames;
     }
 
-    public String getDoenca() {
-        return doenca;
-    }
-
-    public void setDoenca(String doenca) {
-        this.doenca = doenca;
-    }
 
     public String getSexo() {
         return sexo;

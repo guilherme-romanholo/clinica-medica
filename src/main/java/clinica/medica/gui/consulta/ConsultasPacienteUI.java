@@ -1,34 +1,33 @@
-package clinica.medica.gui;
+package clinica.medica.gui.consulta;
 
 import clinica.medica.consultas.Consulta;
-import clinica.medica.database.*;
-import clinica.medica.documentos.Exame;
-import clinica.medica.documentos.Laudo;
-import clinica.medica.documentos.Receita;
+import clinica.medica.consultas.Encaixe;
+import clinica.medica.database.ConsultaSQL;
+import clinica.medica.database.HorariosSQL;
+import clinica.medica.database.UsuariosSQL;
+import clinica.medica.gui.recursos.RecursosUI;
+import clinica.medica.gui.telas.CadastroUI;
+import clinica.medica.gui.telas.TelaLogadaUI;
 import clinica.medica.usuarios.Medico;
 import clinica.medica.usuarios.Paciente;
 import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class TelaLogadaPacienteUI {
-
-    protected static JPanel showMedicosConsulta(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
+public class ConsultasPacienteUI {
+    public static JPanel showMedicosConsulta(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = TelaLogadaMedicoUI.criaInfoPanel("Medicos");
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Medicos");
         ArrayList<Medico> medicos = UsuariosSQL.selectAllMedicos();
         int i = 0;
 
@@ -77,11 +76,11 @@ public class TelaLogadaPacienteUI {
         return painelPrincipal;
     }
 
-    protected static JPanel telaVerificarConsulta(Paciente pacienteLogado) {
+    public static JPanel telaVerificarConsulta(Paciente pacienteLogado) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = TelaLogadaMedicoUI.criaInfoPanel("Consultas");
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Consultas");
         ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromPaciente(pacienteLogado.getCpf());
         int i = 0;
         JPanel painelConsulta = new JPanel();
@@ -100,12 +99,17 @@ public class TelaLogadaPacienteUI {
 
         for (Consulta rc: consultas) {
             if(rc.isRealizada()) {
+
                 if (rc.getMotivoCancelamento().equals(""))
                     listaConsulta[i] = "Consulta já realizada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
                 else
                     listaConsulta[i] = "Consulta cancelada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
-            }else
-                listaConsulta[i] = "Consulta marcada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            }else {
+                if(rc.isEncaixe())
+                    listaConsulta[i] = "Encaixe marcado - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                else
+                    listaConsulta[i] = "Consulta marcada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+            }
             i++;
         }
 
@@ -125,10 +129,16 @@ public class TelaLogadaPacienteUI {
                 String[] elementos = consultaSelecionada.split("-");
                 int id = Integer.parseInt(elementos[6].strip());
                 Consulta consulta = new Consulta(id);
-                if(consulta.getMotivoCancelamento().equals(""))
+                if(consulta.getMotivoCancelamento().equals("") && !consulta.isEncaixe())
                     JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
-                else
-                    JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao() + "\n\n Motivo do cancelamento: " + consulta.getMotivoCancelamento(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                else {
+                    if(!consulta.isEncaixe()) {
+                        JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao() + "\n\nMotivo do cancelamento: " + consulta.getMotivoCancelamento(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        Encaixe encaixe = new Encaixe(consulta.getId());
+                        JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao() + "\n\nMotivo da emergência: " + encaixe.getMotivoEmergencia(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
             }
         });
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);
@@ -140,7 +150,7 @@ public class TelaLogadaPacienteUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = TelaLogadaMedicoUI.criaInfoPanel("Nova consulta");
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Nova consulta");
         JPanel painelConsulta = new JPanel();
 
         painelConsulta.setLayout(new GridBagLayout());
@@ -229,9 +239,11 @@ public class TelaLogadaPacienteUI {
                 cpf = cpf.replaceAll("[.-]", "");
                 String conteudo = comentarioArea.getText();
                 String horario = (String) horariosCombo.getSelectedItem();
-                if (ConsultaSQL.salvarConsulta(data, cpfMedico, pacienteLogado.getCpf(),conteudo, horario,painelConsulta)) {
+                if (!horario.equals("Não existem horários disponíveis nesse dia.") && ConsultaSQL.salvarConsulta(data, cpfMedico, pacienteLogado.getCpf(),conteudo, horario,painelConsulta)) {
                     JOptionPane.showMessageDialog(painelConsulta, "Agendamento de consulta realizado com sucesso!");
                     telaLogada.atualizaPainel(pacienteLogado);
+                }else {
+                    JOptionPane.showMessageDialog(painelConsulta, "Não é possível cadastrar consultas sem horários disponíveis !", "ERRO", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
@@ -246,12 +258,14 @@ public class TelaLogadaPacienteUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = TelaLogadaMedicoUI.criaInfoPanel("Agendamento de consulta");
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Agendamento de consulta");
 
         GridBagConstraints constraints = new GridBagConstraints();
 
         JLabel nomeMedicoLabel = new JLabel("Escolha uma data para agendar a consulta com o Dr." + nomeMedico);
         JButton agendarConsultaButton = new JButton("Agendar a consulta");
+        JButton voltarButton = new JButton("Voltar");
+        voltarButton.addActionListener(telaLogada);
 
 
         JPanel calendarPanel = new JPanel();
@@ -310,172 +324,6 @@ public class TelaLogadaPacienteUI {
 
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);
         painelPrincipal.add(calendarPanel,BorderLayout.CENTER);
-        return painelPrincipal;
-    }
-
-    protected static JPanel telaVerificarLaudo(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
-        JPanel painelPrincipal = new JPanel();
-        painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = TelaLogadaMedicoUI.criaInfoPanel("Laudos");
-        ArrayList<Laudo> laudos = PacientesSQL.verificarLaudos(pacienteLogado.getCpf());
-        int i = 0;
-        JPanel painelLaudo = new JPanel();
-
-        painelLaudo.setLayout(new GridBagLayout());
-        painelLaudo.setSize(800, 600);
-
-
-        JButton imprimirLaudoButton = new JButton("Visualizar laudo");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-        String[] listaLaudo = new String[laudos.size()];
-
-        for (Laudo ex : laudos) {
-            listaLaudo[i] = "Laudo - " + ex.getPaciente().getNome() + " - " + ex.getExame().getTipo() + " - " + ex.getExame().getId();
-            i++;
-        }
-
-
-        JList<String> list = new JList<>(listaLaudo);
-        JScrollPane scrollPanel = new JScrollPane(list);
-        scrollPanel.setPreferredSize(new Dimension(800, 600));
-
-        constraints.gridy = 1;
-        painelLaudo.add(scrollPanel, constraints);
-        constraints.gridy = 2;
-        painelLaudo.add(imprimirLaudoButton, constraints);
-        constraints.gridy = 3;
-        painelLaudo.add(voltarButton, constraints);
-
-        imprimirLaudoButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                String laudoSelecionado = list.getSelectedValue();
-                String[] elementos = laudoSelecionado.split("-");
-                int id = Integer.parseInt(elementos[3].strip());
-                Laudo laudo = new Laudo(id);
-             //   TelaLogadaMedicoUI.imprimirLaudo(medicoLogado, laudo);
-            }
-        });
-        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
-        painelPrincipal.add(painelLaudo,BorderLayout.CENTER);
-        return painelPrincipal;
-    }
-
-    protected static JPanel telaVerificarExame(Paciente pacienteLoagado, TelaLogadaUI telaLogada) {
-        JPanel painelPrincipal = new JPanel();
-        painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = TelaLogadaMedicoUI.criaInfoPanel("Exames");
-        int i = 0;
-        ArrayList<Exame> exames = PacientesSQL.verificarExamesPaciente(pacienteLoagado.getCpf());
-        JPanel painelExame = new JPanel();
-
-        painelExame.setLayout(new GridBagLayout());
-        painelExame.setSize(800, 600);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-        JButton imprimirExameButton = new JButton("Visualizar exame");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
-
-        String[] listaExame = new String[exames.size()];
-
-        for (Exame ex : exames) {
-            listaExame[i] = "Exame - " + ex.getPaciente().getNome() + " - " + ex.getTipo() + " - " + ex.getId();
-            i++;
-        }
-
-        JList<String> list = new JList<>(listaExame);
-        JScrollPane scrollPanel = new JScrollPane(list);
-
-        scrollPanel.setPreferredSize(new Dimension(800, 600));
-
-        constraints.gridy = 1;
-        painelExame.add(scrollPanel, constraints);
-        constraints.gridy = 2;
-        painelExame.add(imprimirExameButton, constraints);
-        constraints.gridy = 3;
-        painelExame.add(voltarButton, constraints);
-
-        imprimirExameButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                String exameSelecionado = list.getSelectedValue();
-                String[] elementos = exameSelecionado.split("-");
-                int id = Integer.parseInt(elementos[3].strip());
-                Exame exame = new Exame(id);
-                //TelaLogadaMedicoUI.imprimirExame(exame);
-            }
-        });
-        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
-        painelPrincipal.add(painelExame,BorderLayout.CENTER);
-        return painelPrincipal;
-    }
-
-    protected static JPanel telaVerificarReceitas(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
-        JPanel painelPrincipal = new JPanel();
-        painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = TelaLogadaMedicoUI.criaInfoPanel("Receitas");
-        ArrayList<Receita> receitas = ReceitasSQL.selectAllReceitasFromPaciente(pacienteLogado.getCpf());
-        int i = 0;
-        JPanel painelReceita = new JPanel();
-
-        painelReceita.setLayout(new GridBagLayout());
-        painelReceita.setSize(800, 600);
-
-        JButton imprimirReceitaButton = new JButton("Visualizar receita");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-        String[] listaReceita = new String[receitas.size()];
-
-        for (Receita rc: receitas) {
-            listaReceita[i] = "Receita - " + rc.getPaciente().getNome() + " - " + rc.getNomeDoRemedio() + " - " + rc.getMedico().getNome() + " - " + rc.getId();
-            i++;
-        }
-
-        JList<String> list = new JList<>(listaReceita);
-        JScrollPane scrollPanel = new JScrollPane(list);
-
-        scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 1;
-        painelReceita.add(scrollPanel, constraints);
-        constraints.gridy = 2;
-        painelReceita.add(imprimirReceitaButton, constraints);
-        constraints.gridy = 3;
-        painelReceita.add(voltarButton, constraints);
-
-        imprimirReceitaButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                String receitaSelecionada = list.getSelectedValue();
-                String[] elementos = receitaSelecionada.split("-");
-                int id = Integer.parseInt(elementos[4].strip());
-
-                Receita receita = new Receita(id);
-                TelaLogadaMedicoUI.imprimirDocumento(receita);
-            }
-        });
-        painelPrincipal.add(infoPanel,BorderLayout.NORTH);
-        painelPrincipal.add(painelReceita,BorderLayout.CENTER);
         return painelPrincipal;
     }
 }

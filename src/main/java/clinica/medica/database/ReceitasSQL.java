@@ -5,9 +5,16 @@ import clinica.medica.documentos.Receita;
 import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
-
+/**
+ * Classe para realizar a consulta das informações referentes as
+ * receitas no banco de dados.
+ */
 public class ReceitasSQL {
-
+    /**
+     * Método que retorna todas as receitas que um paciente possui
+     * @param cpfPaciente CPF do paciente
+     * @return retorna uma lista de receitas do paciente
+     */
     public static ArrayList<Receita> selectAllReceitasFromPaciente(String cpfPaciente) {
         String query = "SELECT * FROM receitas where paciente = ?";
         ArrayList<Receita> receitas = new ArrayList<>();
@@ -30,6 +37,11 @@ public class ReceitasSQL {
         return receitas;
     }
 
+    /**
+     * Método que retorna todas as receitas feitas por um médico
+     * @param cpfMedico CPF médico
+     * @return retorna uma lista de receitas feitas pelo médico
+     */
     public static ArrayList<Receita> selectAllReceitasFromMedico(String cpfMedico) {
         String query = "SELECT * FROM receitas where medico = ?";
         ArrayList<Receita> receitas = new ArrayList<>();
@@ -52,6 +64,12 @@ public class ReceitasSQL {
         return receitas;
     }
 
+    /**
+     * Método que retorna todos os dados de uma receita específica
+     * @param id ID da receita desejada
+     * @param conn conexão com o banco de dados
+     * @return retorna o resultado da consulta do banco de dados
+     */
     public static ResultSet selectAllFromReceitas(int id, Connection conn) {
         String query = "SELECT * FROM receitas WHERE id = ?";
         ResultSet rs = null;
@@ -67,6 +85,12 @@ public class ReceitasSQL {
         return rs;
     }
 
+    /**
+     * Método que salva uma nova receita no banco de dados
+     * @param receita Objeto da receita que será salva
+     * @param panel painel da interface de cadastro da receita
+     * @return retorna verdadeiro se o cadastro der certo, ou falso se houver algum erro
+     */
     public static boolean cadastrarReceita(Receita receita, JPanel panel){
         boolean cadastro = false;
 

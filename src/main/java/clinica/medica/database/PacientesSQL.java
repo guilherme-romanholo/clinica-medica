@@ -7,8 +7,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+/**
+ * Classe para realizar a consulta das informações referentes aos
+ * pacientes no banco de dados.
+ */
 public class PacientesSQL {
+    /**
+     * Método que retorna todos os exames que um paciente possui
+     * @param cpf CPF do paciente
+     * @return retorna uma lista de exames do paciente
+     */
     public static ArrayList<Exame> verificarExamesPaciente(String cpf){
         ArrayList<Exame> exames = new ArrayList();
         String query = "SELECT * FROM exames WHERE paciente = ?";
@@ -33,6 +41,11 @@ public class PacientesSQL {
         return exames;
     }
 
+    /**
+     * Método que retorna todos os laudos que um paciente possui
+     * @param cpf CPF do paciente
+     * @return retorna uma lista de laudos do paciente
+     */
     public static ArrayList<Laudo> verificarLaudos(String cpf){
         ArrayList<Laudo> laudos = new ArrayList();
         String query = "SELECT * FROM laudos WHERE paciente = ?";
