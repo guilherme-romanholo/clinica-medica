@@ -2,6 +2,7 @@ package clinica.medica.gui.exame;
 
 import clinica.medica.database.PacientesSQL;
 import clinica.medica.documentos.Exame;
+import clinica.medica.gui.recursos.ImpressaoUI;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
 import clinica.medica.usuarios.Paciente;
@@ -11,9 +12,17 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-
+/**
+ * Classe que possui os métodos usados na criação da interface da parte de exames do paciente
+ */
 public class ExamesPacienteUI {
-    public static JPanel telaVerificarExame(Paciente pacienteLoagado, TelaLogadaUI telaLogada) {
+    /**
+     * Método que montará o painel com todos os exames do paciente
+     * @param pacienteLoagado paciente logado no sistema
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
+    public static JPanel showExamesDoPaciente(Paciente pacienteLoagado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
@@ -49,14 +58,21 @@ public class ExamesPacienteUI {
         constraints.gridy = 2;
         painelExame.add(imprimirExameButton, constraints);
 
+        /**
+         * criação de uma nova classe interna para tratar os eventos do botão Imprimir exame
+         */
         imprimirExameButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados do exame selecionado e imprime este
+             * @param e evento de click do mouse no botão Imprimir exame
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String exameSelecionado = list.getSelectedValue();
                 String[] elementos = exameSelecionado.split("-");
                 int id = Integer.parseInt(elementos[3].strip());
                 Exame exame = new Exame(id);
-                //TelaLogadaMedicoUI.imprimirExame(exame);
+                ImpressaoUI.imprimirDocumento(exame);
             }
         });
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);

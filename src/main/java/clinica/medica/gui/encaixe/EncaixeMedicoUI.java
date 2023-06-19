@@ -15,8 +15,17 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Date;
 import java.util.Calendar;
-
+/**
+ * Classe que possui os métodos usados na criação da interface da parte de encaixe do médico
+ */
 public class EncaixeMedicoUI {
+    /**
+     * Método que montará o painel contendo os campos de preenchimento para cadastrar um novo encaixe
+     * @param medicoLogado medico que marcará o encaixe
+     * @param data data do encaixse
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
     public static JPanel telaNovoEncaixe(Medico medicoLogado, Date data, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
@@ -115,7 +124,14 @@ public class EncaixeMedicoUI {
         constraints.gridy = 15;
         painelEncaixe.add(voltarButton, constraints);
 
+        /**
+         * criação de uma nova classe interna para tratar os eventos do botão Cadastrar encaixe
+         */
         cadastrarEncaixeButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados fornecidos e salva o encaixe no banco
+             * @param e evento de click no botão Cadastrar encaixe
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String cpf = cpfField.getText();
@@ -138,6 +154,12 @@ public class EncaixeMedicoUI {
         return painelPrincipal;
     }
 
+    /**
+     * Método que montará o painel contendo os dias disponíveis para o agendamento do encaixe
+     * @param medicoLogado medico que está solicitando o encaixe
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
     public static JPanel telaAgendarEncaixe(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
@@ -181,10 +203,15 @@ public class EncaixeMedicoUI {
 
 
         // ================ Listeners ================
-
+        /**
+         * criação de uma nova classe para tratar os eventos do calendário
+         */
         class MeuPropertyListener implements PropertyChangeListener {
             protected Date data;
-
+            /**
+             * método que pega a data selecionada no calendário
+             * @param e evento de mudança da data selecionada
+             */
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("calendar".equals(e.getPropertyName())) {
@@ -192,8 +219,14 @@ public class EncaixeMedicoUI {
                     this.data = new Date(selectedCalendar.getTimeInMillis());
                 }
             }
-
+            /**
+             * criação de uma nova classe interna para tratar os eventos de click do mouse nos dias do calendário
+             */
             public class MeuMouseListener extends MouseAdapter {
+                /**
+                 * Método que adiciona o painel de agendar a consulta na tela
+                 * @param e evento de click do mouse no botão Agendar consulta
+                 */
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     telaLogada.getContentPanel().add(EncaixeMedicoUI.telaNovoEncaixe(medicoLogado, data, telaLogada), "Agendar o encaixe");

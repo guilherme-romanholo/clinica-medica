@@ -19,8 +19,16 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Classe que possui os métodos usados na criação da interface da parte de laudos do médico
+ */
 public class LaudosMedicoUI {
-    public static JPanel telaPrescreverLaudo(TelaLogadaUI telaLogada) {
+    /**
+     * Método que montará o painel da área de laudos do médico
+     * @param telaLogada tela principal que conterá o painel da área de laudos
+     * @return retorna o painel da área de laudos para adicioná-lo na tela principal
+     */
+    public static JPanel telaAreaDeLaudos(TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
@@ -78,6 +86,13 @@ public class LaudosMedicoUI {
         return painelPrincipal;
     }
 
+    /**
+     * Método que montará o painel contendo os campos de preenchimento para fazer um novo laudo
+     * @param medicoLogado médico logado no sistema
+     * @param exame exame utilizado para fazer o laudo
+     * @param telaLogada tela principal que conterá o painel de noov laudo
+     * @return retorna o painel de novo laudo para adicioná-lo na tela principal
+     */
     public static JPanel telaNovoLaudo(Medico medicoLogado, Exame exame, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
@@ -140,7 +155,14 @@ public class LaudosMedicoUI {
         constraints.gridy = 10;
         painelLaudo.add(voltarButton, constraints);
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Cadastrar laudo
+         */
         cadastrarLaudoButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados fornecidos e salva o laudo no banco de dados
+             * @param e evento de click do mouse no botão Cadastrar laudo
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String cpf = cpfField.getText();
@@ -163,7 +185,13 @@ public class LaudosMedicoUI {
         return painelPrincipal;
     }
 
-    public static JPanel showExamesLaudo(Medico medicoLogado, TelaLogadaUI telaLogada) {
+    /**
+     * Método que montará o painel com os exames disponíveis para fazer um laudo
+     * @param medicoLogado médico logado no sistema
+     * @param telaLogada tela principal que conterá o painel dos exames disponíveis
+     * @return retorna o painel dos exames disponíveis para adicioná-lo na tela principal
+     */
+    public static JPanel showExamesDisponiveisParaLaudo(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
@@ -203,7 +231,14 @@ public class LaudosMedicoUI {
         constraints.gridy = 3;
         painelExame.add(voltarButton, constraints);
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Utilizar exame
+         */
         utilizarExameButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados do exame selecionado e chama um novo painel para cadastrar o laudo
+             * @param e evento de click do mouse no botão Utilizar exame
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String exameSelecionado = list.getSelectedValue();
@@ -219,6 +254,12 @@ public class LaudosMedicoUI {
         return painelPrincipal;
     }
 
+    /**
+     * Método que montará o painel contendo os laudos feitos pelo médico
+     * @param medicoLogado médico logado no sistema
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
     public static JPanel showLaudos(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
@@ -258,7 +299,14 @@ public class LaudosMedicoUI {
         constraints.gridy = 3;
         painelLaudo.add(voltarButton, constraints);
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Imprimir laudo
+         */
         imprimirLaudoButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados do laudo selecionado e imprime este
+             * @param e evento de click do mouse no botão imprimir laudo
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String laudoSelecionado = list.getSelectedValue();

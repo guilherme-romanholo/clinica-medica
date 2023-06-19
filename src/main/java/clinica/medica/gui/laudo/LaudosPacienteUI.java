@@ -2,6 +2,7 @@ package clinica.medica.gui.laudo;
 
 import clinica.medica.database.PacientesSQL;
 import clinica.medica.documentos.Laudo;
+import clinica.medica.gui.recursos.ImpressaoUI;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
 import clinica.medica.usuarios.Paciente;
@@ -11,9 +12,16 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-
+/**
+ * Classe que possui os métodos usados na criação da interface da parte de laudos do paciente
+ */
 public class LaudosPacienteUI {
-
+    /**
+     * Método que montará o painel contendo todos os laudos de um paciente
+     * @param pacienteLogado paciente logado no sistema
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
     public static JPanel telaVerificarLaudo(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
@@ -51,14 +59,21 @@ public class LaudosPacienteUI {
         constraints.gridy = 2;
         painelLaudo.add(imprimirLaudoButton, constraints);
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Imprimir laudo
+         */
         imprimirLaudoButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados do laudo selecionado e imprime este
+             * @param e the event to be processed
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String laudoSelecionado = list.getSelectedValue();
                 String[] elementos = laudoSelecionado.split("-");
                 int id = Integer.parseInt(elementos[3].strip());
                 Laudo laudo = new Laudo(id);
-                //   TelaLogadaMedicoUI.imprimirLaudo(medicoLogado, laudo);
+                ImpressaoUI.imprimirDocumento(laudo);
             }
         });
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);

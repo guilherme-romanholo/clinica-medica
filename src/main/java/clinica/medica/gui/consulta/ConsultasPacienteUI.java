@@ -21,13 +21,23 @@ import java.beans.PropertyChangeListener;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+/**
+ * Classe que possui os métodos usados na criação da interface da parte de consultas do paciente
+ */
 public class ConsultasPacienteUI {
-    public static JPanel showMedicosConsulta(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
+    /**
+     * Método que montará o painel contendo todos os médicos do sistema
+     * @param pacienteLogado paciente que deseja marcar a consulta
+     * @param telaLogada tela principal
+     * @return retorna o painel da área de consultas consultas para adicioná-lo na tela principal
+     */
+    public static JPanel showMedicos(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
         JPanel infoPanel = RecursosUI.criaInfoPanel("Medicos");
+
+        //Array de médicos do sistema
         ArrayList<Medico> medicos = UsuariosSQL.selectAllMedicos();
         int i = 0;
 
@@ -45,7 +55,7 @@ public class ConsultasPacienteUI {
         constraints.gridx = 0;
 
         String[] listaMedicos = new String[medicos.size()];
-
+        //Monta-se uma lista de string a partir do Array de médicos e adiciona essa lista em uma JList
         for (Medico medico : medicos) {
             listaMedicos[i] = medico.getNome() + " - " + medico.getAreaAtuacao() + " - " + medico.getCpf();
             i++;
@@ -60,13 +70,21 @@ public class ConsultasPacienteUI {
         constraints.gridy = 2;
         painelExame.add(escolherMedicoButton, constraints);
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Escolher médico
+         */
         escolherMedicoButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados do médico selecionado e chama o próximo painel da parte de consultas
+             * @param e evento do mouse
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String exameSelecionado = list.getSelectedValue();
                 String[] elementos = exameSelecionado.split("-");
                 String cpfMedico = elementos[2].strip();
                 String nomeMedico = elementos[0].strip();
+                //Adiciona um novo painel por cima do painel atual
                 telaLogada.getContentPanel().add(telaAgendarConsulta(cpfMedico, nomeMedico, pacienteLogado, telaLogada), "Agendar consulta com o médico selecionado");
                 telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Agendar consulta com o médico selecionado");
             }
@@ -75,12 +93,17 @@ public class ConsultasPacienteUI {
         painelPrincipal.add(painelExame,BorderLayout.CENTER);
         return painelPrincipal;
     }
-
-    public static JPanel telaVerificarConsulta(Paciente pacienteLogado) {
+    /**
+     * Método que montará o painel com as consultas marcadas pelo paciente
+     * @param pacienteLogado paciente que está logado
+     * @return retorna o painel da área de consultas consultas para adicioná-lo na tela principal
+     */
+    public static JPanel telaVerificarConsultas(Paciente pacienteLogado) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
         JPanel infoPanel = RecursosUI.criaInfoPanel("Consultas");
+        //Array de consultas do paciente logado
         ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromPaciente(pacienteLogado.getCpf());
         int i = 0;
         JPanel painelConsulta = new JPanel();
@@ -96,7 +119,7 @@ public class ConsultasPacienteUI {
         constraints.gridx = 0;
 
         String[] listaConsulta = new String[consultas.size()];
-
+        //Monta-se uma lista de string a partir do array de consultas e adiciona essa lista em um JList
         for (Consulta rc: consultas) {
             if(rc.isRealizada()) {
 
@@ -122,16 +145,24 @@ public class ConsultasPacienteUI {
         constraints.gridy = 2;
         painelConsulta.add(vizualizarComentarioButton, constraints);
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Visualizar comentário
+         */
         vizualizarComentarioButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados da consulta e imprime na tela os comentários gerais dessa consulta
+             * @param e evento do mouse
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String consultaSelecionada = list.getSelectedValue();
                 String[] elementos = consultaSelecionada.split("-");
                 int id = Integer.parseInt(elementos[6].strip());
                 Consulta consulta = new Consulta(id);
+                //Caso de consulta normal
                 if(consulta.getMotivoCancelamento().equals("") && !consulta.isEncaixe())
                     JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
-                else {
+                else { //Caso de consulta cancelada ou encaixe, respectivamente
                     if(!consulta.isEncaixe()) {
                         JOptionPane.showMessageDialog(painelConsulta, "Comentários: " + consulta.getDescricao() + "\n\nMotivo do cancelamento: " + consulta.getMotivoCancelamento(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
                     }else{
@@ -146,6 +177,15 @@ public class ConsultasPacienteUI {
         return painelPrincipal;
     }
 
+    /**
+     * Método que montará o painel com as informações a serem preenchidas de uma nova consulta
+     * @param pacienteLogado paciente que deseja marcar a consulta
+     * @param medicoSolicitado medico referente a consulta
+     * @param cpfMedico CPF do médico referente a cosnulta
+     * @param data data da consulta
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
     protected static JPanel telaNovaConsulta(Paciente pacienteLogado, String medicoSolicitado, String cpfMedico, Date data, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
@@ -173,6 +213,7 @@ public class ConsultasPacienteUI {
         dataField.setEditable(false);
         dataField.setEnabled(false);
 
+        //Cria uma JList com os horários disponíveis do médico referente a consulta
         String[] horariosDisponiveis = HorariosSQL.selectHorariosDisponiveis(cpfMedico, data);
         JComboBox<String> horariosCombo = new JComboBox<>(horariosDisponiveis);
 
@@ -232,13 +273,21 @@ public class ConsultasPacienteUI {
         constraints.gridy = 13;
         painelConsulta.add(voltarButton, constraints);
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Cadastrar consulta
+         */
         cadastrarConsultaButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados fornecidos e salva a consulta no banco de dados, caso esteja tudo certo
+             * @param e evento do botão Cadastrar consulta
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String cpf = cpfField.getText();
                 cpf = cpf.replaceAll("[.-]", "");
                 String conteudo = comentarioArea.getText();
                 String horario = (String) horariosCombo.getSelectedItem();
+                //Salva a consulta no banco caso haja horários disponíveis
                 if (!horario.equals("Não existem horários disponíveis nesse dia.") && ConsultaSQL.salvarConsulta(data, cpfMedico, pacienteLogado.getCpf(),conteudo, horario,painelConsulta)) {
                     JOptionPane.showMessageDialog(painelConsulta, "Agendamento de consulta realizado com sucesso!");
                     telaLogada.atualizaPainel(pacienteLogado);
@@ -254,6 +303,15 @@ public class ConsultasPacienteUI {
         painelPrincipal.add(painelConsulta,BorderLayout.CENTER);
         return painelPrincipal;
     }
+
+    /**
+     * Método que montará o painel contendo os dias disponíveis para o agendamento da consulta
+     * @param cpfMedico CPF do médico referente a consulta
+     * @param nomeMedico nome do médico refente a consulta
+     * @param pacienteLogado paciente que deseja marcar a consulta
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
     protected static JPanel telaAgendarConsulta(String cpfMedico, String nomeMedico, Paciente pacienteLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
@@ -296,9 +354,16 @@ public class ConsultasPacienteUI {
 
 
         // ================ Listeners ================
-
+        /**
+         * criação de uma nova classe para tratar os eventos do calendário
+         */
         class MeuPropertyListener implements PropertyChangeListener {
             protected Date data;
+
+            /**
+             * método que pega a data selecionada no calendário
+             * @param e evento de mudança da data selecionada
+             */
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("calendar".equals(e.getPropertyName())) {
@@ -307,7 +372,14 @@ public class ConsultasPacienteUI {
                 }
             }
 
+            /**
+             * criação de uma nova classe interna para tratar os eventos de click do mouse nos dias do calendário
+             */
             public class MeuMouseListener extends MouseAdapter {
+                /**
+                 * Método que adiciona o painel de agendar a consulta na tela
+                 * @param e evento de click do mouse no botão Agendar consulta
+                 */
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     telaLogada.getContentPanel().add(telaNovaConsulta(pacienteLogado, nomeMedico, cpfMedico,  data, telaLogada), "Agendar a consulta");

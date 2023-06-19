@@ -16,9 +16,16 @@ import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+/**
+ * Classe que possui os métodos usados na criação da interface de exames do médico
+ */
 public class ExamesMedicoUI {
-    public static JPanel telaPrescreverExame(TelaLogadaUI telaLogada) {
+    /**
+     * método que montará o painel da área de exames do médico
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
+    public static JPanel telaAreaDosExames(TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
@@ -79,6 +86,12 @@ public class ExamesMedicoUI {
         return painelPrincipal;
     }
 
+    /**
+     * Método que montará o painel contendo os campos de preenchimento para cadastrar um novo exame
+     * @param medicoLogado médico que irá fazer o exame
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
     public static JPanel telaNovoExame(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
@@ -136,7 +149,14 @@ public class ExamesMedicoUI {
         painelExame.add(voltarButton, constraints);
 
 
+        /**
+         * criação de uma nova classe para tratar os eventos do calendário
+         */
         cadastrarExameButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados fornecidos e salva o exame no banco de dados
+             * @param e evento de click do mouse no botão Cadastrar exame
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String tipo = tipoField.getText();
@@ -155,7 +175,13 @@ public class ExamesMedicoUI {
         return painelPrincipal;
     }
 
-    public static JPanel showExames(Medico medicoLogado, TelaLogadaUI telaLogada) {
+    /**
+     * Método que montará o painel contendo os exames feitos pelo médico
+     * @param medicoLogado médico logado no sistema
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
+    public static JPanel showExamesFeitosPeloMedico(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
@@ -195,7 +221,14 @@ public class ExamesMedicoUI {
         constraints.gridy = 3;
         painelExame.add(voltarButton, constraints);
 
+        /**
+         * criação de uma nova classe interna para tratar os eventos do botão Imprimir exame
+         */
         imprimirExameButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados do exame e imprime este em uma nova tela
+             * @param e evento de click do mouse no botão Imprimir exame
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String exameSelecionado = list.getSelectedValue();

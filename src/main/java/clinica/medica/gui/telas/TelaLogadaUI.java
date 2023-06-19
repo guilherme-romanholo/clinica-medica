@@ -27,7 +27,7 @@ import java.util.Calendar;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
-import static clinica.medica.gui.exame.ExamesMedicoUI.telaPrescreverExame;
+import static clinica.medica.gui.exame.ExamesMedicoUI.telaAreaDosExames;
 
 
 public class TelaLogadaUI extends JFrame implements ActionListener {
@@ -173,24 +173,24 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         contentPanel.add(painelPrincipal(user), "Principal");
 
         if (user instanceof Medico) {
-            contentPanel.add(telaPrescreverExame(this), "Exames");
-            contentPanel.add(LaudosMedicoUI.telaPrescreverLaudo(this), "Laudos");
+            contentPanel.add(telaAreaDosExames(this), "Exames");
+            contentPanel.add(LaudosMedicoUI.telaAreaDeLaudos(this), "Laudos");
             contentPanel.add(ReceitasMedicoUI.telaPrescreverReceita((Medico) user, this), "Receitas");
-            contentPanel.add(ConsultasMedicoUI.telaAgendarConsulta(this), "Consultas");
+            contentPanel.add(ConsultasMedicoUI.telaAreaDasConsultas(this), "Consultas");
             contentPanel.add(EncaixeMedicoUI.telaAgendarEncaixe((Medico) user, this), "Agendar novo encaixe");
             contentPanel.add(CadastroUI.cadastroPaciente( (Medico) user, this), "Cadastrar paciente");
             contentPanel.add(ExamesMedicoUI.telaNovoExame((Medico) user, this), "Prescrever novo exame");
-            contentPanel.add(ExamesMedicoUI.showExames((Medico) user, this), "Verificar exames");
-            contentPanel.add(LaudosMedicoUI.showExamesLaudo((Medico) user, this), "Prescrever novo laudo");
+            contentPanel.add(ExamesMedicoUI.showExamesFeitosPeloMedico((Medico) user, this), "Verificar exames");
+            contentPanel.add(LaudosMedicoUI.showExamesDisponiveisParaLaudo((Medico) user, this), "Prescrever novo laudo");
             contentPanel.add(LaudosMedicoUI.showLaudos((Medico) user, this), "Verificar laudos");
             contentPanel.add(ReceitasMedicoUI.showPacientesReceita((Medico) user, this), "Prescrever nova receita");
             contentPanel.add(ReceitasMedicoUI.showReceitas((Medico) user, this), "Verificar receitas");
-            contentPanel.add(ConsultasMedicoUI.showConsultas((Medico) user, this), "Verificar consultas");
+            contentPanel.add(ConsultasMedicoUI.showConsultasMarcadas((Medico) user, this), "Verificar consultas");
         } else if (user instanceof Paciente) {
-            contentPanel.add(ConsultasPacienteUI.telaVerificarConsulta((Paciente) user), "Verificar consultas");
+            contentPanel.add(ConsultasPacienteUI.telaVerificarConsultas((Paciente) user), "Verificar consultas");
             contentPanel.add(LaudosPacienteUI.telaVerificarLaudo((Paciente) user, this), "Verificar laudos");
-            contentPanel.add(ExamesPacienteUI.telaVerificarExame((Paciente) user, this), "Verificar exames");
-            contentPanel.add(ConsultasPacienteUI.showMedicosConsulta((Paciente) user, this), "Agendar consulta");
+            contentPanel.add(ExamesPacienteUI.showExamesDoPaciente((Paciente) user, this), "Verificar exames");
+            contentPanel.add(ConsultasPacienteUI.showMedicos((Paciente) user, this), "Agendar consulta");
             contentPanel.add(ReceitasPacienteUI.telaVerificarReceitas((Paciente) user, this), "Verificar receitas");
         }
     }

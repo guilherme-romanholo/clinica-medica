@@ -13,9 +13,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-
+/**
+ * Classe que possui os métodos usados na criação da interface da parte de consultas do médico
+ */
 public class ConsultasMedicoUI {
-    public static JPanel telaAgendarConsulta(TelaLogadaUI telaLogada) {
+    /**
+     * Método que montará o painel da interface da área de consultas na parte do médico
+     * @param telaLogada tela principal que conterá o painel da área das consultas
+     * @return retorna o painel da área de consultas consultas para adicioná-lo na tela principal
+     */
+    public static JPanel telaAreaDasConsultas(TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
@@ -29,6 +36,7 @@ public class ConsultasMedicoUI {
         JButton novaConsultaButton = new JButton("Agendar novo encaixe");
         JButton verificarConsultaButton = new JButton("Verificar consultas");
 
+        //Adiciona a tela pricinpal como listener dos botões
         verificarConsultaButton.addActionListener(telaLogada);
         novaConsultaButton.addActionListener(telaLogada);
 
@@ -48,11 +56,20 @@ public class ConsultasMedicoUI {
 
         return painelPrincipal;
     }
-    public static JPanel showConsultas(Medico medicoLogado, TelaLogadaUI telaLogada) {
+
+    /**
+     * Método que montará o painel contendo todas as consultas que estão marcadas com o médico
+     * @param medicoLogado CPF do médico que deve realizar as consultas
+     * @param telaLogada tela principal que conterá o painel das consultas marcadas
+     * @return retorna o painel das consultas marcadas para adicioná-lo na tela principal
+     */
+    public static JPanel showConsultasMarcadas(Medico medicoLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
         JPanel infoPanel = RecursosUI.criaInfoPanel("Consultas");
+
+        //Pega as consultas do banco de dados
         ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromMedico(medicoLogado.getCpf());
         int i = 0;
         JPanel painelConsulta = new JPanel();
@@ -63,6 +80,7 @@ public class ConsultasMedicoUI {
         JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
         JButton editarConsultaButton = new JButton("Editar consulta");
         JButton voltarButton = new JButton("Voltar");
+
         voltarButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -70,6 +88,7 @@ public class ConsultasMedicoUI {
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+        //Cria e monta um vetor de String a partir da lista retornada pela busca no banco
         String[] listaConsulta = new String[consultas.size()];
         System.out.println(consultas.size());
         for (Consulta rc : consultas) {
@@ -84,6 +103,7 @@ public class ConsultasMedicoUI {
             }
         }
 
+        //Vetor de String é utilizado para montar a JList com as consultas
         JList<String> list = new JList<>(listaConsulta);
         JScrollPane scrollPanel = new JScrollPane(list);
 
@@ -97,17 +117,30 @@ public class ConsultasMedicoUI {
         constraints.gridy = 4;
         painelConsulta.add(voltarButton, constraints);
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Visualizar consulta
+         */
         vizualizarComentarioButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que pega os dados da consulta selecionada e mostra na tela os comentários gerais da consulta
+             * @param e evento de click do mouse no botão Visualizar comentário
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
+                //Divide a String selecionada a partir do caracter '-' e seleciona o ID da consulta no final da string
                 String consultaSelecionada = list.getSelectedValue();
                 String[] elementos = consultaSelecionada.split("-");
                 int id = Integer.parseInt(elementos[6].strip());
                 Consulta consulta = new Consulta(id);
+                //Verificação para ver a situação e o tipo da consulta
+
+                //Caso de consulta normal
                 if (consulta.getMotivoCancelamento().equals("") && !consulta.isEncaixe())
                     JOptionPane.showMessageDialog(painelConsulta, "Comentários do paciente: " + consulta.getDescricao(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                //Caso de consulta cancelada
                 else if (!consulta.getMotivoCancelamento().equals(""))
                     JOptionPane.showMessageDialog(painelConsulta, "Comentários do paciente: " + consulta.getDescricao() + "\n\nMotivo do cancelamento: " + consulta.getMotivoCancelamento(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
+                //Caso de encaixe
                 else if(consulta.isEncaixe()){
                     Encaixe encaixe = new Encaixe(consulta.getId());
                     JOptionPane.showMessageDialog(painelConsulta, "Comentários do paciente: " + consulta.getDescricao() + "\n\nMotivo da emergência: " + encaixe.getMotivoEmergencia(), "Comentarios da consulta", JOptionPane.INFORMATION_MESSAGE);
@@ -115,7 +148,14 @@ public class ConsultasMedicoUI {
             }
         });
 
+        /**
+         * criação de uma nova classe para tratar os eventos do botão Editar consulta
+         */
         editarConsultaButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Método que atualiza a consulta a partir da opção selecionada pelo médico
+             * @param e the event to be processed
+             */
             @Override
             public void mouseClicked(MouseEvent e) {
                 String consultaSelecionada = list.getSelectedValue();
@@ -134,16 +174,17 @@ public class ConsultasMedicoUI {
                 radioPanel.add(feitaButton);
                 radioPanel.add(canceladaButton);
 
-                ;
-
+                //JOption Pane que verifica a opção de atualização da consulta
                 int option = JOptionPane.showOptionDialog(painelConsulta, radioPanel, "Selecione uma opção", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 
                 if (option == JOptionPane.OK_OPTION) {
+                    //Caso em que a consulta é apenas marcada com realizada
                     if (feitaButton.isSelected()) {
+                        //Atualiza a consulta no banco de dados
                         ConsultaSQL.atualizaConsulta(consulta.getId());
                         JOptionPane.showMessageDialog(painelConsulta, "Consulta finalizada com sucesso! ", "Consulta finalizada", JOptionPane.INFORMATION_MESSAGE);
                         telaLogada.atualizaPainel(medicoLogado);
-                    } else if (canceladaButton.isSelected()) {
+                    } else if (canceladaButton.isSelected()) { //Caso quem a consulta é cancelada
                         JPanel fieldPanel = new JPanel();
                         fieldPanel.setLayout(new BorderLayout());
                         JLabel motivoLabel = new JLabel("Digite o motivo do cancelamento");
@@ -152,8 +193,11 @@ public class ConsultasMedicoUI {
                         cancelamento.setLineWrap(true);
                         fieldPanel.add(motivoLabel, BorderLayout.NORTH);
                         fieldPanel.add(cancelamento, BorderLayout.SOUTH);
+
+                        //É criado um novo JOption Pane que contém o motivo do cancelamento
                         int option2 = JOptionPane.showOptionDialog(painelConsulta, fieldPanel, "Cancelamento", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
                         if (option2 == JOptionPane.OK_OPTION) {
+                            //Pega o motivo do cancelamento e atualiza a consulta no banco de dados
                             String motivo = cancelamento.getText();
                             ConsultaSQL.atualizaConsulta(consulta.getId(), motivo);
                             JOptionPane.showMessageDialog(painelConsulta, "Consulta cancelada com sucesso!", "Consulta cancelada", JOptionPane.INFORMATION_MESSAGE);
