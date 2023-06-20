@@ -26,11 +26,10 @@ public class ExamesPacienteUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = RecursosUI.criaInfoPanel("Exames");
-        int i = 0;
-        ArrayList<Exame> exames = PacientesSQL.verificarExamesPaciente(pacienteLoagado.getCpf());
-        JPanel painelExame = new JPanel();
 
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Exames");
+
+        JPanel painelExame = new JPanel();
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
 
@@ -39,10 +38,10 @@ public class ExamesPacienteUI {
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
-        JButton imprimirExameButton = new JButton("Visualizar exame");
-
+        ArrayList<Exame> exames = PacientesSQL.verificarExamesPaciente(pacienteLoagado.getCpf());
         String[] listaExame = new String[exames.size()];
 
+        int i = 0;
         for (Exame ex : exames) {
             listaExame[i] = "Exame - " + ex.getPaciente().getNome() + " - " + ex.getTipo() + " - " + ex.getId();
             i++;
@@ -50,17 +49,14 @@ public class ExamesPacienteUI {
 
         JList<String> list = new JList<>(listaExame);
         JScrollPane scrollPanel = new JScrollPane(list);
-
         scrollPanel.setPreferredSize(new Dimension(800, 600));
-
-        constraints.gridy = 1;
+        constraints.gridy = 0;
         painelExame.add(scrollPanel, constraints);
-        constraints.gridy = 2;
+
+        JButton imprimirExameButton = new JButton("Visualizar exame");
+        constraints.gridy = 1;
         painelExame.add(imprimirExameButton, constraints);
 
-        /**
-         * criação de uma nova classe interna para tratar os eventos do botão Imprimir exame
-         */
         imprimirExameButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados do exame selecionado e imprime este
@@ -75,8 +71,10 @@ public class ExamesPacienteUI {
                 ImpressaoUI.imprimirDocumento(exame);
             }
         });
+
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);
         painelPrincipal.add(painelExame,BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 }

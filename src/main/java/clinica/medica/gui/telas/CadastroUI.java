@@ -2,6 +2,7 @@ package clinica.medica.gui.telas;
 
 import clinica.medica.database.HorariosSQL;
 import clinica.medica.database.UsuariosSQL;
+import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.usuarios.Medico;
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -14,6 +15,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
 
+/**
+ * Classe utilizada para a criação da interface gráfica do cadastro
+ */
 public class CadastroUI {
 
     /**
@@ -37,104 +41,94 @@ public class CadastroUI {
      * Método privado para implementação da tela de cadastro do médico.
      */
     private static void showCadastroMedico() {
-        String[] horariosEntrada = {"8","10","12","14","16"};
-        String[] horariosSaida = {"10","12","14","16","18"};
-
         LoginUI.frame.setVisible(false);
 
         JFrame frame = new JFrame("Cadastro médico");
         frame.setLocationRelativeTo(LoginUI.frame);
-
         frame.setLayout(new GridBagLayout());
         frame.setVisible(true);
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        JLabel usernameLabel = new JLabel("Nome");
-        JLabel cpfLabel = new JLabel("CPF");
-        JLabel emailLabel = new JLabel("E-mail");
-        JLabel areaLabel = new JLabel("Área de atuação");
-        JLabel crmLabel = new JLabel("CRM");
-        JLabel passwordLabel = new JLabel("Senha");
-        JLabel horariosEntradaLabel = new JLabel("Escolha o horário de entrada");
-        JLabel horariosSaidaLabel = new JLabel("Escolha o horário de saida");
-
-        JTextField usernameField = new JTextField(20);
-        JTextField emailField = new JTextField(20);
-        JTextField areaField = new JTextField(20);
-        JTextField crmField = new JTextField(20);
-
-        JPasswordField passwordField = new JPasswordField(20);
-
-        JFormattedTextField cpfField = inicializaCpf();
-
-        JButton cadastroButton = new JButton("Cadastrar");
-
-        JComboBox horarioEntrada = new JComboBox<>(horariosEntrada);
-        JComboBox horarioSaida = new JComboBox<>(horariosSaida);
-
-        horarioEntrada.setSelectedIndex(0);
-        horarioSaida.setSelectedIndex(4);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+        JLabel usernameLabel = new JLabel("Nome");
         constraints.gridy = 1;
         frame.add(usernameLabel, constraints);
 
+        JTextField usernameField = new JTextField(20);
         constraints.gridy = 2;
         frame.add(usernameField, constraints);
 
+        JLabel emailLabel = new JLabel("E-mail");
         constraints.gridy = 3;
         frame.add(emailLabel, constraints);
 
+        JTextField emailField = new JTextField(20);
         constraints.gridy = 4;
         frame.add(emailField, constraints);
 
+        JLabel cpfLabel = new JLabel("CPF");
         constraints.gridy = 5;
         frame.add(cpfLabel, constraints);
 
+        JFormattedTextField cpfField = inicializaCpf();
         constraints.gridy = 6;
         frame.add(cpfField, constraints);
 
+        JLabel areaLabel = new JLabel("Área de atuação");
         constraints.gridy = 7;
         frame.add(areaLabel, constraints);
 
+        JTextField areaField = new JTextField(20);
         constraints.gridy = 8;
         frame.add(areaField, constraints);
 
+        JLabel crmLabel = new JLabel("CRM");
         constraints.gridy = 9;
         frame.add(crmLabel, constraints);
 
+        JTextField crmField = new JTextField(20);
         constraints.gridy = 10;
         frame.add(crmField, constraints);
 
+        JLabel horariosEntradaLabel = new JLabel("Escolha o horário de entrada");
         constraints.gridy = 11;
         frame.add(horariosEntradaLabel, constraints);
 
+        String[] horariosEntrada = {"8","10","12","14","16"};
+        JComboBox horarioEntrada = new JComboBox<>(horariosEntrada);
+        horarioEntrada.setSelectedIndex(0);
         constraints.gridy = 12;
         frame.add(horarioEntrada, constraints);
 
+        JLabel horariosSaidaLabel = new JLabel("Escolha o horário de saida");
         constraints.gridy = 13;
         frame.add(horariosSaidaLabel, constraints);
 
+        String[] horariosSaida = {"10","12","14","16","18"};
+        JComboBox horarioSaida = new JComboBox<>(horariosSaida);
+        horarioSaida.setSelectedIndex(4);
         constraints.gridy = 14;
         frame.add(horarioSaida, constraints);
 
+        JLabel passwordLabel = new JLabel("Senha");
         constraints.gridy = 15;
         frame.add(passwordLabel, constraints);
 
+        JPasswordField passwordField = new JPasswordField(20);
         constraints.gridy = 16;
         frame.add(passwordField, constraints);
 
-        constraints.anchor = GridBagConstraints.CENTER;
 
+        JButton cadastroButton = new JButton("Cadastrar");
+        constraints.anchor = GridBagConstraints.CENTER;
         constraints.gridy = 17;
         frame.add(cadastroButton, constraints);
 
-        //Quando clica no botão para cadastrar, pega os dados e chama a função de cadastrar o médico
         cadastroButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -167,7 +161,6 @@ public class CadastroUI {
                     crmField.setText("");
                     passwordField.setText("");
                 }
-
             }
         });
 
@@ -187,42 +180,21 @@ public class CadastroUI {
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
 
-        JPanel infoPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Cadastro de paciente");
 
-                Graphics2D g2d = (Graphics2D) g.create();
-
-                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
-
-                g2d.setPaint(gradient);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-
-                g2d.dispose();
-            }
-        };
-
-        infoPanel.setBackground(Color.decode("#67dcff"));
-        infoPanel.setLayout(new GridBagLayout());
-        JLabel cadastroLabel = new JLabel("Cadastro de paciente");
-
-        String[] sexo = {"Masculino", "Feminino", "Outro"};
         JPanel panelCadastro = new JPanel();
-
         panelCadastro.setLayout(new GridBagLayout());
 
-        JLabel usernameLabel = new JLabel("Nome");
         JLabel cpfLabel = new JLabel("CPF");
         JLabel emailLabel = new JLabel("E-mail");
         JLabel enderecoLabel = new JLabel("Endereco");
         JLabel sexoLabel = new JLabel("Sexo");
+        String[] sexo = {"Masculino", "Feminino", "Outro"};
         JLabel idadeLabel = new JLabel("Idade");
         JLabel alturaLabel = new JLabel("Altura");
         JLabel pesoLabel = new JLabel("Peso");
         JLabel passwordLabel = new JLabel("Senha");
 
-        JTextField usernameField = new JTextField(20);
         JTextField emailField = new JTextField(20);
         JTextField enderecoField = new JTextField(20);
 
@@ -243,14 +215,12 @@ public class CadastroUI {
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
-        constraints.gridy = 0;
-        infoPanel.add(cadastroLabel);
-        cadastroLabel.setFont(new Font("Roboto", Font.BOLD, 20));
-        cadastroLabel.setForeground(Color.WHITE);
 
+        JLabel usernameLabel = new JLabel("Nome");
         constraints.gridy = 1;
         panelCadastro.add(usernameLabel, constraints);
 
+        JTextField usernameField = new JTextField(20);
         constraints.gridy = 2;
         panelCadastro.add(usernameField, constraints);
 

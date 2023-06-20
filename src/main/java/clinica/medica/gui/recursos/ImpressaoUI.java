@@ -11,7 +11,6 @@ import java.io.IOException;
 public class ImpressaoUI {
     public static <T extends Imprimivel> void imprimirDocumento(T documento) {
         JFrame documentFrame = new JFrame(documento.imprimeTipo());
-
         documentFrame.setLayout(new BorderLayout());
         documentFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -152,7 +151,6 @@ public class ImpressaoUI {
         documentFrame.add(centralPanel, BorderLayout.CENTER);
         documentFrame.add(finalPanel, BorderLayout.SOUTH);
         documentFrame.setSize(1000, 800);
-        //documentFrame.pack();
         documentFrame.setVisible(true);
     }
 }

@@ -13,28 +13,36 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ * Classe que possui os métodos usados na criação da interface da parte de receitas do paciente
+ */
 public class ReceitasPacienteUI {
+    /**
+     * Método usado para criar a tela de receitas do paciente
+     * @param pacienteLogado Paciente que vai acessar suas receitas
+     * @param telaLogada Tela principal onde esse novo painel será posicionado
+     * @return Tela criada pelo método
+     */
     public static JPanel telaVerificarReceitas(Paciente pacienteLogado, TelaLogadaUI telaLogada) {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = RecursosUI.criaInfoPanel("Receitas");
-        ArrayList<Receita> receitas = ReceitasSQL.selectAllReceitasFromPaciente(pacienteLogado.getCpf());
-        int i = 0;
-        JPanel painelReceita = new JPanel();
 
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Receitas");
+
+        JPanel painelReceita = new JPanel();
         painelReceita.setLayout(new GridBagLayout());
         painelReceita.setSize(800, 600);
-
-        JButton imprimirReceitaButton = new JButton("Visualizar receita");
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+        ArrayList<Receita> receitas = ReceitasSQL.selectAllReceitasFromPaciente(pacienteLogado.getCpf());
         String[] listaReceita = new String[receitas.size()];
 
+        int i = 0;
         for (Receita rc: receitas) {
             listaReceita[i] = "Receita - " + rc.getPaciente().getNome() + " - " + rc.getNomeDoRemedio() + " - " + rc.getMedico().getNome() + " - " + rc.getId();
             i++;
@@ -42,10 +50,11 @@ public class ReceitasPacienteUI {
 
         JList<String> list = new JList<>(listaReceita);
         JScrollPane scrollPanel = new JScrollPane(list);
-
         scrollPanel.setPreferredSize(new Dimension(600, 400));
         constraints.gridy = 1;
         painelReceita.add(scrollPanel, constraints);
+
+        JButton imprimirReceitaButton = new JButton("Visualizar receita");
         constraints.gridy = 2;
         painelReceita.add(imprimirReceitaButton, constraints);
 
@@ -60,8 +69,10 @@ public class ReceitasPacienteUI {
                 ImpressaoUI.imprimirDocumento(receita);
             }
         });
+
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);
         painelPrincipal.add(painelReceita,BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 }

@@ -5,6 +5,7 @@ import clinica.medica.consultas.Encaixe;
 import clinica.medica.database.ConsultaSQL;
 import clinica.medica.database.HorariosSQL;
 import clinica.medica.database.UsuariosSQL;
+import clinica.medica.gui.recursos.JListFilter;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.CadastroUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
@@ -35,27 +36,26 @@ public class ConsultasPacienteUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
+
         JPanel infoPanel = RecursosUI.criaInfoPanel("Medicos");
 
-        //Array de médicos do sistema
-        ArrayList<Medico> medicos = UsuariosSQL.selectAllMedicos();
-        int i = 0;
-
         JPanel painelExame = new JPanel();
-
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
-
-
-        JButton escolherMedicoButton = new JButton("Agendar consulta com o médico selecionado");
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+        JTextField textFilter = new JTextField();
+        constraints.gridy = 0;
+        painelExame.add(textFilter, constraints);
+
+        ArrayList<Medico> medicos = UsuariosSQL.selectAllMedicos();
         String[] listaMedicos = new String[medicos.size()];
-        //Monta-se uma lista de string a partir do Array de médicos e adiciona essa lista em uma JList
+
+        int i = 0;
         for (Medico medico : medicos) {
             listaMedicos[i] = medico.getNome() + " - " + medico.getAreaAtuacao() + " - " + medico.getCpf();
             i++;
@@ -63,16 +63,16 @@ public class ConsultasPacienteUI {
 
         JList<String> list = new JList<>(listaMedicos);
         JScrollPane scrollPanel = new JScrollPane(list);
-
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(textFilter);
         scrollPanel.setPreferredSize(new Dimension(600, 400));
         constraints.gridy = 1;
         painelExame.add(scrollPanel, constraints);
+
+        JButton escolherMedicoButton = new JButton("Agendar consulta com o médico selecionado");
         constraints.gridy = 2;
         painelExame.add(escolherMedicoButton, constraints);
 
-        /**
-         * criação de uma nova classe para tratar os eventos do botão Escolher médico
-         */
         escolherMedicoButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados do médico selecionado e chama o próximo painel da parte de consultas
@@ -89,10 +89,13 @@ public class ConsultasPacienteUI {
                 telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Agendar consulta com o médico selecionado");
             }
         });
+
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);
         painelPrincipal.add(painelExame,BorderLayout.CENTER);
+
         return painelPrincipal;
     }
+
     /**
      * Método que montará o painel com as consultas marcadas pelo paciente
      * @param pacienteLogado paciente que está logado
@@ -102,52 +105,48 @@ public class ConsultasPacienteUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = RecursosUI.criaInfoPanel("Consultas");
-        //Array de consultas do paciente logado
-        ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromPaciente(pacienteLogado.getCpf());
-        int i = 0;
-        JPanel painelConsulta = new JPanel();
 
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Consultas");
+
+        JPanel painelConsulta = new JPanel();
         painelConsulta.setLayout(new GridBagLayout());
         painelConsulta.setSize(800, 600);
-
-        JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+        ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromPaciente(pacienteLogado.getCpf());
         String[] listaConsulta = new String[consultas.size()];
-        //Monta-se uma lista de string a partir do array de consultas e adiciona essa lista em um JList
+
+        int i = 0;
         for (Consulta rc: consultas) {
             if(rc.isRealizada()) {
 
                 if (rc.getMotivoCancelamento().equals(""))
-                    listaConsulta[i] = "Consulta já realizada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                    listaConsulta[i] = "Consulta já realizada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
                 else
-                    listaConsulta[i] = "Consulta cancelada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                    listaConsulta[i] = "Consulta cancelada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
             }else {
                 if(rc.isEncaixe())
-                    listaConsulta[i] = "Encaixe marcado - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                    listaConsulta[i] = "Encaixe marcado - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
                 else
-                    listaConsulta[i] = "Consulta marcada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                    listaConsulta[i] = "Consulta marcada - " + "Dr. " + rc.getMedico().getNome() + " - " + "Data: " + rc.getData() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
             }
             i++;
         }
 
         JList<String> list = new JList<>(listaConsulta);
         JScrollPane scrollPanel = new JScrollPane(list);
-
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 1;
+        constraints.gridy = 0;
         painelConsulta.add(scrollPanel, constraints);
-        constraints.gridy = 2;
+
+        JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
+        constraints.gridy = 1;
         painelConsulta.add(vizualizarComentarioButton, constraints);
 
-        /**
-         * criação de uma nova classe para tratar os eventos do botão Visualizar comentário
-         */
         vizualizarComentarioButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados da consulta e imprime na tela os comentários gerais dessa consulta
@@ -172,8 +171,10 @@ public class ConsultasPacienteUI {
                 }
             }
         });
+
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);
         painelPrincipal.add(painelConsulta,BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 
@@ -190,92 +191,79 @@ public class ConsultasPacienteUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = RecursosUI.criaInfoPanel("Nova consulta");
-        JPanel painelConsulta = new JPanel();
 
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Nova consulta");
+
+        JPanel painelConsulta = new JPanel();
         painelConsulta.setLayout(new GridBagLayout());
-        //painelConsulta.setSize(100, 100);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
 
         JLabel dataLabel = new JLabel("Data da consulta");
-        JLabel horariolabel = new JLabel("Horário");
-        JLabel medicoLabel = new JLabel("Medico");
-        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
-        JLabel comentarioLabel = new JLabel("Descrição");
-
-
-        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
-        cpfField.setText(pacienteLogado.getCpf());
-        cpfField.setEditable(false);
-        cpfField.setEnabled(false);
+        constraints.gridy = 0;
+        painelConsulta.add(dataLabel, constraints);
 
         JTextField dataField = new JTextField(20);
         dataField.setText(data.toString());
         dataField.setEditable(false);
         dataField.setEnabled(false);
+        constraints.gridy = 1;
+        painelConsulta.add(dataField, constraints);
 
-        //Cria uma JList com os horários disponíveis do médico referente a consulta
+        JLabel horariolabel = new JLabel("Horário");
+        constraints.gridy = 2;
+        painelConsulta.add(horariolabel, constraints);
+
         String[] horariosDisponiveis = HorariosSQL.selectHorariosDisponiveis(cpfMedico, data);
         JComboBox<String> horariosCombo = new JComboBox<>(horariosDisponiveis);
+        constraints.gridy = 3;
+        painelConsulta.add(horariosCombo, constraints);
+
+        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
+        constraints.gridy = 4;
+        painelConsulta.add(cpfPacienteLabel, constraints);
+
+        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
+        cpfField.setText(pacienteLogado.getCpf());
+        cpfField.setEditable(false);
+        cpfField.setEnabled(false);
+        constraints.gridy = 5;
+        painelConsulta.add(cpfField, constraints);
+
+        JLabel medicoLabel = new JLabel("Medico");
+        constraints.gridy = 6;
+        painelConsulta.add(medicoLabel, constraints);
 
         JTextField medicoField = new JTextField(20);
         medicoField.setText(medicoSolicitado);
         medicoField.setEditable(false);
         medicoField.setEnabled(false);
+        constraints.gridy = 7;
+        painelConsulta.add(medicoField, constraints);
+
+        JLabel comentarioLabel = new JLabel("Descrição");
+        constraints.gridy = 8;
+        painelConsulta.add(comentarioLabel, constraints);
 
         JTextArea comentarioArea = new JTextArea(20, 40);
         comentarioArea.setSize(new Dimension(100, 100));
         comentarioArea.setEditable(true);
         comentarioArea.setLineWrap(true);
         comentarioArea.setWrapStyleWord(true);
-
-        JButton cadastrarConsultaButton = new JButton("Agendar consulta");
-        JButton voltarButton = new JButton("Voltar");
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        //constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-
-        constraints.gridy = 2;
-        painelConsulta.add(dataLabel, constraints);
-
-        constraints.gridy = 3;
-        painelConsulta.add(dataField, constraints);
-
-        constraints.gridy = 4;
-        painelConsulta.add(horariolabel, constraints);
-
-        constraints.gridy = 5;
-        painelConsulta.add(horariosCombo, constraints);
-
-        constraints.gridy = 6;
-        painelConsulta.add(cpfPacienteLabel, constraints);
-
-        constraints.gridy = 7;
-        painelConsulta.add(cpfField, constraints);
-
-        constraints.gridy = 8;
-        painelConsulta.add(medicoLabel, constraints);
-
         constraints.gridy = 9;
-        painelConsulta.add(medicoField, constraints);
-
-        constraints.gridy = 10;
-        painelConsulta.add(comentarioLabel, constraints);
-
-        constraints.gridy = 11;
         painelConsulta.add(comentarioArea, constraints);
 
-        constraints.gridy = 12;
+        JButton cadastrarConsultaButton = new JButton("Agendar consulta");
+        constraints.gridy = 10;
         painelConsulta.add(cadastrarConsultaButton, constraints);
 
-        constraints.gridy = 13;
+        JButton voltarButton = new JButton("Voltar");
+        constraints.gridy = 11;
         painelConsulta.add(voltarButton, constraints);
 
-        /**
-         * criação de uma nova classe para tratar os eventos do botão Cadastrar consulta
-         */
         cadastrarConsultaButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados fornecidos e salva a consulta no banco de dados, caso esteja tudo certo
@@ -283,24 +271,24 @@ public class ConsultasPacienteUI {
              */
             @Override
             public void mouseClicked(MouseEvent e) {
-                String cpf = cpfField.getText();
-                cpf = cpf.replaceAll("[.-]", "");
                 String conteudo = comentarioArea.getText();
                 String horario = (String) horariosCombo.getSelectedItem();
                 //Salva a consulta no banco caso haja horários disponíveis
+                assert horario != null;
                 if (!horario.equals("Não existem horários disponíveis nesse dia.") && ConsultaSQL.salvarConsulta(data, cpfMedico, pacienteLogado.getCpf(),conteudo, horario,painelConsulta)) {
                     JOptionPane.showMessageDialog(painelConsulta, "Agendamento de consulta realizado com sucesso!");
                     telaLogada.atualizaPainel(pacienteLogado);
                 }else {
                     JOptionPane.showMessageDialog(painelConsulta, "Não é possível cadastrar consultas sem horários disponíveis !", "ERRO", JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         });
 
         voltarButton.addActionListener(telaLogada);
+
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);
         painelPrincipal.add(painelConsulta,BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 
@@ -316,32 +304,26 @@ public class ConsultasPacienteUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
+
         JPanel infoPanel = RecursosUI.criaInfoPanel("Agendamento de consulta");
 
         GridBagConstraints constraints = new GridBagConstraints();
-
-        JLabel nomeMedicoLabel = new JLabel("Escolha uma data para agendar a consulta com o Dr." + nomeMedico);
-        JButton agendarConsultaButton = new JButton("Agendar a consulta");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
-
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
 
         JPanel calendarPanel = new JPanel();
         calendarPanel.setBackground(Color.WHITE);
         calendarPanel.setLayout(new GridBagLayout());
 
-        constraints.insets = new Insets(5, 5, 5, 5);
-
-        JLabel calendarLabel = new JLabel("Calendário");
-        constraints.gridx = 0;
+        JLabel nomeMedicoLabel = new JLabel("Escolha uma data para agendar a consulta com o Dr." + nomeMedico);
         constraints.gridy = 0;
         calendarPanel.add(nomeMedicoLabel,constraints);
 
+        JLabel calendarLabel = new JLabel("Calendário");
         constraints.gridy = 1;
         calendarPanel.add(calendarLabel, constraints);
 
         JCalendar calendar = new JCalendar();
-
         calendar.setSize(400, 400);
         calendar.getDayChooser().getDayPanel().setBackground(Color.WHITE);
         calendar.getDayChooser().setWeekOfYearVisible(false);
@@ -349,14 +331,14 @@ public class ConsultasPacienteUI {
         calendar.setMinSelectableDate(new Date(Calendar.getInstance().getTime().getTime()));
         constraints.gridy = 2;
         calendarPanel.add(calendar, constraints);
+
+        JButton agendarConsultaButton = new JButton("Agendar a consulta");
         constraints.gridy = 3;
         calendarPanel.add(agendarConsultaButton, constraints);
 
+        JButton voltarButton = new JButton("Voltar");
+        voltarButton.addActionListener(telaLogada);
 
-        // ================ Listeners ================
-        /**
-         * criação de uma nova classe para tratar os eventos do calendário
-         */
         class MeuPropertyListener implements PropertyChangeListener {
             protected Date data;
 
@@ -396,6 +378,7 @@ public class ConsultasPacienteUI {
 
         painelPrincipal.add(infoPanel,BorderLayout.NORTH);
         painelPrincipal.add(calendarPanel,BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 }

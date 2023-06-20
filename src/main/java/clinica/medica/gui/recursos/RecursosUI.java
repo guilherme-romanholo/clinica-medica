@@ -6,7 +6,18 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * Classe referente há alguns recursos extras utilizados na contrução das interfaces gráficas
+ */
 public class RecursosUI {
+    /**
+     * Método utilizado para a criação de um JLabel contendo uma imagem que pode ser
+     * redimensionada
+     * @param imagePath Localização da imagem
+     * @param width Largura da imagem
+     * @param height Altura da imagem
+     * @return O JLabel com a imagem posicionada
+     */
     public static JLabel criaImagemLabel(String imagePath, int width, int height){
         JLabel imageLabel = null;
         try {
@@ -22,6 +33,12 @@ public class RecursosUI {
         return imageLabel;
     }
 
+    /**
+     * Método usado na criação dos 'headers' de cada página, com o nome específico
+     * da página
+     * @param labelText Nome do painel
+     * @return Painel customizado com o nome
+     */
     public static JPanel criaInfoPanel(String labelText) {
         JPanel infoPanel = new JPanel() {
             @Override

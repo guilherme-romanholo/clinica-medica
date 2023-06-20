@@ -30,56 +30,29 @@ public class ExamesMedicoUI {
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
 
-        JPanel infoPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Área dos exames");
 
-                Graphics2D g2d = (Graphics2D) g.create();
-
-                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
-
-                g2d.setPaint(gradient);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-
-                g2d.dispose();
-            }
-        };
-
-        infoPanel.setBackground(Color.decode("#67dcff"));
-        infoPanel.setLayout(new GridBagLayout());
-
-        JLabel examesLabel = new JLabel();
-        examesLabel.setText("Área dos exames");
-
-        JPanel painelExame = new JPanel(new GridBagLayout());
-
-        JButton novoExameButton = new JButton("Prescrever novo exame");
-        JButton verificarExameButton = new JButton("Verificar exames");
-
-        novoExameButton.addActionListener(telaLogada);
-        verificarExameButton.addActionListener(telaLogada);
+        JPanel painelExame = new JPanel();
+        painelExame.setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
+
+        JButton novoExameButton = new JButton("Prescrever novo exame");
         constraints.gridy = 0;
-
-        infoPanel.add(examesLabel, constraints);
-        examesLabel.setFont(new Font("Roboto", Font.BOLD, 20));
-        examesLabel.setForeground(Color.WHITE);
-
-        painelPrincipal.add(infoPanel, BorderLayout.NORTH);
-
-        constraints.gridy = 1;
         painelExame.add(novoExameButton, constraints);
 
-        constraints.gridy = 2;
+        JButton verificarExameButton = new JButton("Verificar exames");
+        constraints.gridy = 1;
         painelExame.add(verificarExameButton, constraints);
 
-        painelPrincipal.add(painelExame, BorderLayout.CENTER);
+        novoExameButton.addActionListener(telaLogada);
+        verificarExameButton.addActionListener(telaLogada);
 
+        painelPrincipal.add(infoPanel, BorderLayout.NORTH);
+        painelPrincipal.add(painelExame, BorderLayout.CENTER);
 
         return painelPrincipal;
     }
@@ -96,60 +69,51 @@ public class ExamesMedicoUI {
         painelPrincipal.setSize(800, 600);
 
         JPanel infoPanel = RecursosUI.criaInfoPanel("Novo exame");
-        JPanel painelExame = new JPanel();
 
+        JPanel painelExame = new JPanel();
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
-
-        JLabel tipoLabel = new JLabel("Tipo de exame");
-        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
-        JLabel comentarioLabel = new JLabel("Comentários");
-
-        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
-
-        JTextField tipoField = new JTextField(20);
-        JTextArea comentarioArea = new JTextArea(20, 40);
-        comentarioArea.setEditable(true);
-        comentarioArea.setLineWrap(true);
-        comentarioArea.setWrapStyleWord(true);
-
-        JButton cadastrarExameButton = new JButton("Cadastrar exame");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
-        constraints.gridy = 2;
+        JLabel tipoLabel = new JLabel("Tipo de exame");
+        constraints.gridy = 0;
         painelExame.add(tipoLabel, constraints);
 
-        constraints.gridy = 3;
+        JTextField tipoField = new JTextField(20);
+        constraints.gridy = 1;
         painelExame.add(tipoField, constraints);
 
-        constraints.gridy = 4;
+        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
+        constraints.gridy = 2;
         painelExame.add(cpfPacienteLabel, constraints);
 
-        constraints.gridy = 5;
+        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
+        constraints.gridy = 3;
         painelExame.add(cpfField, constraints);
 
-        constraints.gridy = 6;
+        JLabel comentarioLabel = new JLabel("Comentários");
+        constraints.gridy = 4;
         painelExame.add(comentarioLabel, constraints);
 
-        constraints.gridy = 7;
+        JTextArea comentarioArea = new JTextArea(20, 40);
+        comentarioArea.setEditable(true);
+        comentarioArea.setLineWrap(true);
+        comentarioArea.setWrapStyleWord(true);
+        constraints.gridy = 5;
         painelExame.add(comentarioArea, constraints);
 
-        constraints.gridy = 8;
+        JButton cadastrarExameButton = new JButton("Cadastrar exame");
+        constraints.gridy = 6;
         painelExame.add(cadastrarExameButton, constraints);
 
-        constraints.gridy = 9;
+        JButton voltarButton = new JButton("Voltar");
+        constraints.gridy = 7;
         painelExame.add(voltarButton, constraints);
 
-
-        /**
-         * criação de uma nova classe para tratar os eventos do calendário
-         */
         cadastrarExameButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados fornecidos e salva o exame no banco de dados
@@ -168,8 +132,11 @@ public class ExamesMedicoUI {
             }
         });
 
+        voltarButton.addActionListener(telaLogada);
+
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelExame, BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 
@@ -185,24 +152,20 @@ public class ExamesMedicoUI {
         painelPrincipal.setSize(800, 600);
 
         JPanel infoPanel = RecursosUI.criaInfoPanel("Exames");
-        ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
-        int i = 0;
-        JPanel painelExame = new JPanel();
 
+        JPanel painelExame = new JPanel();
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
-
-        JButton imprimirExameButton = new JButton("Visualizar exame");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+        ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
         String[] listaExame = new String[exames.size()];
 
+        int i = 0;
         for (Exame ex : exames) {
             listaExame[i] = "Exame - " + ex.getPaciente().getNome() + " - " + ex.getTipo() + " - " + ex.getId();
             i++;
@@ -210,18 +173,19 @@ public class ExamesMedicoUI {
 
         JList<String> list = new JList<>(listaExame);
         JScrollPane scrollPanel = new JScrollPane(list);
-
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 1;
+        constraints.gridy = 0;
         painelExame.add(scrollPanel, constraints);
-        constraints.gridy = 2;
+
+
+        JButton imprimirExameButton = new JButton("Visualizar exame");
+        constraints.gridy = 1;
         painelExame.add(imprimirExameButton, constraints);
-        constraints.gridy = 3;
+
+        JButton voltarButton = new JButton("Voltar");
+        constraints.gridy = 2;
         painelExame.add(voltarButton, constraints);
 
-        /**
-         * criação de uma nova classe interna para tratar os eventos do botão Imprimir exame
-         */
         imprimirExameButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados do exame e imprime este em uma nova tela
@@ -237,8 +201,11 @@ public class ExamesMedicoUI {
             }
         });
 
+        voltarButton.addActionListener(telaLogada);
+
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelExame, BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 }

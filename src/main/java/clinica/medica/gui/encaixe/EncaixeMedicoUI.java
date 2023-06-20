@@ -30,103 +30,88 @@ public class EncaixeMedicoUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
+
         JPanel infoPanel = RecursosUI.criaInfoPanel("Novo encaixe");
+
         JPanel painelEncaixe = new JPanel();
-
         painelEncaixe.setLayout(new GridBagLayout());
-        //painelConsulta.setSize(100, 100);
 
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.gridx = 0;
 
         JLabel dataLabel = new JLabel("Data do encaixe");
-        JLabel horariolabel = new JLabel("Horário");
-        JLabel medicoLabel = new JLabel("Medico");
-        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
-        JLabel comentarioLabel = new JLabel("Descrição");
-        JLabel motivoEmergencia = new JLabel("Motivo da emergência");
-
-
-        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
+        constraints.gridy = 2;
+        painelEncaixe.add(dataLabel, constraints);
 
         JTextField dataField = new JTextField(20);
         dataField.setText(data.toString());
         dataField.setEditable(false);
         dataField.setEnabled(false);
+        constraints.gridy = 3;
+        painelEncaixe.add(dataField, constraints);
+
+        JLabel horariolabel = new JLabel("Horário");
+        constraints.gridy = 4;
+        painelEncaixe.add(horariolabel, constraints);
 
         String[] horariosDisponiveis = {"8", "9", "10", "11", "12", "13", "14", "15", "16", "17"};
         JComboBox<String> horariosCombo = new JComboBox<>(horariosDisponiveis);
+        constraints.gridy = 5;
+        painelEncaixe.add(horariosCombo, constraints);
+
+        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
+        constraints.gridy = 6;
+        painelEncaixe.add(cpfPacienteLabel, constraints);
+
+        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
+        constraints.gridy = 7;
+        painelEncaixe.add(cpfField, constraints);
+
+        JLabel medicoLabel = new JLabel("Medico");
+        constraints.gridy = 8;
+        painelEncaixe.add(medicoLabel, constraints);
 
         JTextField medicoField = new JTextField(20);
         medicoField.setText(medicoLogado.getNome());
         medicoField.setEditable(false);
         medicoField.setEnabled(false);
+        constraints.gridy = 9;
+        painelEncaixe.add(medicoField, constraints);
+
+        JLabel comentarioLabel = new JLabel("Descrição");
+        constraints.gridy = 10;
+        painelEncaixe.add(comentarioLabel, constraints);
 
         JTextArea comentarioArea = new JTextArea(10, 20);
         comentarioArea.setSize(new Dimension(20, 20));
         comentarioArea.setEditable(true);
         comentarioArea.setLineWrap(true);
         comentarioArea.setWrapStyleWord(true);
+        constraints.gridy = 11;
+        painelEncaixe.add(comentarioArea, constraints);
+
+        JLabel motivoEmergencia = new JLabel("Motivo da emergência");
+        constraints.gridy = 12;
+        painelEncaixe.add(motivoEmergencia, constraints);
 
         JTextArea motivoArea = new JTextArea(10, 20);
         motivoArea.setSize(new Dimension(20, 20));
         motivoArea.setEditable(true);
         motivoArea.setLineWrap(true);
         motivoArea.setWrapStyleWord(true);
-
-
-        JButton cadastrarEncaixeButton = new JButton("Agendar encaixe");
-        JButton voltarButton = new JButton("Voltar");
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        //constraints.insets = new Insets(5, 5, 5, 5);
-        constraints.gridx = 0;
-
-
-        constraints.gridy = 2;
-        painelEncaixe.add(dataLabel, constraints);
-
-        constraints.gridy = 3;
-        painelEncaixe.add(dataField, constraints);
-
-        constraints.gridy = 4;
-        painelEncaixe.add(horariolabel, constraints);
-
-        constraints.gridy = 5;
-        painelEncaixe.add(horariosCombo, constraints);
-
-        constraints.gridy = 6;
-        painelEncaixe.add(cpfPacienteLabel, constraints);
-
-        constraints.gridy = 7;
-        painelEncaixe.add(cpfField, constraints);
-
-        constraints.gridy = 8;
-        painelEncaixe.add(medicoLabel, constraints);
-
-        constraints.gridy = 9;
-        painelEncaixe.add(medicoField, constraints);
-
-        constraints.gridy = 10;
-        painelEncaixe.add(comentarioLabel, constraints);
-
-        constraints.gridy = 11;
-        painelEncaixe.add(comentarioArea, constraints);
-
-        constraints.gridy = 12;
-        painelEncaixe.add(motivoEmergencia, constraints);
-
         constraints.gridy = 13;
         painelEncaixe.add(motivoArea, constraints);
 
+        JButton cadastrarEncaixeButton = new JButton("Agendar encaixe");
         constraints.gridy = 14;
         painelEncaixe.add(cadastrarEncaixeButton, constraints);
 
+        JButton voltarButton = new JButton("Voltar");
         constraints.gridy = 15;
         painelEncaixe.add(voltarButton, constraints);
 
-        /**
-         * criação de uma nova classe interna para tratar os eventos do botão Cadastrar encaixe
-         */
         cadastrarEncaixeButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados fornecidos e salva o encaixe no banco
@@ -151,6 +136,7 @@ public class EncaixeMedicoUI {
 
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelEncaixe, BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 
@@ -164,33 +150,27 @@ public class EncaixeMedicoUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
+
         JPanel infoPanel = RecursosUI.criaInfoPanel("Agendamento de encaixes");
 
         GridBagConstraints constraints = new GridBagConstraints();
-
-        JLabel nomeMedicoLabel = new JLabel("Escolha uma data para agendar o encaixe");
-        JButton agendarConsultaButton = new JButton("Agendar o encaixe");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
-
-        //painelConsulta.add(tempLabel);
-        // painelConsulta.add(nomeMedicoLabel, BorderLayout.NORTH);
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.gridx = 0;
 
         JPanel calendarPanel = new JPanel();
         calendarPanel.setBackground(Color.WHITE);
         calendarPanel.setLayout(new GridBagLayout());
 
-        constraints.insets = new Insets(5, 5, 5, 5);
-
-        JLabel calendarLabel = new JLabel("Calendário");
-        constraints.gridx = 0;
+        JLabel nomeMedicoLabel = new JLabel("Escolha uma data para agendar o encaixe");
         constraints.gridy = 0;
         calendarPanel.add(nomeMedicoLabel, constraints);
+
+        JLabel calendarLabel = new JLabel("Calendário");
         constraints.gridy = 1;
         calendarPanel.add(calendarLabel, constraints);
 
         JCalendar calendar = new JCalendar();
-
         calendar.setSize(400, 400);
         calendar.getDayChooser().getDayPanel().setBackground(Color.WHITE);
         calendar.getDayChooser().setWeekOfYearVisible(false);
@@ -198,14 +178,14 @@ public class EncaixeMedicoUI {
         calendar.setMinSelectableDate(new Date(Calendar.getInstance().getTime().getTime()));
         constraints.gridy = 2;
         calendarPanel.add(calendar, constraints);
+
+        JButton agendarConsultaButton = new JButton("Agendar o encaixe");
         constraints.gridy = 3;
         calendarPanel.add(agendarConsultaButton, constraints);
 
+        JButton voltarButton = new JButton("Voltar");
+        voltarButton.addActionListener(telaLogada);
 
-        // ================ Listeners ================
-        /**
-         * criação de uma nova classe para tratar os eventos do calendário
-         */
         class MeuPropertyListener implements PropertyChangeListener {
             protected Date data;
             /**

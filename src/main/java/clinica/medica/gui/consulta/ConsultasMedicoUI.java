@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
- * Classe que possui os métodos usados na criação da interface da parte de consultas do médico
+ * Classe que possui os métodos usados na criação da 'interface' da parte de consultas do médico
  */
 public class ConsultasMedicoUI {
     /**
@@ -26,30 +26,28 @@ public class ConsultasMedicoUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = RecursosUI.criaInfoPanel("Área das consultas");
-        JPanel painelConsulta = new JPanel();
 
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Área das consultas");
+
+        JPanel painelConsulta = new JPanel();
         painelConsulta.setLayout(new GridBagLayout());
         painelConsulta.setSize(800, 600);
-
-
-        JButton novaConsultaButton = new JButton("Agendar novo encaixe");
-        JButton verificarConsultaButton = new JButton("Verificar consultas");
-
-        //Adiciona a tela pricinpal como listener dos botões
-        verificarConsultaButton.addActionListener(telaLogada);
-        novaConsultaButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
-        constraints.gridy = 2;
+        JButton novaConsultaButton = new JButton("Agendar novo encaixe");
+        constraints.gridy = 0;
         painelConsulta.add(novaConsultaButton, constraints);
 
-        constraints.gridy = 3;
+        JButton verificarConsultaButton = new JButton("Verificar consultas");
+        constraints.gridy = 1;
         painelConsulta.add(verificarConsultaButton, constraints);
+
+        verificarConsultaButton.addActionListener(telaLogada);
+        novaConsultaButton.addActionListener(telaLogada);
 
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelConsulta, BorderLayout.CENTER);
@@ -67,59 +65,51 @@ public class ConsultasMedicoUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
+
         JPanel infoPanel = RecursosUI.criaInfoPanel("Consultas");
 
-        //Pega as consultas do banco de dados
-        ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromMedico(medicoLogado.getCpf());
-        int i = 0;
         JPanel painelConsulta = new JPanel();
-
         painelConsulta.setLayout(new GridBagLayout());
         painelConsulta.setSize(800, 600);
-
-        JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
-        JButton editarConsultaButton = new JButton("Editar consulta");
-        JButton voltarButton = new JButton("Voltar");
-
-        voltarButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
-        //Cria e monta um vetor de String a partir da lista retornada pela busca no banco
+        ArrayList<Consulta> consultas = ConsultaSQL.selectAllConsultasFromMedico(medicoLogado.getCpf());
         String[] listaConsulta = new String[consultas.size()];
-        System.out.println(consultas.size());
+
+        int i = 0;
         for (Consulta rc : consultas) {
             if (!rc.isRealizada()) {
                 if (rc.isEncaixe()) {
-                    Encaixe enc = new Encaixe(rc.getId());
-                    listaConsulta[i] = "Encaixe marcado - " + "Paciente: " + rc.getPaciente().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                    listaConsulta[i] = "Encaixe marcado - " + "Paciente: " + rc.getPaciente().getNome() + " - " + "Data: " + rc.getData() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
                 }else{
-                    listaConsulta[i] = "Consulta marcada - " + "Paciente: " + rc.getPaciente().getNome() + " - " + "Data: " + rc.getData().toString() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
+                    listaConsulta[i] = "Consulta marcada - " + "Paciente: " + rc.getPaciente().getNome() + " - " + "Data: " + rc.getData() + " - " + "Horário: " + rc.getHorario() + " horas" + " - " + rc.getId();
                 }
                 i++;
             }
         }
 
-        //Vetor de String é utilizado para montar a JList com as consultas
         JList<String> list = new JList<>(listaConsulta);
         JScrollPane scrollPanel = new JScrollPane(list);
-
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 1;
+        constraints.gridy = 0;
         painelConsulta.add(scrollPanel, constraints);
-        constraints.gridy = 2;
+
+        JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
+        constraints.gridy = 1;
         painelConsulta.add(vizualizarComentarioButton, constraints);
-        constraints.gridy = 3;
+
+        JButton editarConsultaButton = new JButton("Editar consulta");
+        constraints.gridy = 2;
         painelConsulta.add(editarConsultaButton, constraints);
-        constraints.gridy = 4;
+
+        JButton voltarButton = new JButton("Voltar");
+        constraints.gridy = 3;
         painelConsulta.add(voltarButton, constraints);
 
-        /**
-         * criação de uma nova classe para tratar os eventos do botão Visualizar consulta
-         */
         vizualizarComentarioButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados da consulta selecionada e mostra na tela os comentários gerais da consulta
@@ -148,9 +138,6 @@ public class ConsultasMedicoUI {
             }
         });
 
-        /**
-         * criação de uma nova classe para tratar os eventos do botão Editar consulta
-         */
         editarConsultaButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que atualiza a consulta a partir da opção selecionada pelo médico
@@ -207,8 +194,12 @@ public class ConsultasMedicoUI {
                 }
             }
         });
+
+        voltarButton.addActionListener(telaLogada);
+
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelConsulta, BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 }

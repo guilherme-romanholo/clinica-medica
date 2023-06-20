@@ -36,14 +36,13 @@ public class LaudosMedicoUI {
         JPanel infoPanel = RecursosUI.criaInfoPanel("Área dos laudos");
 
         JPanel painelLaudo = new JPanel();
+        painelLaudo.setLayout(new GridBagLayout());
+        painelLaudo.setSize(800, 600);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
-
-        painelLaudo.setLayout(new GridBagLayout());
-        painelLaudo.setSize(800, 600);
 
         JButton novoLaudoButton = new JButton("Prescrever novo laudo");
         constraints.gridy = 0;
@@ -77,7 +76,6 @@ public class LaudosMedicoUI {
         JPanel infoPanel = RecursosUI.criaInfoPanel("Novo Laudo");
 
         JPanel painelLaudo = new JPanel();
-
         painelLaudo.setLayout(new GridBagLayout());
         painelLaudo.setSize(800, 600);
 
@@ -127,9 +125,6 @@ public class LaudosMedicoUI {
         constraints.gridy = 7;
         painelLaudo.add(voltarButton, constraints);
 
-        /**
-         * Criação de uma nova classe para tratar os eventos do botão Cadastrar laudo
-         */
         cadastrarLaudoButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados fornecidos e salva o laudo no banco de dados
@@ -183,6 +178,7 @@ public class LaudosMedicoUI {
 
         ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
         String[] listaExame = new String[exames.size()];
+
         int i = 0;
         for (Exame ex : exames) {
             listaExame[i] = "Exame - " + ex.getPaciente().getNome() + " - " + ex.getTipo() + " - " + ex.getId();
@@ -203,9 +199,6 @@ public class LaudosMedicoUI {
         constraints.gridy = 2;
         painelExame.add(voltarButton, constraints);
 
-        /**
-         * criação de uma nova classe para tratar os eventos do botão Utilizar exame
-         */
         utilizarExameButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados do exame selecionado e chama um novo painel para cadastrar o laudo
@@ -254,6 +247,7 @@ public class LaudosMedicoUI {
 
         ArrayList<Laudo> laudos = LaudosSQL.verificarLaudos(medicoLogado.getCpf());
         String[] listaLaudo = new String[laudos.size()];
+
         int i = 0;
         for (Laudo ex : laudos) {
             listaLaudo[i] = "Laudo - " + ex.getPaciente().getNome() + " - " + ex.getExame().getTipo() + " - " + ex.getExame().getId();
@@ -274,9 +268,6 @@ public class LaudosMedicoUI {
         constraints.gridy = 2;
         painelLaudo.add(voltarButton, constraints);
 
-        /**
-         * criação de uma nova classe para tratar os eventos do botão Imprimir laudo
-         */
         imprimirLaudoButton.addMouseListener(new MouseAdapter() {
             /**
              * Método que pega os dados do laudo selecionado e imprime este
