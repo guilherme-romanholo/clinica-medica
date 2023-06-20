@@ -33,52 +33,28 @@ public class LaudosMedicoUI {
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
 
-        JPanel infoPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-
-                Graphics2D g2d = (Graphics2D) g.create();
-
-                GradientPaint gradient = new GradientPaint(0, 0, Color.decode("#5e8ab3"), getWidth(), getHeight(), Color.decode("#67dcff"));
-
-                g2d.setPaint(gradient);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-
-                g2d.dispose();
-            }
-        };
-
-        infoPanel.setBackground(Color.decode("#67dcff"));
-        infoPanel.setLayout(new GridBagLayout());
-
-        JLabel laudoLabel = new JLabel("Área dos laudos");
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Área dos laudos");
 
         JPanel painelLaudo = new JPanel();
-
-        painelLaudo.setLayout(new GridBagLayout());
-        painelLaudo.setSize(800, 600);
-
-        JButton novoLaudoButton = new JButton("Prescrever novo laudo");
-        JButton verificarLaudoButton = new JButton("Verificar laudos");
-
-        novoLaudoButton.addActionListener(telaLogada);
-        verificarLaudoButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
-        constraints.gridy = 0;
-        infoPanel.add(laudoLabel);
-        laudoLabel.setFont(new Font("Roboto", Font.BOLD, 20));
-        laudoLabel.setForeground(Color.WHITE);
 
-        constraints.gridy = 1;
+        painelLaudo.setLayout(new GridBagLayout());
+        painelLaudo.setSize(800, 600);
+
+        JButton novoLaudoButton = new JButton("Prescrever novo laudo");
+        constraints.gridy = 0;
         painelLaudo.add(novoLaudoButton, constraints);
 
-        constraints.gridy = 2;
+        JButton verificarLaudoButton = new JButton("Verificar laudos");
+        constraints.gridy = 1;
         painelLaudo.add(verificarLaudoButton, constraints);
+
+        novoLaudoButton.addActionListener(telaLogada);
+        verificarLaudoButton.addActionListener(telaLogada);
 
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelLaudo, BorderLayout.CENTER);
@@ -97,66 +73,62 @@ public class LaudosMedicoUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
+
         JPanel infoPanel = RecursosUI.criaInfoPanel("Novo Laudo");
+
         JPanel painelLaudo = new JPanel();
 
         painelLaudo.setLayout(new GridBagLayout());
         painelLaudo.setSize(800, 600);
-
-        JLabel tipoLabel = new JLabel("Tipo de exame");
-        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
-        JLabel comentarioLabel = new JLabel("Conclusão");
-
-        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
-        cpfField.setText(exame.getPaciente().getCpf());
-        cpfField.setEditable(false);
-        cpfField.setEnabled(false);
-
-        JTextField tipoField = new JTextField(20);
-        tipoField.setText(exame.getTipo());
-        tipoField.setEditable(false);
-        tipoField.setEnabled(false);
-
-
-        JTextArea comentarioArea = new JTextArea(20, 40);
-        comentarioArea.setEditable(true);
-        comentarioArea.setLineWrap(true);
-        comentarioArea.setWrapStyleWord(true);
-
-        JButton cadastrarLaudoButton = new JButton("Cadastrar laudo");
-        JButton voltarButton = new JButton("Voltar");
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
-        constraints.gridy = 3;
+        JLabel tipoLabel = new JLabel("Tipo de exame");
+        constraints.gridy = 0;
         painelLaudo.add(tipoLabel, constraints);
 
-        constraints.gridy = 4;
+        JTextField tipoField = new JTextField(20);
+        tipoField.setText(exame.getTipo());
+        tipoField.setEditable(false);
+        tipoField.setEnabled(false);
+        constraints.gridy = 1;
         painelLaudo.add(tipoField, constraints);
 
-        constraints.gridy = 5;
+        JLabel cpfPacienteLabel = new JLabel("CPF do paciente");
+        constraints.gridy = 2;
         painelLaudo.add(cpfPacienteLabel, constraints);
 
-        constraints.gridy = 6;
+        JFormattedTextField cpfField = CadastroUI.inicializaCpf();
+        cpfField.setText(exame.getPaciente().getCpf());
+        cpfField.setEditable(false);
+        cpfField.setEnabled(false);
+        constraints.gridy = 3;
         painelLaudo.add(cpfField, constraints);
 
-        constraints.gridy = 7;
+        JLabel comentarioLabel = new JLabel("Conclusão");
+        constraints.gridy = 4;
         painelLaudo.add(comentarioLabel, constraints);
 
-        constraints.gridy = 8;
+        JTextArea comentarioArea = new JTextArea(20, 40);
+        comentarioArea.setEditable(true);
+        comentarioArea.setLineWrap(true);
+        comentarioArea.setWrapStyleWord(true);
+        constraints.gridy = 5;
         painelLaudo.add(comentarioArea, constraints);
 
-        constraints.gridy = 9;
+        JButton cadastrarLaudoButton = new JButton("Cadastrar laudo");
+        constraints.gridy = 6;
         painelLaudo.add(cadastrarLaudoButton, constraints);
 
-        constraints.gridy = 10;
+        JButton voltarButton = new JButton("Voltar");
+        constraints.gridy = 7;
         painelLaudo.add(voltarButton, constraints);
 
         /**
-         * criação de uma nova classe para tratar os eventos do botão Cadastrar laudo
+         * Criação de uma nova classe para tratar os eventos do botão Cadastrar laudo
          */
         cadastrarLaudoButton.addMouseListener(new MouseAdapter() {
             /**
@@ -180,8 +152,10 @@ public class LaudosMedicoUI {
         });
 
         voltarButton.addActionListener(telaLogada);
+
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelLaudo, BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 
@@ -195,26 +169,21 @@ public class LaudosMedicoUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
+
         JPanel infoPanel = RecursosUI.criaInfoPanel("Exames");
-        ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
-        int i = 0;
 
         JPanel painelExame = new JPanel();
-
         painelExame.setLayout(new GridBagLayout());
         painelExame.setSize(800, 600);
-
-        JButton utilizarExameButton = new JButton("Prescrever laudo para esse exame");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+        ArrayList<Exame> exames = ExamesSQL.verificarExames(medicoLogado.getCpf());
         String[] listaExame = new String[exames.size()];
-
+        int i = 0;
         for (Exame ex : exames) {
             listaExame[i] = "Exame - " + ex.getPaciente().getNome() + " - " + ex.getTipo() + " - " + ex.getId();
             i++;
@@ -222,13 +191,16 @@ public class LaudosMedicoUI {
 
         JList<String> list = new JList<>(listaExame);
         JScrollPane scrollPanel = new JScrollPane(list);
-
         scrollPanel.setPreferredSize(new Dimension(600, 400));
         constraints.gridy = 1;
         painelExame.add(scrollPanel, constraints);
-        constraints.gridy = 2;
+
+        JButton utilizarExameButton = new JButton("Prescrever laudo para esse exame");
+        constraints.gridy = 1;
         painelExame.add(utilizarExameButton, constraints);
-        constraints.gridy = 3;
+
+        JButton voltarButton = new JButton("Voltar");
+        constraints.gridy = 2;
         painelExame.add(voltarButton, constraints);
 
         /**
@@ -249,8 +221,12 @@ public class LaudosMedicoUI {
                 telaLogada.getCardLayout().show(telaLogada.getContentPanel(), "Prescrever laudo para esse exame");
             }
         });
+
+        voltarButton.addActionListener(telaLogada);
+
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelExame, BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 
@@ -264,25 +240,21 @@ public class LaudosMedicoUI {
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setSize(800, 600);
-        JPanel infoPanel = RecursosUI.criaInfoPanel("Laudos");
-        ArrayList<Laudo> laudos = LaudosSQL.verificarLaudos(medicoLogado.getCpf());
-        int i = 0;
-        JPanel painelLaudo = new JPanel();
 
+        JPanel infoPanel = RecursosUI.criaInfoPanel("Laudos");
+
+        JPanel painelLaudo = new JPanel();
         painelLaudo.setLayout(new GridBagLayout());
         painelLaudo.setSize(800, 600);
-
-        JButton imprimirLaudoButton = new JButton("Visualizar laudo");
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.addActionListener(telaLogada);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
+        ArrayList<Laudo> laudos = LaudosSQL.verificarLaudos(medicoLogado.getCpf());
         String[] listaLaudo = new String[laudos.size()];
-
+        int i = 0;
         for (Laudo ex : laudos) {
             listaLaudo[i] = "Laudo - " + ex.getPaciente().getNome() + " - " + ex.getExame().getTipo() + " - " + ex.getExame().getId();
             i++;
@@ -290,13 +262,16 @@ public class LaudosMedicoUI {
 
         JList<String> list = new JList<>(listaLaudo);
         JScrollPane scrollPanel = new JScrollPane(list);
-
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 1;
+        constraints.gridy = 0;
         painelLaudo.add(scrollPanel, constraints);
-        constraints.gridy = 2;
+
+        JButton imprimirLaudoButton = new JButton("Visualizar laudo");
+        constraints.gridy = 1;
         painelLaudo.add(imprimirLaudoButton, constraints);
-        constraints.gridy = 3;
+
+        JButton voltarButton = new JButton("Voltar");
+        constraints.gridy = 2;
         painelLaudo.add(voltarButton, constraints);
 
         /**
@@ -316,8 +291,12 @@ public class LaudosMedicoUI {
                 ImpressaoUI.imprimirDocumento(laudo);
             }
         });
+
+        voltarButton.addActionListener(telaLogada);
+
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
         painelPrincipal.add(painelLaudo, BorderLayout.CENTER);
+
         return painelPrincipal;
     }
 }

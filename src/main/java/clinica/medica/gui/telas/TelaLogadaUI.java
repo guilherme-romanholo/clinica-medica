@@ -101,28 +101,6 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         }
     }
 
-    public <T extends Usuario> void criaPainelInfos(T user) {
-        JPanel usuarioPanel = new JPanel();
-        usuarioPanel.setLayout(new BoxLayout(usuarioPanel, BoxLayout.Y_AXIS));
-        usuarioPanel.setBackground(Color.decode("#98f8c7"));
-
-        if (user instanceof Medico medico) {
-            JLabel medicoLabel = new JLabel(medico.getNome() + ", " + medico.getAreaAtuacao() + "     ");
-            JLabel crmLabel = new JLabel("CRM: " + medico.getCRM() + "     ");
-
-            usuarioPanel.add(medicoLabel);
-            usuarioPanel.add(crmLabel);
-        } else if (user instanceof Paciente paciente) {
-            JLabel cpf = new JLabel(paciente.getCpf());
-            JLabel idade = new JLabel(paciente.getIdade() + " anos");
-
-            usuarioPanel.add(cpf);
-            usuarioPanel.add(idade);
-        }
-
-        headerPanel.add(usuarioPanel);
-    }
-
     public JButton criaBotaoMenu(String nome) {
         JButton button = new JButton(nome);
         button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));

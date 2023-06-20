@@ -54,7 +54,6 @@ public class ExamesMedicoUI {
 
         JPanel painelExame = new JPanel(new GridBagLayout());
 
-
         JButton novoExameButton = new JButton("Prescrever novo exame");
         JButton verificarExameButton = new JButton("Verificar exames");
 
@@ -72,7 +71,6 @@ public class ExamesMedicoUI {
         examesLabel.setForeground(Color.WHITE);
 
         painelPrincipal.add(infoPanel, BorderLayout.NORTH);
-
 
         constraints.gridy = 1;
         painelExame.add(novoExameButton, constraints);

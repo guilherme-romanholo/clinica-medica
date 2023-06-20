@@ -22,7 +22,7 @@ public class RecursosUI {
         return imageLabel;
     }
 
-    public static JPanel criaInfoPanel(String label) {
+    public static JPanel criaInfoPanel(String labelText) {
         JPanel infoPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -39,18 +39,20 @@ public class RecursosUI {
             }
         };
 
-        infoPanel.setBackground(Color.decode("#67dcff"));
         infoPanel.setLayout(new GridBagLayout());
-        JLabel l = new JLabel();
-        l.setText(label);
+
+        JLabel label = new JLabel(labelText);
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.anchor = GridBagConstraints.CENTER;
         constraints.gridx = 0;
         constraints.gridy = 0;
-        infoPanel.add(l);
-        l.setFont(new Font("Roboto", Font.BOLD, 20));
-        l.setForeground(Color.WHITE);
-        infoPanel.add(l);
+
+        label.setFont(new Font("Roboto", Font.BOLD, 20));
+        label.setForeground(Color.WHITE);
+
+        infoPanel.add(label, constraints);
 
         return infoPanel;
     }
