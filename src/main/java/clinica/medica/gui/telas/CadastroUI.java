@@ -185,32 +185,6 @@ public class CadastroUI {
         JPanel panelCadastro = new JPanel();
         panelCadastro.setLayout(new GridBagLayout());
 
-        JLabel cpfLabel = new JLabel("CPF");
-        JLabel emailLabel = new JLabel("E-mail");
-        JLabel enderecoLabel = new JLabel("Endereco");
-        JLabel sexoLabel = new JLabel("Sexo");
-        String[] sexo = {"Masculino", "Feminino", "Outro"};
-        JLabel idadeLabel = new JLabel("Idade");
-        JLabel alturaLabel = new JLabel("Altura");
-        JLabel pesoLabel = new JLabel("Peso");
-        JLabel passwordLabel = new JLabel("Senha");
-
-        JTextField emailField = new JTextField(20);
-        JTextField enderecoField = new JTextField(20);
-
-        JFormattedTextField cpfField = inicializaCpf();
-
-        JComboBox<String> sexoCombo = new JComboBox<>(sexo);
-        sexoCombo.setSelectedIndex(2);
-
-        JTextField idadeField = new JTextField(20);
-        JTextField alturaField = new JTextField(20);
-        JTextField pesoField = new JTextField(20);
-
-        JPasswordField passwordField = new JPasswordField(20);
-
-        JButton cadastroButton = new JButton("Cadastrar paciente");
-
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(5, 5, 5, 5);
@@ -224,60 +198,77 @@ public class CadastroUI {
         constraints.gridy = 2;
         panelCadastro.add(usernameField, constraints);
 
+        JLabel emailLabel = new JLabel("E-mail");
         constraints.gridy = 3;
         panelCadastro.add(emailLabel, constraints);
 
+        JTextField emailField = new JTextField(20);
         constraints.gridy = 4;
         panelCadastro.add(emailField, constraints);
 
+        JLabel cpfLabel = new JLabel("CPF");
         constraints.gridy = 5;
         panelCadastro.add(cpfLabel, constraints);
 
+        JFormattedTextField cpfField = inicializaCpf();
         constraints.gridy = 6;
         panelCadastro.add(cpfField, constraints);
 
+        JLabel enderecoLabel = new JLabel("Endereco");
         constraints.gridy = 7;
         panelCadastro.add(enderecoLabel, constraints);
 
+        JTextField enderecoField = new JTextField(20);
         constraints.gridy = 8;
         panelCadastro.add(enderecoField, constraints);
 
+        JLabel sexoLabel = new JLabel("Sexo");
         constraints.gridy = 9;
         panelCadastro.add(sexoLabel, constraints);
 
+        String[] sexo = {"Masculino", "Feminino", "Outro"};
+        JComboBox<String> sexoCombo = new JComboBox<>(sexo);
+        sexoCombo.setSelectedIndex(2);
         constraints.gridy = 10;
         panelCadastro.add(sexoCombo, constraints);
 
+        JLabel idadeLabel = new JLabel("Idade");
         constraints.gridy = 11;
         panelCadastro.add(idadeLabel, constraints);
 
+        JTextField idadeField = new JTextField(20);
         constraints.gridy = 12;
         panelCadastro.add(idadeField, constraints);
 
+        JLabel alturaLabel = new JLabel("Altura");
         constraints.gridy = 13;
         panelCadastro.add(alturaLabel, constraints);
 
+        JTextField alturaField = new JTextField(20);
         constraints.gridy = 14;
         panelCadastro.add(alturaField, constraints);
 
+        JLabel pesoLabel = new JLabel("Peso");
         constraints.gridy = 15;
         panelCadastro.add(pesoLabel, constraints);
 
+        JTextField pesoField = new JTextField(20);
         constraints.gridy = 16;
         panelCadastro.add(pesoField, constraints);
 
+        JLabel passwordLabel = new JLabel("Senha");
         constraints.gridy = 17;
         panelCadastro.add(passwordLabel, constraints);
 
+        JPasswordField passwordField = new JPasswordField(20);
         constraints.gridy = 18;
         panelCadastro.add(passwordField, constraints);
 
+        JButton cadastroButton = new JButton("Cadastrar paciente");
         constraints.anchor = GridBagConstraints.CENTER;
-
         constraints.gridy = 19;
         panelCadastro.add(cadastroButton, constraints);
 
-        //Quando clica no botão para cadastrar, pega os dados e chama a função de cadastrar o paciente
         cadastroButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -321,6 +312,10 @@ public class CadastroUI {
         return painelPrincipal;
     }
 
+    /**
+     * Método para a criação do campo formatado do CPF
+     * @return Retorna o campo do CPF formatado
+     */
     public static JFormattedTextField inicializaCpf() {
         JFormattedTextField cpfTest;
 

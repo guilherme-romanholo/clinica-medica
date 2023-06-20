@@ -30,13 +30,19 @@ import com.formdev.flatlaf.FlatLightLaf;
 import static clinica.medica.gui.exame.ExamesMedicoUI.telaAreaDosExames;
 
 
+/**
+ * Classe para criação da tela principal após o login
+ */
 public class TelaLogadaUI extends JFrame implements ActionListener {
     private String ultimaTela, telaAtual;
     private JPanel menuPanel;
-    private JPanel headerPanel;
     private JPanel contentPanel;
     private CardLayout cardLayout;
 
+    /**
+     * Método construtor da tela principal do programa
+     * @param user Usuaário que foi logado
+     */
     public TelaLogadaUI (Usuario user) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Tela Logada");
@@ -83,6 +89,12 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         telaAtual = "Principal";
         cardLayout.show(contentPanel, "Principal");
     }
+
+    /**
+     * Método para realizar a mudança das telas no CardLayout, sair e voltar
+     * as telas
+     * @param e Evento realizado
+     */
     public void actionPerformed(ActionEvent e) {
         String nomePainel = e.getActionCommand();
         if (nomePainel.equals("Sair")) {
@@ -101,6 +113,11 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Método para a criação dos botões do menu
+     * @param nome Nome do botão
+     * @return Botão personalizado
+     */
     public JButton criaBotaoMenu(String nome) {
         JButton button = new JButton(nome);
         button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
@@ -110,10 +127,14 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setOpaque(false);
-        // Adicionar fonte, cores, etc ...
         return button;
     }
 
+    /**
+     * Método para a criação do painel que vai conter os botões
+     * @param user Usuário logado
+     * @return Retorna o painel com os botões
+     */
     public JPanel botoesNavegacao(Usuario user) {
         JPanel menuButtonsPanel = new JPanel();
         menuButtonsPanel.setLayout(new BoxLayout(menuButtonsPanel, BoxLayout.Y_AXIS));
@@ -146,6 +167,11 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         return menuButtonsPanel;
     }
 
+    /**
+     * Método para criar os paineis com o conteudo de cada área
+     * @param user Usuário logado
+     * @param <T> Tipo do usuário, médico ou paciente
+     */
     public <T extends Usuario> void criaPaineisConteudo(T user) {
 
         contentPanel.add(painelPrincipal(user), "Principal");
@@ -173,6 +199,10 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Método para realizar a atualização dos paineis
+     * @param user Usuário logado
+     */
     public void atualizaPainel(Usuario user) {
         Component[] components = contentPanel.getComponents();
 
@@ -184,6 +214,12 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         cardLayout.show(contentPanel, telaAtual);
     }
 
+    /**
+     * Método para criar o painel de conteúdo principal
+     * @param user Usuário logado
+     * @return Painel de conteúdo principal
+     * @param <T> Tipo do usuário, médico ou paciente
+     */
     protected static <T extends Usuario> JPanel painelPrincipal(T user) {
         LoginUI.frame.setVisible(false);
 
@@ -227,8 +263,6 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
             info1Label.setText("CPF: " + pacienteLogado.getCpf());
             info2Label.setText("Idade: " + pacienteLogado.getIdade() + " anos");
         }
-
-
 
         infoPanel.add(nomeLabel);
         nomeLabel.setFont(new Font("Roboto", Font.BOLD, 20));
@@ -307,6 +341,10 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         return painelPrincipal;
     }
 
+    /**
+     * Método para mostrar o frame
+     * @param user Usuário logado
+     */
     public static void mostrarTela(Usuario user) {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
@@ -322,10 +360,18 @@ public class TelaLogadaUI extends JFrame implements ActionListener {
         });
     }
 
+    /**
+     * Método getter para retornar o painel de conteúdos
+     * @return Painel de conteúdos
+     */
     public JPanel getContentPanel() {
         return contentPanel;
     }
 
+    /**
+     * Método getter para retornar o CardLayout
+     * @return CardLayout
+     */
     public CardLayout getCardLayout() {
         return cardLayout;
     }

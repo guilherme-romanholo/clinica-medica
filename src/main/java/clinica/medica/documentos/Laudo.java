@@ -8,6 +8,9 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Classe referente ao laudo
+ */
 public class Laudo implements Imprimivel {
     private Exame exame;
     private String clinica;
@@ -16,6 +19,10 @@ public class Laudo implements Imprimivel {
     private Date data;
     private String conteudo;
 
+    /**
+     * Método construtor do laudo
+     * @param id Id do laudo
+     */
     public Laudo(int id) {
         SQLiteConnection connection = new SQLiteConnection();
 
@@ -66,6 +73,7 @@ public class Laudo implements Imprimivel {
     public String imprimeComentarios() {
         return "Informações:\n" + conteudo;
     }
+
     @Override
     public String imprimeNomeMedico() {
         return "Dr. " + medicoSolicitante.getNome();
@@ -76,50 +84,83 @@ public class Laudo implements Imprimivel {
     }
 
     // --------------------- Getters e Setters ---------------------
+
+    /**
+     * Get exame
+     * @return Exame
+     */
     public Exame getExame() {
         return exame;
     }
 
+    /**
+     * Set exame
+     * @param exame Exame
+     */
     public void setExame(Exame exame) {
         this.exame = exame;
     }
 
+    /**
+     * Get clinica
+     * @return Nome da clinica
+     */
     public String getClinica() {
         return clinica;
     }
 
+    /**
+     * Set clinica
+     * @param clinica Nome da clinica
+     */
     public void setClinica(String clinica) {
         this.clinica = clinica;
     }
 
-    public Medico getMedicoSolicitante() {
-        return medicoSolicitante;
-    }
-
+    /**
+     * Set medico solicitante
+     * @param medicoSolicitante Medico solicitante
+     */
     public void setMedicoSolicitante(Medico medicoSolicitante) {
         this.medicoSolicitante = medicoSolicitante;
     }
 
+    /**
+     * Get paciente
+     * @return Paciente
+     */
     public Paciente getPaciente() {
         return paciente;
     }
 
+    /**
+     * Set paciente
+     * @param paciente Paciente
+     */
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente;
     }
 
+    /**
+     * Get data
+     * @return Data
+     */
     public Date getData() {
         return data;
     }
 
+    /**
+     * Set data
+     * @param data Data
+     */
     public void setData(Date data) {
         this.data = data;
     }
 
-    public String getConteudo() {
-        return conteudo;
-    }
-
+    /**
+     * Set conteudo
+     * @param conteudo Conteudo
+     */
     public void setConteudo(String conteudo) {
         this.conteudo = conteudo;
     }

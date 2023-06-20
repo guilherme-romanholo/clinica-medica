@@ -12,6 +12,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Classe para implementação da tela de Login
+ */
 public class LoginUI {
     protected static JFrame frame;
 
@@ -153,6 +156,11 @@ public class LoginUI {
         });
     }
 
+    /**
+     * Método para configurar os campos de texto
+     * @param field Campo de texto
+     * @param <T> Tipo do campo de texto
+     */
     public static <T extends JTextComponent> void configuraField(T field) {
         field.setCaretColor(Color.WHITE);
         field.setForeground(Color.WHITE);
@@ -160,6 +168,12 @@ public class LoginUI {
         field.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE));
         field.setOpaque(false);
     }
+
+    /**
+     * Método para criar os botões de login
+     * @param nome Nome do botão
+     * @return Retorna o botão personalizado
+     */
     public static JButton criaLoginButton(String nome) {
         JButton button = new JButton(nome){
             @Override

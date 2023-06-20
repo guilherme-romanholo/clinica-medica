@@ -6,9 +6,16 @@ import clinica.medica.database.SQLiteConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Classe referente ao encaixe
+ */
 public class Encaixe extends Consulta {
    private String motivoEmergencia;
 
+    /**
+     * Método construtor do encaixe
+     * @param id Id do encaixe
+     */
     public Encaixe(int id) {
         super(id);
         SQLiteConnection connection = new SQLiteConnection();
@@ -26,10 +33,18 @@ public class Encaixe extends Consulta {
         connection.desconectar();
     }
 
+    /**
+     * Método get do motivo de emergência
+     * @return Motivo de emergência
+     */
     public String getMotivoEmergencia() {
         return motivoEmergencia;
     }
 
+    /**
+     * Método set do motivo de emergência
+     * @param motivoEmergencia Motivo de emergência
+     */
     public void setMotivoEmergencia(String motivoEmergencia) {
         this.motivoEmergencia = motivoEmergencia;
     }

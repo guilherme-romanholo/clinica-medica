@@ -6,12 +6,19 @@ import clinica.medica.database.UsuariosSQL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Classe abstrata para implementação dos usuários
+ */
 public abstract class Usuario {
     private String nome;
     private String cpf;
     private String email;
     private String senha;
 
+    /**
+     * Método construtor dos usuários
+     * @param userCpf Cpf do usuário
+     */
     public Usuario(String userCpf) {
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
@@ -30,10 +37,18 @@ public abstract class Usuario {
         connection.desconectar();
     }
 
+    /**
+     * Método get nome do usuário
+     * @return Nome do usuário
+     */
     public String getNome() {
         return this.nome;
     }
 
+    /**
+     * Método get cpf
+     * @return Cpf do usuário
+     */
     public String getCpf() {
         return this.cpf;
     }

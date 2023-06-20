@@ -9,6 +9,9 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Classe referente ao exame
+ */
 public class Exame implements Imprimivel {
     private int id;
     private String tipo;
@@ -17,6 +20,10 @@ public class Exame implements Imprimivel {
     private Date data;
     private String comentario;
 
+    /**
+     * Método construtor do exame
+     * @param id Id do exame
+     */
     public Exame(int id) {
         SQLiteConnection connection = new SQLiteConnection();
 
