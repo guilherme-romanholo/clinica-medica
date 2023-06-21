@@ -38,7 +38,7 @@ public class EncaixeMedicoUI {
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.insets = new Insets(2, 2, 2, 2);
         constraints.gridx = 0;
 
         JLabel dataLabel = new JLabel("Data do encaixe");
