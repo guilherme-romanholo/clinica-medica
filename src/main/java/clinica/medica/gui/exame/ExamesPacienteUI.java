@@ -3,6 +3,7 @@ package clinica.medica.gui.exame;
 import clinica.medica.database.PacientesSQL;
 import clinica.medica.documentos.Exame;
 import clinica.medica.gui.recursos.ImpressaoUI;
+import clinica.medica.gui.recursos.JListFilter;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
 import clinica.medica.usuarios.Paciente;
@@ -47,14 +48,25 @@ public class ExamesPacienteUI {
             i++;
         }
 
-        JList<String> list = new JList<>(listaExame);
-        JScrollPane scrollPanel = new JScrollPane(list);
-        scrollPanel.setPreferredSize(new Dimension(800, 600));
+        JLabel pesquisaLabel = new JLabel("Pesquisar exame");
         constraints.gridy = 0;
+        painelExame.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
+        constraints.gridy = 1;
+        painelExame.add(pesquisaField, constraints);
+
+        JList<String> list = new JList<>(listaExame);
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
+        JScrollPane scrollPanel = new JScrollPane(list);
+        scrollPanel.setPreferredSize(new Dimension(600, 400));
+        constraints.gridy = 2;
         painelExame.add(scrollPanel, constraints);
 
         JButton imprimirExameButton = new JButton("Visualizar exame");
-        constraints.gridy = 1;
+        constraints.gridy = 3;
         painelExame.add(imprimirExameButton, constraints);
 
         imprimirExameButton.addMouseListener(new MouseAdapter() {

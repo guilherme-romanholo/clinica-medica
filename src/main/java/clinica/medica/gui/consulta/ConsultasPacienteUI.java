@@ -48,10 +48,6 @@ public class ConsultasPacienteUI {
         constraints.insets = new Insets(5, 5, 5, 5);
         constraints.gridx = 0;
 
-        JTextField textFilter = new JTextField();
-        constraints.gridy = 0;
-        painelExame.add(textFilter, constraints);
-
         ArrayList<Medico> medicos = UsuariosSQL.selectAllMedicos();
         String[] listaMedicos = new String[medicos.size()];
 
@@ -61,16 +57,25 @@ public class ConsultasPacienteUI {
             i++;
         }
 
-        JList<String> list = new JList<>(listaMedicos);
-        JScrollPane scrollPanel = new JScrollPane(list);
-        JListFilter<String> listFilter = new JListFilter<>(list);
-        listFilter.attachFilterField(textFilter);
-        scrollPanel.setPreferredSize(new Dimension(600, 400));
+        JLabel pesquisaLabel = new JLabel("Pesquisar médico");
+        constraints.gridy = 0;
+        painelExame.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
         constraints.gridy = 1;
+        painelExame.add(pesquisaField, constraints);
+
+        JList<String> list = new JList<>(listaMedicos);
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
+        JScrollPane scrollPanel = new JScrollPane(list);
+        scrollPanel.setPreferredSize(new Dimension(600, 400));
+        constraints.gridy = 2;
         painelExame.add(scrollPanel, constraints);
 
         JButton escolherMedicoButton = new JButton("Agendar consulta com o médico selecionado");
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         painelExame.add(escolherMedicoButton, constraints);
 
         escolherMedicoButton.addMouseListener(new MouseAdapter() {
@@ -137,14 +142,26 @@ public class ConsultasPacienteUI {
             i++;
         }
 
+        JLabel pesquisaLabel = new JLabel("Pesquisar consulta");
+        constraints.gridy = 0;
+        painelConsulta.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
+        constraints.gridy = 1;
+        painelConsulta.add(pesquisaField, constraints);
+
         JList<String> list = new JList<>(listaConsulta);
+
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
         JScrollPane scrollPanel = new JScrollPane(list);
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
+        constraints.gridy = 2;
         painelConsulta.add(scrollPanel, constraints);
 
         JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
-        constraints.gridy = 1;
+        constraints.gridy = 3;
         painelConsulta.add(vizualizarComentarioButton, constraints);
 
         vizualizarComentarioButton.addMouseListener(new MouseAdapter() {

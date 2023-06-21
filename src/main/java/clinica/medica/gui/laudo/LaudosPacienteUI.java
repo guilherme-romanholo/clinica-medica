@@ -3,6 +3,7 @@ package clinica.medica.gui.laudo;
 import clinica.medica.database.PacientesSQL;
 import clinica.medica.documentos.Laudo;
 import clinica.medica.gui.recursos.ImpressaoUI;
+import clinica.medica.gui.recursos.JListFilter;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
 import clinica.medica.usuarios.Paciente;
@@ -47,15 +48,25 @@ public class LaudosPacienteUI {
             i++;
         }
 
-        JList<String> list = new JList<>(listaLaudo);
-        JScrollPane scrollPanel = new JScrollPane(list);
-        scrollPanel.setPreferredSize(new Dimension(800, 600));
-
+        JLabel pesquisaLabel = new JLabel("Pesquisar laudo");
         constraints.gridy = 0;
+        painelLaudo.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
+        constraints.gridy = 1;
+        painelLaudo.add(pesquisaField, constraints);
+
+        JList<String> list = new JList<>(listaLaudo);
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
+        JScrollPane scrollPanel = new JScrollPane(list);
+        scrollPanel.setPreferredSize(new Dimension(600, 400));
+        constraints.gridy = 2;
         painelLaudo.add(scrollPanel, constraints);
 
         JButton imprimirLaudoButton = new JButton("Visualizar laudo");
-        constraints.gridy = 1;
+        constraints.gridy = 3;
         painelLaudo.add(imprimirLaudoButton, constraints);
 
         imprimirLaudoButton.addMouseListener(new MouseAdapter() {

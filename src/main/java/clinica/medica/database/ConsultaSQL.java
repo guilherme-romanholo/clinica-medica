@@ -48,7 +48,7 @@ public class ConsultaSQL {
      * @return retorna uma lista das consultas marcadas no dia passado como parâmetro
      */
     public static ArrayList<Consulta> selectAllConsultasFromPaciente(String cpfPaciente, Date data) {
-        String query = "SELECT * FROM consultas where paciente = ? AND data = ? ORDER BY date ASC";
+        String query = "SELECT * FROM consultas where paciente = ? AND data = ? ORDER BY data ASC";
         ArrayList<Consulta> consultas = new ArrayList<>();
         ResultSet rs = null;
 

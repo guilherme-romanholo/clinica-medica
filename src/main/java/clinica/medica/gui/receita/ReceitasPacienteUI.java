@@ -3,6 +3,7 @@ package clinica.medica.gui.receita;
 import clinica.medica.database.ReceitasSQL;
 import clinica.medica.documentos.Receita;
 import clinica.medica.gui.recursos.ImpressaoUI;
+import clinica.medica.gui.recursos.JListFilter;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
 import clinica.medica.usuarios.Paciente;
@@ -48,14 +49,25 @@ public class ReceitasPacienteUI {
             i++;
         }
 
+        JLabel pesquisaLabel = new JLabel("Pesquisar receita");
+        constraints.gridy = 0;
+        painelReceita.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
+        constraints.gridy = 1;
+        painelReceita.add(pesquisaField, constraints);
+
         JList<String> list = new JList<>(listaReceita);
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
         JScrollPane scrollPanel = new JScrollPane(list);
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         painelReceita.add(scrollPanel, constraints);
 
         JButton imprimirReceitaButton = new JButton("Visualizar receita");
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         painelReceita.add(imprimirReceitaButton, constraints);
 
         imprimirReceitaButton.addMouseListener(new MouseAdapter() {
