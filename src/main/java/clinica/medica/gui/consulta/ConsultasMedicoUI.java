@@ -3,6 +3,7 @@ package clinica.medica.gui.consulta;
 import clinica.medica.consultas.Consulta;
 import clinica.medica.consultas.Encaixe;
 import clinica.medica.database.ConsultaSQL;
+import clinica.medica.gui.recursos.JListFilter;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
 import clinica.medica.usuarios.Medico;
@@ -93,21 +94,33 @@ public class ConsultasMedicoUI {
         }
 
         JList<String> list = new JList<>(listaConsulta);
+
+        JLabel pesquisaLabel = new JLabel("Pesquisar consulta");
+        constraints.gridy = 0;
+        painelConsulta.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
+        constraints.gridy = 1;
+        painelConsulta.add(pesquisaField, constraints);
+
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
         JScrollPane scrollPanel = new JScrollPane(list);
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
+        constraints.gridy = 2;
         painelConsulta.add(scrollPanel, constraints);
 
         JButton vizualizarComentarioButton = new JButton("Visualizar comentários da consulta");
-        constraints.gridy = 1;
+        constraints.gridy = 3;
         painelConsulta.add(vizualizarComentarioButton, constraints);
 
         JButton editarConsultaButton = new JButton("Editar consulta");
-        constraints.gridy = 2;
+        constraints.gridy = 4;
         painelConsulta.add(editarConsultaButton, constraints);
 
         JButton voltarButton = new JButton("Voltar");
-        constraints.gridy = 3;
+        constraints.gridy = 5;
         painelConsulta.add(voltarButton, constraints);
 
         vizualizarComentarioButton.addMouseListener(new MouseAdapter() {

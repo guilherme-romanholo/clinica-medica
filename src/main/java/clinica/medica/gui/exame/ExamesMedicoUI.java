@@ -3,6 +3,7 @@ package clinica.medica.gui.exame;
 import clinica.medica.database.ExamesSQL;
 import clinica.medica.database.MedicosSQL;
 import clinica.medica.documentos.Exame;
+import clinica.medica.gui.recursos.JListFilter;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.CadastroUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
@@ -172,18 +173,30 @@ public class ExamesMedicoUI {
         }
 
         JList<String> list = new JList<>(listaExame);
+
+        JLabel pesquisaLabel = new JLabel("Pesquisar exame");
+        constraints.gridy = 0;
+        painelExame.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
+        constraints.gridy = 1;
+        painelExame.add(pesquisaField, constraints);
+
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
         JScrollPane scrollPanel = new JScrollPane(list);
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
+        constraints.gridy = 2;
         painelExame.add(scrollPanel, constraints);
 
 
         JButton imprimirExameButton = new JButton("Visualizar exame");
-        constraints.gridy = 1;
+        constraints.gridy = 3;
         painelExame.add(imprimirExameButton, constraints);
 
         JButton voltarButton = new JButton("Voltar");
-        constraints.gridy = 2;
+        constraints.gridy = 4;
         painelExame.add(voltarButton, constraints);
 
         imprimirExameButton.addMouseListener(new MouseAdapter() {

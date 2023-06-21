@@ -3,6 +3,7 @@ package clinica.medica.gui.receita;
 import clinica.medica.database.ReceitasSQL;
 import clinica.medica.database.UsuariosSQL;
 import clinica.medica.documentos.Receita;
+import clinica.medica.gui.recursos.JListFilter;
 import clinica.medica.gui.recursos.RecursosUI;
 import clinica.medica.gui.telas.CadastroUI;
 import clinica.medica.gui.telas.TelaLogadaUI;
@@ -188,17 +189,29 @@ public class ReceitasMedicoUI {
         }
 
         JList<String> list = new JList<>(listaReceita);
+
+        JLabel pesquisaLabel = new JLabel("Pesquisar receita");
+        constraints.gridy = 0;
+        painelReceita.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
+        constraints.gridy = 1;
+        painelReceita.add(pesquisaField, constraints);
+
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
         JScrollPane scrollPanel = new JScrollPane(list);
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 0;
+        constraints.gridy = 2;
         painelReceita.add(scrollPanel, constraints);
 
         JButton imprimirReceitaButton = new JButton("Visualizar receita");
-        constraints.gridy = 1;
+        constraints.gridy = 3;
         painelReceita.add(imprimirReceitaButton, constraints);
 
         JButton voltarButton = new JButton("Voltar");
-        constraints.gridy = 2;
+        constraints.gridy = 4;
         painelReceita.add(voltarButton, constraints);
 
         imprimirReceitaButton.addMouseListener(new MouseAdapter() {
@@ -258,17 +271,29 @@ public class ReceitasMedicoUI {
         }
 
         JList<String> list = new JList<>(listaPacientes);
+
+        JLabel pesquisaLabel = new JLabel("Pesquisar paciente");
+        constraints.gridy = 0;
+        painelExame.add(pesquisaLabel, constraints);
+
+        JTextField pesquisaField = new JTextField(20);
+        constraints.gridy = 1;
+        painelExame.add(pesquisaField, constraints);
+
+        JListFilter<String> listFilter = new JListFilter<>(list);
+        listFilter.attachFilterField(pesquisaField);
+
         JScrollPane scrollPanel = new JScrollPane(list);
         scrollPanel.setPreferredSize(new Dimension(600, 400));
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         painelExame.add(scrollPanel, constraints);
 
         JButton utilizarExameButton = new JButton("Prescrever receita para esse paciente");
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         painelExame.add(utilizarExameButton, constraints);
 
         JButton voltarButton = new JButton("Voltar");
-        constraints.gridy = 3;
+        constraints.gridy = 4;
         painelExame.add(voltarButton, constraints);
 
         utilizarExameButton.addMouseListener(new MouseAdapter() {
