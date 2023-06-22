@@ -8,11 +8,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+/**
+ * Classe do médico
+ */
 public class Medico extends Usuario {
     private String areaAtuacao;
     private String CRM;
     private LinkedList<Consulta> consultas;
 
+    /**
+     * Método construtor do médico
+     * @param medicoCpf Cpf do médico que sera criado
+     */
     public Medico(String medicoCpf) {
         super(medicoCpf);
 
@@ -32,10 +39,18 @@ public class Medico extends Usuario {
         connection.desconectar();
     }
 
+    /**
+     * Getter área de atuação
+     * @return Área de atuação
+     */
     public String getAreaAtuacao() {
         return this.areaAtuacao;
     }
-    
+
+    /**
+     * Getter do Crm
+     * @return CRM
+     */
     public String getCRM(){
         return this.CRM;
     }

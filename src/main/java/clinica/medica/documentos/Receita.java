@@ -9,6 +9,9 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Classe referente as receitas
+ */
 public class Receita implements Imprimivel {
     Medico medico;
     Paciente paciente;
@@ -17,6 +20,14 @@ public class Receita implements Imprimivel {
     String detalhes;
     int id;
 
+    /**
+     * Método construtor das receitas
+     * @param medico Médico
+     * @param paciente Paciente
+     * @param nomeDoRemedio Nome do remédio
+     * @param dataReceita Data da receita
+     * @param detalhes Detalhes da prescrição
+     */
     public Receita(String medico, String paciente, String nomeDoRemedio, Date dataReceita, String detalhes) {
         this.medico = new Medico(medico);
         this.paciente = new Paciente(paciente);
@@ -24,6 +35,11 @@ public class Receita implements Imprimivel {
         this.dataReceita = dataReceita;
         this.detalhes = detalhes;
     }
+
+    /**
+     * Método construtor da receita
+     * @param id Id da receita
+     */
     public Receita(int id) {
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
@@ -83,26 +99,51 @@ public class Receita implements Imprimivel {
     }
 
     // --------------------- Getters e Setters ---------------------
+
+    /**
+     * Get detalhes da receita
+     * @return Detalhes
+     */
     public String getDetalhes() {
         return detalhes;
     }
 
+    /**
+     * Get data da receita
+     * @return Data
+     */
     public Date getDataReceita() {
         return dataReceita;
     }
 
+    /**
+     * Get nome do remédio
+     * @return Nome do remédio
+     */
     public String getNomeDoRemedio() {
         return nomeDoRemedio;
     }
 
+    /**
+     * Get paciente
+     * @return Paciente
+     */
     public Paciente getPaciente() {
         return paciente;
     }
 
+    /**
+     * Get médico
+     * @return Médico
+     */
     public Medico getMedico() {
         return medico;
     }
 
+    /**
+     * Get id
+     * @return id
+     */
     public int getId() {
         return id;
     }

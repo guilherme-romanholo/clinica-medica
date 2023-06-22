@@ -14,7 +14,10 @@ import javax.swing.*;
  * usuarios no banco de dados.
  */
 public class UsuariosSQL {
-
+    /**
+     * Método que retorna todos os pacientes cadastrados na clínica
+     * @return lista de pacientes
+     */
     public static ArrayList<Paciente> selectAllPacientes() {
         String query = "SELECT * FROM pacientes";
         ArrayList<Paciente> pacientes = new ArrayList<>();
@@ -38,6 +41,10 @@ public class UsuariosSQL {
         return pacientes;
     }
 
+    /**
+     * Método que retorna todos os médicos cadastrados na clínica
+     * @return lista de médicos cadastrados
+     */
     public static ArrayList<Medico> selectAllMedicos() {
         String query = "SELECT * FROM medicos";
         ArrayList<Medico> medicos = new ArrayList<>();
@@ -170,7 +177,7 @@ public class UsuariosSQL {
      * @param crm CRM do médico.
      * @return Valor booleano se foi possível cadastrar o médico.
      */
-    public static boolean cadastroMedico(String nome, String cpf, String email, String senha, String areaAtuacao, String crm, JFrame frame){
+    public static boolean cadastroMedico(String nome, String cpf, String email, String senha, String areaAtuacao, String crm, JFrame frame, int entrada, int saida){
         boolean cadastro = false;
         //verifica validade dos dados digitados
         if(nome.matches("[0-9]+") || cpf.matches("[A-Z]+") || areaAtuacao.matches("[0-9]+") || crm.matches("[A-Z]+")){
@@ -185,12 +192,17 @@ public class UsuariosSQL {
         }else if(cpf.contains("_")){
             JOptionPane.showMessageDialog(frame, "CPF inválido!", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
+        }else if((saida - entrada) <=0){
+            JOptionPane.showMessageDialog(frame, "Escolha um horário de trabalho válido!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
 
         String queryMedico = "INSERT INTO medicos (cpf, areaAtuacao, crm) VALUES (?, ?, ?)";
 
-        if (!cadastroUsuario(nome, cpf, email, senha, true))
+        if (!cadastroUsuario(nome, cpf, email, senha, true)) {
+            JOptionPane.showMessageDialog(frame, "Já existe um usuário com esse cpf!", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
+        }
         
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
@@ -246,8 +258,10 @@ public class UsuariosSQL {
 
         String queryPaciente = "INSERT INTO pacientes (cpf, endereco, sexo, idade, altura, peso) VALUES (?, ?, ?, ?, ?, ?)";
 
-        if (!cadastroUsuario(nome, cpf, email, senha, false))
+        if (!cadastroUsuario(nome, cpf, email, senha, false)) {
+            JOptionPane.showMessageDialog(panel, "Já existe um usuário com esse CPF!", "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
+        }
 
         SQLiteConnection connection = new SQLiteConnection();
         connection.conectar();
